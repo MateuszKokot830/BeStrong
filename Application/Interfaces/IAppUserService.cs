@@ -4,7 +4,7 @@ namespace Application.Interfaces
 {
     public interface IAppUserService
     {
-        IEnumerable<AppUserDto> GetAllUsers();
-        AppUserDto GetUserById(int id);
+        Task<IEnumerable<AppUserDto>> GetAllUsers();
+        Task<AppUserDto> GetUserById(int id);
     }
 }

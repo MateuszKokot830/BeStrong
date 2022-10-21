@@ -4,9 +4,9 @@ namespace Domain.Interfaces
 {
     public interface IAppUserRepository
     {
-        IEnumerable<AppUser> GetAll();
-        AppUser GetById(int id);
-        AppUser Add(AppUser appUser);
+        Task<IEnumerable<AppUser>> GetAll();
+        Task<AppUser> GetById(int id);
+        void Add(AppUser appUser);
         void Update(AppUser appUser);
         void Delete(AppUser appUser);
     }

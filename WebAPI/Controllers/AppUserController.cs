@@ -1,3 +1,4 @@
+using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -16,23 +17,18 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves all users")]
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetUsers()
         {
-            var users = _appUserService.GetAllUsers();
+            var users = await _appUserService.GetAllUsers();
             return Ok(users);
         }
 
         [SwaggerOperation(Summary = "Retrieves a specific user by unique id")]
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
-            var user = _appUserService.GetUserById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
+            var user = await _appUserService.GetUserById(id);
+            return user == null ? NotFound() : Ok(user);
         }
     }
 }

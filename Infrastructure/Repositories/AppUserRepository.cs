@@ -1,34 +1,44 @@
 using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class AppUserRepository : IAppUserRepository
     {
-
-        public IEnumerable<AppUser> GetAll()
+        private DataContext _context;
+        public AppUserRepository(DataContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public AppUser GetById(int id)
+        public async Task<IEnumerable<AppUser>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Users.ToListAsync();
         }
 
-        public AppUser Add(AppUser appUser)
+        public async Task<AppUser> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(id);
+        }
+
+        public void Add(AppUser appUser)
+        {
+            _context.Users.Add(appUser);
+            _context.SaveChanges();
         }
 
         public void Update(AppUser appUser)
         {
-            throw new NotImplementedException();
+            _context.Users.Update(appUser);
+            _context.SaveChanges();
         }
         
         public void Delete(AppUser appUser)
         {
-            throw new NotImplementedException();
+            _context.Users.Remove(appUser);
+            _context.SaveChanges();
         }
     }
 }

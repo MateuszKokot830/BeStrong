@@ -15,15 +15,15 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<AppUserDto> GetAllUsers()
+        public async Task<IEnumerable<AppUserDto>> GetAllUsers()
         {
-            var users = _usersRepository.GetAll();
+            var users = await _usersRepository.GetAll();
             return _mapper.Map<IEnumerable<AppUserDto>>(users);
         }
 
-        public AppUserDto GetUserById(int id)
+        public async Task<AppUserDto> GetUserById(int id)
         {
-            var user = _usersRepository.GetById(id);
+            var user = await _usersRepository.GetById(id);
             return _mapper.Map<AppUserDto>(user);
         }
     }
