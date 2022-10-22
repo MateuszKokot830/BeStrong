@@ -24,8 +24,9 @@ namespace WebAPI
 
             services.AddSingleton(AutoMapperConfig.Initialize());
 
-            services.AddControllers();
             services.AddDbContext<DataContext>();
+            services.AddControllers();
+            services.AddCors();
             services.AddSwaggerGen(c => 
             {
                 c.EnableAnnotations();
@@ -43,6 +44,10 @@ namespace WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
             app.UseAuthorization();
 

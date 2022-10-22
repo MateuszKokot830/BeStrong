@@ -1,4 +1,3 @@
-using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -7,10 +6,10 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppUserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IAppUserService _appUserService;
-        public AppUserController(IAppUserService appUserService)
+        public UsersController(IAppUserService appUserService)
         {
             _appUserService = appUserService;
         }
