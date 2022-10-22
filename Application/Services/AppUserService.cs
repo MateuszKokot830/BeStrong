@@ -1,6 +1,9 @@
+using System.Security.Cryptography;
+using System.Text;
 using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Interfaces;
 
 namespace Application.Services
@@ -26,5 +29,37 @@ namespace Application.Services
             var user = await _usersRepository.GetById(id);
             return _mapper.Map<AppUserDto>(user);
         }
+
+        public async Task<AppUserDto> GetUserByUsername(string username)
+        {
+            var user = await _usersRepository.GetByUsername(username);
+            return _mapper.Map<AppUserDto>(user);
+        }
+
+        public async Task<AppUserDto> AddUser(RegisterDto registerDto)
+        {
+            using var hmac = new HMACSHA512();
+            var user = new AppUser
+            {
+                Username = registerDto.Username,
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+                PasswordSalt = hmac.Key
+            };
+            await _usersRepository.Add(user);
+            return _mapper.Map<AppUserDto>(user);
+        }
+
+        public bool IsPasswordCorrect(AppUserDto appUserDto, LoginDto loginDto)
+        {
+            using var hmac = new HMACSHA512(appUserDto.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != appUserDto.PasswordHash[i]) return false;
+            }
+
+            return true;
+        }
+
     }
 }

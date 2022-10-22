@@ -23,22 +23,27 @@ namespace Infrastructure.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public void Add(AppUser appUser)
+        public async Task<AppUser> GetByUsername(string username)
         {
-            _context.Users.Add(appUser);
-            _context.SaveChanges();
+            return await _context.Users.SingleOrDefaultAsync(x=>x.Username == username.ToLower());
         }
 
-        public void Update(AppUser appUser)
+        public async Task Add(AppUser appUser)
+        {
+            _context.Users.Add(appUser); 
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(AppUser appUser)
         {
             _context.Users.Update(appUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         
-        public void Delete(AppUser appUser)
+        public async Task Delete(AppUser appUser)
         {
             _context.Users.Remove(appUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

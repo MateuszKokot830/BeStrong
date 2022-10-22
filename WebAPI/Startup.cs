@@ -4,6 +4,10 @@ using Application.Interfaces;
 using Application.Mappings;
 using Infrastructure.Repositories;
 using Application.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using WebAPI.Extensions;
 
 namespace WebAPI
 {
@@ -18,15 +22,10 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddScoped<IAppUserRepository, AppUserRepository>();
-            services.AddScoped<IAppUserService, AppUserService>();
-
-            services.AddSingleton(AutoMapperConfig.Initialize());
-
-            services.AddDbContext<DataContext>();
+            services.AddApplicationServices();
             services.AddControllers();
             services.AddCors();
+            services.AddIdentityServices(_config);
             services.AddSwaggerGen(c => 
             {
                 c.EnableAnnotations();
@@ -44,13 +43,10 @@ namespace WebAPI
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

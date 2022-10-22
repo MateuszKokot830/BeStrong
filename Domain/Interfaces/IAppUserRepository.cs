@@ -6,8 +6,9 @@ namespace Domain.Interfaces
     {
         Task<IEnumerable<AppUser>> GetAll();
         Task<AppUser> GetById(int id);
-        void Add(AppUser appUser);
-        void Update(AppUser appUser);
-        void Delete(AppUser appUser);
+        Task<AppUser> GetByUsername(string username);
+        Task Add(AppUser appUser);
+        Task Update(AppUser appUser);
+        Task Delete(AppUser appUser);
     }
 }
