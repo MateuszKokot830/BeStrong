@@ -10,29 +10,29 @@ namespace Application.Services
 {
     public class AppUserService : IAppUserService
     {
-        private readonly IAppUserRepository _usersRepository;
+        private readonly IAppUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public AppUserService(IAppUserRepository usersRepository, IMapper mapper)
+        public AppUserService(IAppUserRepository userRepository, IMapper mapper)
         {
-            _usersRepository = usersRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<AppUserDto>> GetAllUsers()
         {
-            var users = await _usersRepository.GetAll();
+            var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<AppUserDto>>(users);
         }
 
         public async Task<AppUserDto> GetUserById(int id)
         {
-            var user = await _usersRepository.GetById(id);
+            var user = await _userRepository.GetByIdAsync(id);
             return _mapper.Map<AppUserDto>(user);
         }
 
         public async Task<AppUserDto> GetUserByUsername(string username)
         {
-            var user = await _usersRepository.GetByUsername(username);
+            var user = await _userRepository.GetByUsername(username);
             return _mapper.Map<AppUserDto>(user);
         }
 
@@ -45,7 +45,7 @@ namespace Application.Services
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
-            await _usersRepository.Add(user);
+            await _userRepository.AddAsync(user);
             return _mapper.Map<AppUserDto>(user);
         }
 
