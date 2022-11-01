@@ -4,12 +4,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './modules/pages/home/home.component';
 import { RegisterComponent } from './modules/components/register/register.component';
+import { ProfileComponent } from './modules/pages/profile/profile.component';
+import { PostsComponent } from './modules/pages/posts/posts.component';
+import { MessagesComponent } from './modules/pages/messages/messages.component';
+import { StatisticsComponent } from './modules/pages/statistics/statistics.component';
+import { WorkoutComponent } from './modules/pages/workout/workout.component';
+import { SearchComponent } from './modules/pages/search/search.component';
+import { ToastrModule } from 'ngx-toastr';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -17,15 +23,20 @@ import { RegisterComponent } from './modules/components/register/register.compon
     NavbarComponent,
     HomeComponent,
     RegisterComponent,
+    ProfileComponent,
+    PostsComponent,
+    MessagesComponent,
+    StatisticsComponent,
+    WorkoutComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    BsDropdownModule.forRoot(),
-    ModalModule.forRoot(),
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
