@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebAPI.Extensions;
+using WebAPI.Middleware;
 
 namespace WebAPI
 {
@@ -42,6 +43,7 @@ namespace WebAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
