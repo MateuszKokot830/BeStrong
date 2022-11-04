@@ -22,8 +22,6 @@ export class RegisterComponent implements OnInit {
     this.accountService.register(this.model).subscribe(response => {
       console.log(response);
       this.bsModalRef.hide();
-    }, error => {
-      this.toastr.error(error.error);
     })
   }
 

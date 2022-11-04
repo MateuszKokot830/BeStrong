@@ -21,8 +21,6 @@ export class NavbarComponent implements OnInit {
   {
     this.accountService.login(this.model).subscribe(respone => {
       this.router.navigateByUrl('');
-    }, error => {
-      this.toastr.error(error.error);
     });
   }
 
