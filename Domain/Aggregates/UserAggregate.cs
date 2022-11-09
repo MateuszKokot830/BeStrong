@@ -1,6 +1,6 @@
-namespace Domain.Entities
+namespace Domain.Aggregates
 {
-    public class AppUser
+    public class UserAggregate
     {
         public int Id { get; set; }
         public string Username { get; set; }

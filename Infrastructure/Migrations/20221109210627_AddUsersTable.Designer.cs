@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221022184748_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221109210627_AddUsersTable")]
+    partial class AddUsersTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
-            modelBuilder.Entity("Domain.Entities.AppUser", b =>
+            modelBuilder.Entity("Domain.Aggregates.UserAggregate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

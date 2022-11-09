@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -19,6 +19,6 @@ namespace Infrastructure.Data
             optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         }
 
-        public DbSet<AppUser> Users { get; set; }
+        public DbSet<UserAggregate> Users { get; set; }
     }
 }

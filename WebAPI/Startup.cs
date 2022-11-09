@@ -1,14 +1,14 @@
 using Infrastructure.Data;
-using Domain.Interfaces;
 using Application.Interfaces;
 using Application.Mappings;
 using Infrastructure.Repositories;
-using Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebAPI.Extensions;
 using WebAPI.Middleware;
+using Infrastructure;
+using Application;
 
 namespace WebAPI
 {
@@ -23,7 +23,8 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationServices();
+            services.AddApplication();
+            services.AddInfrastructure();
             services.AddControllers();
             services.AddCors();
             services.AddIdentityServices(_config);

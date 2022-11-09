@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class AddUsersTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

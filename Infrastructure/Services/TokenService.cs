@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Application.Services
+namespace Infrastructure.Services
 {
     public class TokenService : ITokenService
     {
@@ -16,7 +16,7 @@ namespace Application.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string CreateToken(AppUserDto user)
+        public string CreateToken(UserAggregateDto user)
         {
             var claims = new List<Claim>
             {

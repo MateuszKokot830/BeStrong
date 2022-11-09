@@ -1,6 +1,6 @@
 using Application.Dto;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Aggregates;
 
 namespace Application.Mappings
 {
@@ -8,7 +8,7 @@ namespace Application.Mappings
     {
         public static IMapper Initialize() => new MapperConfiguration(config =>
         {
-            config.CreateMap<AppUser, AppUserDto>();
+            config.CreateMap<UserAggregate, UserAggregateDto>();
         })
         .CreateMapper();
     }

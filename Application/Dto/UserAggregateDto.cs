@@ -1,6 +1,6 @@
 namespace Application.Dto
 {
-    public class AppUserDto
+    public class UserAggregateDto
     {
         public int Id { get; set; }
         public string Username { get; set; } 
