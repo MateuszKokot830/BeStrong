@@ -4,7 +4,7 @@ namespace Domain.Errors
 {
     public static partial class Errors
     {
-        public static class Authentication 
+        public static class Auth 
         {
             public static Error InvalidUsername => Error.Failure(
                 code: "Auth.InvalidUsername", 

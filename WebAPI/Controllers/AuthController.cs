@@ -9,12 +9,11 @@ using Application.Queries.Login;
 
 namespace WebAPI.Controllers
 {
-    [Route("auth")]
-    public class AuthenticationController : BaseApiController
+    public class AuthController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly ITokenService _tokenService;
-        public AuthenticationController(IMediator mediator, ITokenService tokenService)
+        public AuthController(IMediator mediator, ITokenService tokenService)
         {
             _mediator = mediator;
             _tokenService = tokenService;

@@ -27,17 +27,17 @@ export class ErrorInterceptor implements HttpInterceptor {
                   }
                 }
               } else {
-                this.toastr.error(error.statusText === "OK" ? "Bad Request" : error.statusText, error.status);
+                this.toastr.error(error.error.title, error.status);
               }
               break;
             case 401:
-              this.toastr.error(error.statusText === "OK" ? "Unauthorised" : error.statusText, error.status);
+              this.toastr.error(error.error.title, error.status);
               break;
             case 404:
-              this.toastr.error(error.statusText === "OK" ? "Page not found" : error.statusText, error.status);
+              this.toastr.error(error.error.title, error.status);
               break;  
             case 500:
-              this.toastr.error(error.statusText === "OK" ? "Server error" : error.statusText, error.status);
+              this.toastr.error(error.error.title, error.status);
               break;
             default:
               this.toastr.error('Something went wrong. Please refresh the page.');
