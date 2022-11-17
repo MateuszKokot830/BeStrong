@@ -3,9 +3,9 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
-using Application.Queries.Users;
-using Application.Commands.Users;
-using Application.Commands.Authentication;
+using ErrorOr;
+using Application.Commands.Register;
+using Application.Queries.Login;
 
 namespace WebAPI.Controllers
 {
@@ -20,39 +20,29 @@ namespace WebAPI.Controllers
             _tokenService = tokenService;
         }
 
-       [SwaggerOperation(Summary = "Creates a user with given username and password")]
+        [SwaggerOperation(Summary = "Creates a user with given username and password")]
         [HttpPost("register")]
-        public async Task<ActionResult<UserAuthResponseDto>> Register(UserRegisterRequestDto userRegisterRequestDto)
+        public async Task<IActionResult> Register(UserRegisterRequestDto userRegisterRequestDto)
         {
-            var user = await _mediator.Send(new GetUserByUsernameQuery() {Username = userRegisterRequestDto.Username});
-            if (user != null) return BadRequest("Username is taken");
+            ErrorOr<UserAuthResponseDto> authResult = await _mediator.Send(new RegisterCommand() {
+                userRegisterRequestDto = userRegisterRequestDto});
 
-            user = await _mediator.Send(new CreateUserCommand(){UserRegisterRequestDto = userRegisterRequestDto});
-
-            return new UserAuthResponseDto 
-                {
-                    Username = user.Username, 
-                    Token = _tokenService.CreateToken(user)
-                };
+            return authResult.Match(
+                authResult => Ok(authResult),
+                errors => Problem(errors));
         }
 
 
         [SwaggerOperation(Summary = "Login a user with given username and password")]
         [HttpPost("login")]
-        public async Task<ActionResult<UserAuthResponseDto>> Login(UserLoginRequestDto userLoginRequestDto)
+        public async Task<IActionResult> Login(UserLoginRequestDto userLoginRequestDto)
         {
-            var user = await _mediator.Send(new GetUserByUsernameQuery() {Username = userLoginRequestDto.Username});
-            if (user == null) return Unauthorized("Invalid username");
+            ErrorOr<UserAuthResponseDto> authResult = await _mediator.Send(new LoginQuery() {
+                userLoginRequestDto = userLoginRequestDto});
 
-            var isPasswordCorrect = await _mediator.Send(new AuthenticateUserCommand() {
-                UserAggregateDto = user, UserLoginRequestDto = userLoginRequestDto});
-
-            return isPasswordCorrect ? new UserAuthResponseDto
-                {   
-                    Username = user.Username, 
-                    Token = _tokenService.CreateToken(user)
-                } 
-                : Unauthorized("Invalid password");
+            return authResult.Match(
+                authResult => Ok(authResult),
+                errors => Problem(errors));
         }
     }
 }

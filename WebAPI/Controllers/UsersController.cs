@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using Application.Queries.Users;
-using Application.Commands.Users;
 
 namespace WebAPI.Controllers
 {
