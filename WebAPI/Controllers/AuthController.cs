@@ -12,11 +12,9 @@ namespace WebAPI.Controllers
     public class AuthController : BaseApiController
     {
         private readonly IMediator _mediator;
-        private readonly ITokenService _tokenService;
-        public AuthController(IMediator mediator, ITokenService tokenService)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-            _tokenService = tokenService;
         }
 
         [SwaggerOperation(Summary = "Creates a user with given username and password")]

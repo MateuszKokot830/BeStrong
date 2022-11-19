@@ -8,7 +8,6 @@ namespace Infrastructure.Data
     {
         public DataContext() 
         {
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
