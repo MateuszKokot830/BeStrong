@@ -2,8 +2,6 @@ using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
-using System.Security.Cryptography;
-using System.Text;
 using Domain.Aggregates;
 using Domain.Errors;
 using ErrorOr;
@@ -15,35 +13,33 @@ namespace Application.Commands.Register
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
+        private readonly INLoggerService _loggerService;
         public RegisterCommandHandler(IUserRepository userRepository, 
                                     IMapper mapper, 
-                                    ITokenService tokenService)
+                                    ITokenService tokenService,
+                                    INLoggerService loggerService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
+            _loggerService = loggerService;
         }
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetByUsername(request.userRegisterRequestDto.Username) != null) 
+            if (await _userRepository.GetByUsernameAsync(request.userRegisterRequestDto.UserName) != null) 
                 return Errors.User.DuplicateUsername;
 
-            using var hmac = new HMACSHA512();
+            var user = _mapper.Map<UserAggregate>(request.userRegisterRequestDto);
 
-            var user = new UserAggregate
-            {
-                Username = request.userRegisterRequestDto.Username,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.userRegisterRequestDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            var result = _userRepository.RegisterUserAsync(user, request.userRegisterRequestDto.Password);
+            if (!result.Result.Succeeded) return Errors.User.FailedRegister;
 
-            await _userRepository.AddAsync(user);
             var userDto = _mapper.Map<UserAggregateDto>(user);
 
             return new UserAuthResponseDto 
             {
-                Username = user.Username, 
+                Username = user.UserName, 
                 Token = _tokenService.CreateToken(userDto)
             };
         }

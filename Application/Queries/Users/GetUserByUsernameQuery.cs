@@ -21,7 +21,7 @@ namespace Application.Queries.Users
 
             public async Task<UserAggregateDto> Handle(GetUserByUsernameQuery request, CancellationToken cancellationToken)
             {
-                var user = await _userRepository.GetByUsername(request.Username);
+                var user = await _userRepository.GetByUsernameAsync(request.Username);
                 
                 return _mapper.Map<UserAggregateDto>(user);
             }

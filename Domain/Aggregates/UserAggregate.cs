@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
+
 namespace Domain.Aggregates
 {
-    public class UserAggregate
+    public class UserAggregate : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string Description { get; set; }
+        public ICollection<Role> Roles { get; set; }
     }
 }

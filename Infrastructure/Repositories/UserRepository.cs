@@ -2,19 +2,30 @@ using Domain.Aggregates;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<UserAggregate>, IUserRepository
     {
-        public UserRepository(DataContext context) : base(context)
+        private readonly UserManager<UserAggregate> _userManager;
+        public UserRepository(DataContext context, UserManager<UserAggregate> userManager) : base(context)
         {
+            _userManager = userManager;
+        }
+        public async Task<UserAggregate> GetByUsernameAsync(string username)
+        {
+            return await _userManager.Users.SingleOrDefaultAsync(x=>x.UserName == username.ToLower());
         }
 
-        public async Task<UserAggregate> GetByUsername(string username)
+        public async Task<IdentityResult> RegisterUserAsync(UserAggregate user, string password)
         {
-            return await _context.Users.SingleOrDefaultAsync(x=>x.Username == username.ToLower());
+            return await _userManager.CreateAsync(user, password);
         }
-        
+
+        public async Task<bool> CheckPasswordAsync(UserAggregate user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
     }
 }

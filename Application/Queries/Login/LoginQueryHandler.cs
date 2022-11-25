@@ -2,11 +2,10 @@ using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
-using System.Security.Cryptography;
-using System.Text;
 using Domain.Aggregates;
 using Domain.Errors;
 using ErrorOr;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Queries.Login
 {
@@ -26,22 +25,17 @@ namespace Application.Queries.Login
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByUsername(request.userLoginRequestDto.Username);
+            var user = await _userRepository.GetByUsernameAsync(request.userLoginRequestDto.UserName);
             if (user == null)  return Errors.Auth.InvalidUsername;
 
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.userLoginRequestDto.Password));
-
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != user.PasswordHash[i]) return Errors.Auth.InvalidPassword;
-            }
+            var result = _userRepository.CheckPasswordAsync(user, request.userLoginRequestDto.Password);
+            if (!result.Result) return Errors.Auth.InvalidPassword;
 
             var userDto = _mapper.Map<UserAggregateDto>(user);
 
             return new UserAuthResponseDto 
             {
-                Username = user.Username, 
+                Username = user.UserName, 
                 Token = _tokenService.CreateToken(userDto)
             };
         }

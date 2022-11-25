@@ -2,6 +2,7 @@ using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Queries.Users
 {
@@ -20,7 +21,7 @@ namespace Application.Queries.Users
             public async Task<IEnumerable<UserAggregateDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
             {
                 var users = await _userRepository.GetAllAsync();
-                users.OrderBy(a => a.Username);
+                users.OrderBy(a => a.UserName);
 
                 return _mapper.Map<IEnumerable<UserAggregateDto>>(users);
             }

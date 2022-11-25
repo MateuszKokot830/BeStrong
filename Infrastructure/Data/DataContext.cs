@@ -1,12 +1,15 @@
 using Domain.Aggregates;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<UserAggregate, Role, int>
     {
-        public DataContext() 
+        public DataContext()
         {
         }
 
@@ -18,6 +21,10 @@ namespace Infrastructure.Data
             optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         }
 
-        public DbSet<UserAggregate> Users { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+
     }
 }
