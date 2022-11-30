@@ -31,7 +31,7 @@ namespace Application.Queries.Login
             var result = _userRepository.CheckPasswordAsync(user, request.userLoginRequestDto.Password);
             if (!result.Result) return Errors.Auth.InvalidPassword;
 
-            var userDto = _mapper.Map<UserAggregateDto>(user);
+            var userDto = _mapper.Map<UserDto>(user);
 
             return new UserAuthResponseDto 
             {

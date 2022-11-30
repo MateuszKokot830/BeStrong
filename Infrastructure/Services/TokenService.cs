@@ -16,7 +16,7 @@ namespace Infrastructure.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string CreateToken(UserAggregateDto user)
+        public string CreateToken(UserDto user)
         {
             var claims = new List<Claim>
             {

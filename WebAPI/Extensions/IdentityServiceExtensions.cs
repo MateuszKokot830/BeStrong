@@ -12,7 +12,7 @@ namespace WebAPI.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentityCore<UserAggregate>(opt =>
+            services.AddIdentityCore<User>(opt =>
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireNonAlphanumeric = false;

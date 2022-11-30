@@ -30,12 +30,12 @@ namespace Application.Commands.Register
             if (await _userRepository.GetByUsernameAsync(request.userRegisterRequestDto.UserName) != null) 
                 return Errors.User.DuplicateUsername;
 
-            var user = _mapper.Map<UserAggregate>(request.userRegisterRequestDto);
+            var user = _mapper.Map<User>(request.userRegisterRequestDto);
 
             var result = _userRepository.RegisterUserAsync(user, request.userRegisterRequestDto.Password);
             if (!result.Result.Succeeded) return Errors.User.FailedRegister;
 
-            var userDto = _mapper.Map<UserAggregateDto>(user);
+            var userDto = _mapper.Map<UserDto>(user);
 
             return new UserAuthResponseDto 
             {

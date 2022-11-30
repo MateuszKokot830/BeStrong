@@ -3,7 +3,8 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
-using Application.Queries.Users;
+using Application.Queries.Users.GetUser;
+using Application.Queries.Users.GetUsers;
 
 namespace WebAPI.Controllers
 {
@@ -20,7 +21,7 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves all users")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserAggregateDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _mediator.Send(new GetUsersQuery());
             return users.ToList();
@@ -29,9 +30,9 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves a specific user by unique id")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserAggregateDto>> GetUser(int id)
+        public async Task<ActionResult<UserDto>> GetUser(int id)
         {
-            return await _mediator.Send(new GetUserByIdQuery() {Id = id});
+            return await _mediator.Send(new GetUserQuery() {Id = id});
         }
 
     }
