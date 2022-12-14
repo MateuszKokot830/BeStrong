@@ -2,3 +2,12 @@
     text-decoration: none !important;
     cursor: pointer;
 }
+
+.image1 {
+    mix-blend-mode: multiply;
+    background-color: #3A3F44;
+    width: 10%;
+    height: 10%;
+    text-align: left;
+    margin-left: 20px;
+}

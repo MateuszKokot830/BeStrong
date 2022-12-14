@@ -1,23 +1,22 @@
 using System.Net;
 using System.Text.Json;
 using WebAPI.Exceptions;
+using Application.Interfaces;
 
 namespace WebAPI.Middleware
 {
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IHostEnvironment _env;
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
+        public ExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
         {
 
             _next = next;
-            _logger = logger;
             _env = env;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, INLoggerService logger)
         {
             try 
             {
@@ -25,7 +24,7 @@ namespace WebAPI.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                logger.Error(ex);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
