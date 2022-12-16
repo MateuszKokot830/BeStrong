@@ -26,13 +26,13 @@ namespace WebAPI.Controllers
             var users = await _mediator.Send(new GetUsersQuery());
             return users.ToList();
         }
+        
 
-
-        [SwaggerOperation(Summary = "Retrieves a specific user by unique id")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUser(int id)
+        [SwaggerOperation(Summary = "Retrieves a specific user by username")]
+        [HttpGet("{username}")]
+        public async Task<ActionResult<UserDto>> GetUser(string username)
         {
-            return await _mediator.Send(new GetUserQuery() {Id = id});
+            return await _mediator.Send(new GetUserQuery() {Username = username});
         }
 
     }

@@ -13,9 +13,10 @@ export interface UserApp {
     name: string;
     surname: string;
     gender: string;
-    cit: string;
+    city: string;
     country: string;
     description: string;
+    age: number;
     profilePhotoUrl: string;
     photos: Photo[];
 }

@@ -15,10 +15,10 @@ const routes: Routes = [
     path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    children: [ 
+    children: [
       {path: 'search', component: SearchComponent},
       {path: 'posts', component: PostsComponent},
-      {path: 'user/:id', component: ProfileComponent},
+      {path: 'profile/:username', component: ProfileComponent},
       {path: 'messages', component: MessagesComponent},
       {path: 'statistics', component: StatisticsComponent},
       {path: 'workout', component: WorkoutComponent}

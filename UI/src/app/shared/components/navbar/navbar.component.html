@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-primary">
-  <img src="../../../../assets\photos\logo.png" class="image1" alt="BeStrong">
+  <img src="./assets/photos/logo.png" class="image1" alt="BeStrong">
     <div class="container">
         <ul class="navbar-nav mr-auto">
           <ng-container *ngIf="accountService.currentUser$ | async">
             <li class="nav-item">
-              <a class="nav-link bi bi-house-fill" routerLink="/" routerLinkActive="active"> Home</a>
+              <a class="nav-link bi bi-house-fill" routerLink="/*" routerLinkActive="active"> Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link bi bi-activity" routerLink="/posts" routerLinkActive="active"> Activity</a>
@@ -24,13 +24,16 @@
           </ng-container>
         </ul>
 
-      <div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown>
-          <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.username | titlecase}}</a>
-          <div class="dropdown-menu mt-3" *dropdownMenu>
-            <a class="dropdown-item">Edit profile</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="logout()">Logout</a>
-          </div>
+      <div *ngIf="(accountService.currentUser$ | async) as user">
+        <div class="navbar-nav">
+          <h5 class="text-white mt-3 mr-2">{{user.username | titlecase}}</h5>
+          <li class="nav-item">
+            <a class="nav-link bi-person-square" routerLink="/profile/{{user.username}}" routerLinkActive="active"> Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link bi-box-arrow-right" routerLink="/" (click)="logout()"> Logout</a>
+          </li>
+        </div>
       </div>
 
         <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" autocomplete="off">

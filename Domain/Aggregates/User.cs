@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Common.Extensions;
 
 namespace Domain.Aggregates
 {
@@ -16,7 +17,7 @@ namespace Domain.Aggregates
         public string Country { get; set; }
         public int Height { get; set; }
         public string Description { get; set; }
-        
+        public int Age => DateOfBirth.GetAgeFromDate();
         public virtual ICollection<Photo> Photos { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
