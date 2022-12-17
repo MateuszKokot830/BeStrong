@@ -1,11 +1,10 @@
-using Domain.Common.Extensions;
+using Domain.ValueObjects;
+using MediatR;
 
-namespace Application.Dto
+namespace Application.Commands.Users.UpdateUser
 {
-    public class UserDto
+    public class UpdateUserCommand : IRequest
     {
-        public int Id { get; set; }
-        public string UserName { get; set; } 
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfWorkoutStart { get; set; }
         public string Name { get; set; }
@@ -14,8 +13,6 @@ namespace Application.Dto
         public string City { get; set; }
         public string Country { get; set; }
         public string Description { get; set; }
-        public string ProfilePhotoUrl { get; set; }
-        public int Age => DateOfBirth.GetAgeFromDate();
-        public string WorkoutSince => DateOfWorkoutStart.GetTimeDifferenceString();
+        public Measurements Measurments { get; set; }
     }
 }

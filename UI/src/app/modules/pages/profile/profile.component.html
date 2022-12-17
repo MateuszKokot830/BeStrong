@@ -1,1 +1,21 @@
-
+<div class="row" *ngIf="userApp">
+  <div class="col-4">
+    <img src="{{userApp.profilePhotoUrl || './assets/user.png'}}" alt="{{userApp.userName}}" class="card-img-top img-thumbnail">
+    <div class="card-body">
+      <div>
+        <strong>Location:</strong>
+        <p>{{userApp.city}}, {{userApp.country}}</p>
+      </div>
+      <div>
+        <strong>Location:</strong>
+        <p>{{userApp.city}}, {{userApp.country}}</p>
+      </div>
+      <div>
+        <strong>Location:</strong>
+        <p>{{userApp.city}}, {{userApp.country}}</p>
+      </div>
+    </div>
+    <div class="card-footer">
+    </div>
+  </div>
+</div>

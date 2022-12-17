@@ -1,5 +1,3 @@
-using static Domain.Common.Enums;
-
 namespace Application.Dto
 {
     public class Exercise

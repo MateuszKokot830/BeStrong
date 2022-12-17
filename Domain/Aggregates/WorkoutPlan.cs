@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities;
+using Domain.Models;
 
 namespace Domain.Aggregates
 {
     [Table("WorkoutPlans")]
-    public class WorkoutPlan
+    public class WorkoutPlan : AggregateRoot<int>
     {
-        public int Id { get; set; }
         public int CreatedById { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual IEnumerable<User> UsedBy { get; set; }

@@ -1,6 +1,8 @@
 namespace Domain.Common
 {
-    public class Enums
-    {
-    }
+    public enum DateUnit {
+        Year,
+        Month,
+        Day
+    }  
 }

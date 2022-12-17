@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
+using Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Common.Extensions;
 
@@ -8,16 +9,17 @@ namespace Domain.Aggregates
     [Table("Users")]
     public class User : IdentityUser<int>
     {
-        public DateTime CreatedDate { get; set;} = DateTime.UtcNow;
         public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfWorkoutStart { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Gender { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public int Height { get; set; }
         public string Description { get; set; }
         public int Age => DateOfBirth.GetAgeFromDate();
+        public string WorkoutSince => DateOfWorkoutStart.GetTimeDifferenceString();
+        public Measurements Measurments { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
@@ -25,7 +27,6 @@ namespace Domain.Aggregates
         public virtual ICollection<Follower> FollowedUsers { get; set; }
         public virtual ICollection<Follower> Followers { get; set; }
         public virtual ICollection<Workout> Workouts { get; set; }
-        public virtual ICollection<Measurement> Measurments { get; set; }
         public int? WorkoutPlanId { get; set; }
         public virtual WorkoutPlan WorkoutPlan { get; set; }
         public virtual ICollection<WorkoutPlan> CreatedWorkoutPlans { get; set; }

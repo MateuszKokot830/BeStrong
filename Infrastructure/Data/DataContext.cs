@@ -1,5 +1,6 @@
 using Domain.Aggregates;
 using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,6 @@ namespace Infrastructure.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Exercise> Excercises { get; set; }
         public DbSet<Follower> Followers { get; set; }
-        public DbSet<Measurement> Measurments { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
     }

@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using Application.Queries.Users.GetUser;
 using Application.Queries.Users.GetUsers;
+using Application.Commands.Users.UpdateUser;
 
 namespace WebAPI.Controllers
 {
@@ -24,7 +25,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _mediator.Send(new GetUsersQuery());
-            return users.ToList();
+            return Ok(users.ToList());
         }
         
 
@@ -32,8 +33,16 @@ namespace WebAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<UserDto>> GetUser(string username)
         {
-            return await _mediator.Send(new GetUserQuery() {Username = username});
+            var user = await _mediator.Send(new GetUserQuery() {Username = username});
+            return Ok(user);
         }
 
+        [SwaggerOperation(Summary = "Updates all changes of a specific user")]
+        [HttpGet("{username}")]
+        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserCommand updateUserCommand) 
+        {
+            await _mediator.Send(updateUserCommand);
+            return NoContent();
+        }
     }
 }

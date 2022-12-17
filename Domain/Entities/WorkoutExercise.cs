@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Aggregates;
+using Domain.Models;
 
 namespace Domain.Entities
 {
     [Table("WorkoutExercises")]
-    public class WorkoutExercise
+    public class WorkoutExercise : Entity<int>
     {
-        public int Id { get; set; }
         public int Sets { get; set; }
         public int Reps { get; set; }
         public Decimal? Weight { get; set; }
