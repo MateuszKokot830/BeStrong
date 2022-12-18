@@ -1,4 +1,3 @@
-using Application.Dto;
 using Application.Interfaces;
 using Domain.Aggregates;
 using AutoMapper;
@@ -18,7 +17,7 @@ namespace Application.Commands.Users.UpdateUser
 
         public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {   
-            var user = _mapper.Map<User>(request);
+            var user = _mapper.Map<User>(request.UserUpdateDto);
             await _userRepository.UpdateAsync(user);
 
             return Unit.Value;

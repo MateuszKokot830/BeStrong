@@ -1,5 +1,4 @@
 using Application.Dto;
-using ErrorOr;
 using MediatR;
 
 namespace Application.Queries.Users.GetUsers

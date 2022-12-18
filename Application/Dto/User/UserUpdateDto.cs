@@ -1,11 +1,8 @@
-using Domain.Common.Extensions;
-
 namespace Application.Dto
 {
-    public class UserDto
+    public class UserUpdateDto
     {
         public int Id { get; set; }
-        public string UserName { get; set; } 
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfWorkoutStart { get; set; }
         public string Name { get; set; }
@@ -14,8 +11,6 @@ namespace Application.Dto
         public string City { get; set; }
         public string Country { get; set; }
         public string Description { get; set; }
-        public string ProfilePhotoUrl { get; set; }
-        public int Age => DateOfBirth.GetAgeFromDate();
-        public string WorkoutSince => DateOfWorkoutStart.GetTimeDifferenceString();
+        public MeasurementsDto Measurements { get; set; }
     }
 }

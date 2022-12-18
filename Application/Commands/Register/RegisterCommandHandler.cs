@@ -13,16 +13,13 @@ namespace Application.Commands.Register
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
-        private readonly INLoggerService _loggerService;
         public RegisterCommandHandler(IUserRepository userRepository, 
                                     IMapper mapper, 
-                                    ITokenService tokenService,
-                                    INLoggerService loggerService)
+                                    ITokenService tokenService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
-            _loggerService = loggerService;
         }
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)

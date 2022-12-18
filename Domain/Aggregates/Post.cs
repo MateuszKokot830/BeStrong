@@ -10,7 +10,7 @@ namespace Domain.Aggregates
         public int UserId { get; set; }
         public virtual User User { get; set; }
         public string Description { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate => DateTime.Now;
         public int? WorkoutId { get; set; }
         public virtual Workout Workout { get; set; }
         public int Likes { get; set; }

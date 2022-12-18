@@ -1,6 +1,6 @@
 namespace Application.Dto
 {
-    public class Exercise
+    public class ExerciseDto
     {
         public int Id { get; set; }
         public string ExerciseName { get; set; }

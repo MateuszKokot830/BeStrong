@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves all users")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<ActionResult> GetUsers()
         {
             var users = await _mediator.Send(new GetUsersQuery());
             return Ok(users.ToList());
@@ -31,17 +31,17 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves a specific user by username")]
         [HttpGet("{username}")]
-        public async Task<ActionResult<UserDto>> GetUser(string username)
+        public async Task<ActionResult> GetUser(string username)
         {
             var user = await _mediator.Send(new GetUserQuery() {Username = username});
             return Ok(user);
         }
 
-        [SwaggerOperation(Summary = "Updates all changes of a specific user")]
-        [HttpGet("{username}")]
-        public async Task<ActionResult> UpdateUser([FromBody] UpdateUserCommand updateUserCommand) 
+        [SwaggerOperation(Summary = "Updates a specific user")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto) 
         {
-            await _mediator.Send(updateUserCommand);
+            await _mediator.Send(new UpdateUserCommand() {UserUpdateDto = userUpdateDto});
             return NoContent();
         }
     }
