@@ -1,0 +1,90 @@
+[
+    {
+      "Name": "Bench Press",
+      "Description": "Working muscles: Chest, Front Deltoid"
+    },
+    {
+        "Name": "Dumbbell Pullovers",
+        "Description": "Working muscles: Chest"
+    },
+    {
+        "Name": "Push-up",
+        "Description": "Working muscles: Chest, Front Deltoid, Triceps"
+    },
+    {
+        "Name": "Bar Dip",
+        "Description": "Working muscles: Chest, Front Deltoid, Triceps"
+    },
+    {
+        "Name": "Dumbbell Front Raises",
+        "Description": "Working muscles: Front Deltoid"
+    },
+    {
+        "Name": "Face Pull",
+        "Description": "Working muscles: Rear Deltoid Rotator Cuff"
+    },
+    {
+        "Name": "Overhead Press",
+        "Description": "Working muscles: Front Deltoid"
+    },
+    {
+        "Name": "Barbell Curl",
+        "Description": "Working muscles: Biceps"
+    },
+    {
+        "Name": "Dumbbell Curl",
+        "Description": "Working muscles: Biceps"
+    },
+    {
+        "Name": "Hammer Curl",
+        "Description": "Working muscles: Biceps"
+    },
+    {
+        "Name": "Bench Dip",
+        "Description": "Working muscles: Triceps"
+    },
+    {
+        "Name": "Tricep Pushdown",
+        "Description": "Working muscles: Triceps"
+    },
+    {
+        "Name": "Squat",
+        "Description": "Working muscles: Quads, Adductors, Glutes"
+    },
+    {
+        "Name": "Chin-Up",
+        "Description": "Working muscles: Lats"
+    },
+    {
+        "Name": "Pull-Up",
+        "Description": "Working muscles: Lats"
+    },
+    {
+        "Name": "Dumbbell Row",
+        "Description": "Working muscles: Lats, Trapezius, Rear Deltoids"
+    },
+    {
+        "Name": "Inverted Row",
+        "Description": "Working muscles: Lats, Trapezius, Rear Deltoids"
+    },
+    {
+        "Name": "Deadlift",
+        "Description": "Working muscles: Glutes, Lower Back"
+    },
+    {
+        "Name": "Hip Thrusts",
+        "Description": "Working muscles: Glutes"
+    },
+    {
+        "Name": "Plank",
+        "Description": "Working muscles: Abs"
+    },
+    {
+        "Name": "Hanging Leg Raise",
+        "Description": "Working muscles: Abs"
+    },
+    {
+        "Name": "Ab Wheel Roll-Outs",
+        "Description": "Working muscles: Abs"
+    }
+]

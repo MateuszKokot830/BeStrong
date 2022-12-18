@@ -12,29 +12,18 @@ namespace Application.Mappings
         {
             config.CreateMap<User, UserDto>()
                 .ForMember(x => x.ProfilePhotoUrl, opt => opt.MapFrom(src => 
-                src.Photos.FirstOrDefault(y => y.IsProfilePhoto).Url));
-            config.CreateMap<UserDto, User>();
-            config.CreateMap<User, UserDto>();
-            config.CreateMap<UserUpdateDto, User>();
-            config.CreateMap<MeasurementsDto, Measurements>();
-            config.CreateMap<Measurements, MeasurementsDto>();
-            config.CreateMap<User, UserRegisterRequestDto>();
-            config.CreateMap<UserRegisterRequestDto, User>();
-            config.CreateMap<CommentDto, Comment>();
-            config.CreateMap<Comment, CommentDto>();
-            config.CreateMap<ExerciseDto, Exercise>();
-            config.CreateMap<Exercise, ExerciseDto>();
-            config.CreateMap<FollowerDto, Follower>();
-            config.CreateMap<Follower, FollowerDto>();
-            config.CreateMap<PhotoDto, Photo>();
-            config.CreateMap<Photo, PhotoDto>();
-            config.CreateMap<PostDto, Post>();
-            config.CreateMap<Post, PostDto>();
-            config.CreateMap<PostCreateDto, Post>();
-            config.CreateMap<WorkoutDto, Workout>();
-            config.CreateMap<Workout, WorkoutDto>();
-            config.CreateMap<WorkoutExerciseDto, WorkoutExercise>();
-            config.CreateMap<WorkoutExercise, WorkoutExerciseDto>();
+                    src.Photos.FirstOrDefault(y => y.IsProfilePhoto).Url)).ReverseMap();
+            config.CreateMap<UserUpdateDto, User>().ReverseMap();
+            config.CreateMap<MeasurementsDto, Measurements>().ReverseMap();
+            config.CreateMap<User, UserRegisterRequestDto>().ReverseMap();
+            config.CreateMap<CommentDto, Comment>().ReverseMap();
+            config.CreateMap<ExerciseDto, Exercise>().ReverseMap();
+            config.CreateMap<FollowerDto, Follower>().ReverseMap();
+            config.CreateMap<PhotoDto, Photo>().ReverseMap();
+            config.CreateMap<PostDto, Post>().ReverseMap();
+            config.CreateMap<PostCreateDto, Post>().ReverseMap();
+            config.CreateMap<WorkoutDto, Workout>().ReverseMap();
+            config.CreateMap<WorkoutExerciseDto, WorkoutExercise>().ReverseMap();
         })
         .CreateMapper();
     }

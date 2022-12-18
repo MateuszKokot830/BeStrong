@@ -16,12 +16,14 @@ namespace Infrastructure.Repositories
 
         public override async Task<IReadOnlyList<User>> GetAllAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            return await _userManager.Users.Include(p => p.Photos).Include(p => p.Measurements)
+                .ToListAsync();
         }
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _userManager.Users.SingleOrDefaultAsync(x=>x.UserName == username.ToLower());
+            return await _userManager.Users.Include(p => p.Photos).Include(p => p.Measurements)
+                .SingleOrDefaultAsync(x=>x.UserName == username.ToLower());
         }
 
         public async Task<IdentityResult> RegisterUserAsync(User user, string password)

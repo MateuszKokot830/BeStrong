@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221218191115_GenderAsEnum")]
+    partial class GenderAsEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -463,7 +465,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("WorkoutPlanId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.OwnsOne("Domain.ValueObjects.Measurements", "Measurements", b1 =>
+                    b.OwnsOne("Domain.ValueObjects.Measurements", "Measurments", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("INTEGER");
@@ -500,8 +502,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("Measurements")
-                        .IsRequired();
+                    b.Navigation("Measurments");
 
                     b.Navigation("WorkoutPlan");
                 });

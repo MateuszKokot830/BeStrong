@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using Domain.Common.Extensions;
+using Domain.Common;
 
 namespace Domain.Aggregates
 {
@@ -13,13 +15,14 @@ namespace Domain.Aggregates
         public DateTime DateOfWorkoutStart { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
         public string Description { get; set; }
         public int Age => DateOfBirth.GetAgeFromDate();
         public string WorkoutSince => DateOfWorkoutStart.GetTimeDifferenceString();
-        public Measurements Measurments { get; set; }
+        [Required]
+        public Measurements Measurements { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Post> Posts { get; set; }

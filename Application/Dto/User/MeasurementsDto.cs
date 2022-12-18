@@ -2,7 +2,6 @@ namespace Application.Dto
 {
     public class MeasurementsDto
     {
-        public int Id { get; set; }
         public int? Height { get; set; }
         public decimal? Weight { get; set; }
         public decimal? Chest { get; set; }

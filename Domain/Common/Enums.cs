@@ -5,4 +5,9 @@ namespace Domain.Common
         Month,
         Day
     }  
+
+    public enum Gender {
+        Male,
+        Female
+    }  
 }

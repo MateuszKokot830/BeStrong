@@ -9,6 +9,9 @@ using WebAPI.Extensions;
 using WebAPI.Middleware;
 using Infrastructure;
 using Application;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.SeedData;
+using NLog;
 
 namespace WebAPI
 {
@@ -35,7 +38,7 @@ namespace WebAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -54,6 +57,14 @@ namespace WebAPI
             {
                 endpoints.MapControllers();
             });
+
+            using var scope = app.ApplicationServices.CreateScope();
+            var services = scope.ServiceProvider;
+
+            var context = services.GetRequiredService<DataContext>();
+            await context.Database.MigrateAsync();
+            await SeedData.SeedUserData(context);
+            await SeedData.SeedExerciseData(context);
         }
     }
 }
