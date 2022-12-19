@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserApp } from 'src/app/core/models/User';
+import { User } from 'src/app/core/models/User';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { UserService } from 'src/app/core/services/user.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  userApp: UserApp | undefined;
+  user: User | undefined;
 
   constructor(private userService: UserService, private route: ActivatedRoute) { }
 
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
     if (!username) return;
 
     this.userService.getUser(username).subscribe({
-      next: user => this.userApp = user
+      next: user => this.user = user
     });
   }
 

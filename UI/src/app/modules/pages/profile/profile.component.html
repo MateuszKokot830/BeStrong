@@ -1,21 +1,147 @@
-<div class="row" *ngIf="userApp">
-  <div class="col-4">
-    <img src="{{userApp.profilePhotoUrl || './assets/user.png'}}" alt="{{userApp.userName}}" class="card-img-top img-thumbnail">
+<div class="" *ngIf="user">
+  <div class="card">
     <div class="card-body">
-      <div>
-        <strong>Location:</strong>
-        <p>{{userApp.city}}, {{userApp.country}}</p>
+      <div class="row">
+        <div class="col-4">
+          <div><h2 class="text-center text-success mt-3">{{user.userName | titlecase}} </h2></div>
+          <img src="{{user.profilePhotoUrl || './assets/defaultPhoto.png'}}"
+            alt="{{user.userName}}" class="card-imp-top img-thumbnail">
+          <table class="text-white mb-2" cellPadding="3">
+            <tr>
+              <th scope="row">Name:</th>
+              <td>{{user.name}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Surname:</th>
+              <td>{{user.surname}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Age:</th>
+              <td>{{user.age}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Location:</th>
+              <td>{{user.city}}, {{user.country}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Workout since:</th>
+              <td>{{user.workoutSince}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Last workout:</th>
+              <td>2 days ago</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-8 mt-2">
+          <div class="mt-2 mb-2" style="position:absolute; left:550px;">
+            <button type="button" class="btn btn-secondary btn-sm"> Edit Profile</button> &nbsp;
+            <button type="button" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
+            <button type="button" class="btn btn-warning btn-sm bi-envelope"> Message</button>
+          </div>
+          <div class="mt-2">
+            <tabset class="info-tab">
+              <tab heading="Info">
+                <h4 class="text-center mt-4 text-success">Description</h4>
+                <p class="text-white">{{user.description}}</p>
+                <div class="row">
+                  <div class="col-4">
+                    <h4 class="text-center mt-2 text-success">Measurements</h4>
+                    <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Height:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.height}} cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.weight}} kg</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.chest}} cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Shoulders:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.shoulders}} 31 cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Arms:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.arms}} cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Waist:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.waist}} cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Hips:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.hips}} cm</td>
+                      </tr>
+                      <tr class="text-white">
+                        <th scope="row" style="border: 3px solid grey; padding: 5px">Thights:</th>
+                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.thights}} cm</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-8">
+                      <h4 class="text-center mt-2 text-success">Last workout</h4>
+                      <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
+                      <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                        <thead>
+                          <tr class="text-white">
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                          </tr>
+                        </thead>
+                        <tr class="text-white">
+                          <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
+                          <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
+                          <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                        </tr>
+                        <tr class="text-white">
+                          <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
+                          <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
+                          <td style="border: 3px solid grey; padding: 5px">15 kg</td>
+                        </tr>
+                        <tr class="text-white">
+                          <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
+                          <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
+                          <td style="border: 3px solid grey; padding: 5px">90 kg</td>
+                        </tr>
+                        <tr class="text-white">
+                          <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
+                          <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                          <td style="border: 3px solid grey; padding: 5px">-</td>
+                        </tr>
+                        <tr class="text-white">
+                          <td style="border: 3px solid grey; padding: 5px">Plank</td>
+                          <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
+                          <td style="border: 3px solid grey; padding: 5px">-</td>
+                        </tr>
+                      </table>
+                  </div>
+                </div>
+              </tab>
+              <tab heading="Workouts" class="text-white ml-ms">
+                <h4>Description</h4>
+                <p>{{user.description}}</p>
+              </tab>
+              <tab heading="Gallery" class="text-white ml-ms">
+                <h4>Description</h4>
+                <p>{{user.description}}</p>
+              </tab>
+              <tab heading="Followers: 4" class="text-white ml-ms">
+                <h4>Description</h4>
+                <p>{{user.description}}</p>
+              </tab>
+              <tab heading="Follows: 3" class="text-white ml-ms">
+                <h4>Description</h4>
+                <p>{{user.description}}</p>
+              </tab>
+            </tabset>
+          </div>
+        </div>
       </div>
-      <div>
-        <strong>Location:</strong>
-        <p>{{userApp.city}}, {{userApp.country}}</p>
-      </div>
-      <div>
-        <strong>Location:</strong>
-        <p>{{userApp.city}}, {{userApp.country}}</p>
-      </div>
-    </div>
-    <div class="card-footer">
     </div>
   </div>
 </div>
