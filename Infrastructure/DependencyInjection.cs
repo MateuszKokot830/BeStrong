@@ -15,6 +15,7 @@ namespace Infrastructure
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<INLoggerService, NLoggerService>();
