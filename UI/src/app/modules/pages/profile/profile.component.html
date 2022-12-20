@@ -128,48 +128,140 @@
                     </table>
                   </div>
                   <div class="col-8">
-                      <h4 class="text-center mt-2 text-success">Last workout</h4>
-                      <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
-                      <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                        <thead>
-                          <tr class="text-white">
-                            <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
-                            <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
-                            <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
-                          </tr>
-                        </thead>
+                    <h4 class="text-center mt-2 text-success">Last workout</h4>
+                    <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
+                    <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                      <thead>
                         <tr class="text-white">
-                          <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
-                          <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
-                          <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                          <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                          <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
+                          <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
                         </tr>
-                        <tr class="text-white">
-                          <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
-                          <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
-                          <td style="border: 3px solid grey; padding: 5px">15 kg</td>
-                        </tr>
-                        <tr class="text-white">
-                          <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
-                          <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
-                          <td style="border: 3px solid grey; padding: 5px">90 kg</td>
-                        </tr>
-                        <tr class="text-white">
-                          <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
-                          <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                          <td style="border: 3px solid grey; padding: 5px">-</td>
-                        </tr>
-                        <tr class="text-white">
-                          <td style="border: 3px solid grey; padding: 5px">Plank</td>
-                          <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
-                          <td style="border: 3px solid grey; padding: 5px">-</td>
-                        </tr>
-                      </table>
+                      </thead>
+                      <tr class="text-white">
+                        <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
+                        <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
+                        <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                      </tr>
+                      <tr class="text-white">
+                        <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
+                        <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
+                        <td style="border: 3px solid grey; padding: 5px">15 kg</td>
+                      </tr>
+                      <tr class="text-white">
+                        <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
+                        <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
+                        <td style="border: 3px solid grey; padding: 5px">90 kg</td>
+                      </tr>
+                      <tr class="text-white">
+                        <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
+                        <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                        <td style="border: 3px solid grey; padding: 5px">-</td>
+                      </tr>
+                      <tr class="text-white">
+                        <td style="border: 3px solid grey; padding: 5px">Plank</td>
+                        <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
+                        <td style="border: 3px solid grey; padding: 5px">-</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </tab>
               <tab heading="Workouts" class="text-white ml-ms">
-                <h4>Description</h4>
-                <p *ngIf="!isEditMode">{{user.description}}</p>
+                <div class="row mt-3" style="margin:auto; justify-content: center;">
+                <h4 class="text-center text-success">{{user.userName | titlecase}}'s workout history</h4>
+                <div class="col-4">
+                  <h5 class="text-center mt-4 text-white">18.12.2022 - Chest+Abs</h5>
+                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                    <thead>
+                      <tr class="text-white">
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                      </tr>
+                    </thead>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
+                      <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
+                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
+                      <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
+                      <td style="border: 3px solid grey; padding: 5px">15 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
+                      <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
+                      <td style="border: 3px solid grey; padding: 5px">90 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
+                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                      <td style="border: 3px solid grey; padding: 5px">-</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Plank</td>
+                      <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
+                      <td style="border: 3px solid grey; padding: 5px">-</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="col-4">
+                  <h5 class="text-center mt-4 text-white">17.12.2022 - Legs</h5>
+                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                    <thead>
+                      <tr class="text-white">
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                      </tr>
+                    </thead>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Squat</td>
+                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Hip Thrusts</td>
+                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="col-4">
+                  <h5 class="text-center mt-4 text-white">16.12.2022 - Lats, Biceps</h5>
+                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                    <thead>
+                      <tr class="text-white">
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
+                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                      </tr>
+                    </thead>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Pull-Up</td>
+                      <td style="border: 3px solid grey; padding: 5px">5/5/5</td>
+                      <td style="border: 3px solid grey; padding: 5px">30 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Deadlift</td>
+                      <td style="border: 3px solid grey; padding: 5px">5/5/5</td>
+                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Barbell Curl</td>
+                      <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
+                      <td style="border: 3px solid grey; padding: 5px">12 kg</td>
+                    </tr>
+                    <tr class="text-white">
+                      <td style="border: 3px solid grey; padding: 5px">Barbell Curl</td>
+                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
+                      <td style="border: 3px solid grey; padding: 5px">40 kg</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
               </tab>
               <tab heading="Gallery" class="text-white ml-ms">
                 <div class="row mt-3" style="margin:auto; justify-content: center;">

@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {
@@ -15,6 +16,11 @@ namespace Infrastructure.Repositories
         public async Task<IReadOnlyList<Workout>> GetUserWorkoutsAsync(int id)
         {
             return await _context.Workouts.Include(w => w.WorkoutExercises).Where(w => w.UserId == id).ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Exercise>> GetExercisesAsync()
+        {
+            return await _context.Excercises.ToListAsync();
         }
     }
 }

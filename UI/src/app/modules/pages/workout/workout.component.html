@@ -1,1 +1,53 @@
-<p>workout works!</p>
+<div class="card" style="height: 700; position: relative;">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-8">
+        <h4 class="text-center text-success">Add workout</h4>
+        <div class="row text-center">
+          <h4 class="col-4">Exercise</h4>
+          <h4 class="col-2">Sets,Reps</h4>
+          <h4 class="col-2">Weight</h4>
+        </div>
+          <span class="input-group-btn"
+                  style="width:0px;">
+            <select class="form-select col-4" id="select" style="display: inline-block;">
+                <option *ngFor="let exercise of exercises" [value]="exercise.name">{{exercise.name}}</option>
+            </select>&nbsp;
+            <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Sets and reps (format x/x/x)"> &nbsp;
+            <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Weight/Durations"> &nbsp;
+            <button type="button" class="btn btn-success btn" style="display: inline-block;"> Add another exercise</button>
+        </span>
+            <span class="input-group-btn"
+            style="width:0px;">
+        <select class="form-select col-4" id="select" style="display: inline-block;">
+            <option *ngFor="let exercise of exercises" [value]="exercise.name">{{exercise.name}}</option>
+        </select>&nbsp;
+        <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Sets and reps (format x/x/x)"> &nbsp;
+        <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Weight/Durations"> &nbsp;
+        <button type="button" class="btn btn-success btn" style="display: inline-block;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save workout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+      </span>
+                  <span class="input-group-btn"
+            style="width:0px;">
+        <select class="form-select col-4" id="select" style="display: inline-block;">
+            <option *ngFor="let exercise of exercises" [value]="exercise.name">{{exercise.name}}</option>
+        </select>&nbsp;
+        <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Sets and reps (format x/x/x)"> &nbsp;
+        <input class="form-control form-control-lg text col-2" style="display: inline-block;" type="text" placeholder="Weight/Durations"> &nbsp;
+      </span>
+      </div>
+      <div class="col-4">
+        <h4 class="text-center text-success">List of exercises</h4>
+        <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+          </tr>
+            <tr *ngFor="let exercise of exercises">
+              <th scope="row">{{exercise.name}}</th>
+              <td >{{exercise.description}}</td>
+            </tr>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>

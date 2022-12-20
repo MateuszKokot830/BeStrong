@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using Application.Queries.Workouts.GetUserWorkouts;
 using Application.Commands.Workouts.CreateWorkout;
+using Application.Queries.Workouts.GetExercises;
 
 namespace WebAPI.Controllers
 {
@@ -28,8 +29,16 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUserWorkouts()
         {
-            var posts = await _mediator.Send(new GetUserWorkoutsQuery());
-            return Ok(posts.ToList());
+            var workouts = await _mediator.Send(new GetUserWorkoutsQuery());
+            return Ok(workouts.ToList());
+        }
+
+        [SwaggerOperation(Summary = "Retrieves all exercises")]
+        [HttpGet("Exercises")]
+        public async Task<ActionResult> GetExercises()
+        {
+            var exercises = await _mediator.Send(new GetExercisesQuery());
+            return Ok(exercises.ToList());
         }
     }
 }

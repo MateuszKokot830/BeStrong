@@ -34,8 +34,8 @@ export class ErrorInterceptor implements HttpInterceptor {
               this.toastr.error(error.error.title, error.status);
               break;
             case 404:
-              this.toastr.error(error.error.title, error.status);
-              break;  
+              this.toastr.error(error.title, error.status);
+              break;
             case 500:
               this.toastr.error(error.error.title, error.status);
               break;
@@ -43,7 +43,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               this.toastr.error('Something went wrong. Please refresh the page.');
               console.log(error);
               break;
-          } 
+          }
         }
         return throwError(error);
       })

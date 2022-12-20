@@ -45,8 +45,6 @@ export class ProfileComponent implements OnInit {
         if (this.user.userName == this.currentUser.username) this.isCurrentUser = true;
       }
     });
-
-    console.log(this.isCurrentUser);
   }
 
   loadGallery() {
