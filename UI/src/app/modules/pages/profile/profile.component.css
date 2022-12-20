@@ -4,10 +4,10 @@
   margin-left: auto;
   margin-right: auto;
   width: 95%;
-  height: 60%;
 }
 
 .card-body {
   padding: 0 25px;
 }
 
+.ngx-gallery { display: inline-block; margin-bottom: 20px; }

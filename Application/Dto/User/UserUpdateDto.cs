@@ -1,3 +1,5 @@
+using Domain.Common;
+
 namespace Application.Dto
 {
     public class UserUpdateDto
@@ -7,10 +9,11 @@ namespace Application.Dto
         public DateTime DateOfWorkoutStart { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
         public string Description { get; set; }
         public MeasurementsDto Measurements { get; set; }
+        public ICollection<PhotoDto> Photos { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
+using System.Security.Claims;
 
 namespace Application.Commands.Users.UpdateUser
 {
@@ -17,9 +18,13 @@ namespace Application.Commands.Users.UpdateUser
 
         public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {   
-            var user = _mapper.Map<User>(request.UserUpdateDto);
-            await _userRepository.UpdateAsync(user);
+            var user = _userRepository.GetByIdAsync(request.UserUpdateDto.Id).Result;
 
+            if (user != null) {
+                _mapper.Map(request.UserUpdateDto, user);
+                await _userRepository.UpdateAsync(user);
+            }
+       
             return Unit.Value;
         }
     }

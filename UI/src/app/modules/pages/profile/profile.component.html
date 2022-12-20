@@ -3,29 +3,49 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <div><h2 class="text-center text-success mt-3">{{user.userName | titlecase}} </h2></div>
+          <div><h2 class="text-center text-success mt-3">{{user.userName | titlecase}}</h2></div>
           <img src="{{user.profilePhotoUrl || './assets/defaultPhoto.png'}}"
             alt="{{user.userName}}" class="card-imp-top img-thumbnail">
           <table class="text-white mb-2" cellPadding="3">
             <tr>
               <th scope="row">Name:</th>
-              <td>{{user.name}}</td>
+              <td *ngIf="!isEditMode">{{user.name}}</td>
+              <td *ngIf="isEditMode">
+                <input type="text" [(ngModel)]="user.name"name="name">
+              </td>
             </tr>
             <tr>
               <th scope="row">Surname:</th>
-              <td>{{user.surname}}</td>
+              <td *ngIf="!isEditMode">{{user.surname}}</td>
+              <td *ngIf="isEditMode">
+                <input type="text" [(ngModel)]="user.surname" name="surname">
+              </td>
             </tr>
             <tr>
-              <th scope="row">Age:</th>
-              <td>{{user.age}}</td>
+              <th *ngIf="!isEditMode" scope="row">Age:</th>
+              <td *ngIf="!isEditMode">{{user.age}}</td>
+              <th *ngIf="isEditMode" scope="row">Date of birth:</th>
+              <td *ngIf="isEditMode">
+                <input type="date" [(ngModel)]="user.dateOfBirth">
+              </td>
             </tr>
             <tr>
               <th scope="row">Location:</th>
-              <td>{{user.city}}, {{user.country}}</td>
+              <td *ngIf="!isEditMode">{{user.city}}, {{user.country}}</td>
+              <td *ngIf="isEditMode">
+                <span class="input-group-btn"
+                style="width:0px;">
+                <input type="text input-sm" size="7" [(ngModel)]="user.city" name="city">
+                <input type="text input-sm" size="7" [(ngModel)]="user.country" name="country">
+              </span>
+              </td>
             </tr>
             <tr>
               <th scope="row">Workout since:</th>
-              <td>{{user.workoutSince}}</td>
+              <td *ngIf="!isEditMode">{{user.workoutSince}}</td>
+              <td *ngIf="isEditMode">
+                <input type="date" [(ngModel)]="user.dateOfWorkoutStart">
+              </td>
             </tr>
             <tr>
               <th scope="row">Last workout:</th>
@@ -34,51 +54,76 @@
           </table>
         </div>
         <div class="col-8 mt-2">
-          <div class="mt-2 mb-2" style="position:absolute; left:550px;">
-            <button type="button" class="btn btn-secondary btn-sm"> Edit Profile</button> &nbsp;
+          <div class="mt-2 mb-2" *ngIf="isCurrentUser && !isEditMode" style="position:absolute; left:750px;">
+            <button type="button" (click)="changeEditMode()" class="btn btn-secondary btn-sm">Edit Profile</button> &nbsp;
+          </div>
+          <div class="mt-2 mb-2" *ngIf="isCurrentUser && isEditMode" style="position:absolute; left:775px;">
+            <button type="submit" (click)="saveChanges()" class="btn btn-success btn-sm">Save</button> &nbsp;
+          </div>
+          <div class="mt-2 mb-2" *ngIf="!isCurrentUser" style="position:absolute; left:650px;">
             <button type="button" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
             <button type="button" class="btn btn-warning btn-sm bi-envelope"> Message</button>
           </div>
           <div class="mt-2">
             <tabset class="info-tab">
               <tab heading="Info">
-                <h4 class="text-center mt-4 text-success">Description</h4>
-                <p class="text-white">{{user.description}}</p>
+                <h4 class="text-center mt-3 text-success">Description</h4>
+                <p *ngIf="!isEditMode" class="text-white">{{user.description}}</p>
+                <textarea *ngIf="isEditMode" class="form-control"
+                [(ngModel)]="user.description"
+                name="description"
+                rows="5"></textarea>
                 <div class="row">
                   <div class="col-4">
                     <h4 class="text-center mt-2 text-success">Measurements</h4>
                     <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Height:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.height}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.height}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.height" name="height"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.weight}} kg</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.chest}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.chest}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.chest" name="chest"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Shoulders:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.shoulders}} 31 cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.shoulders}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.shoulders" name="shoulders"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Arms:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.arms}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.arms}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.arms" name="arms"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Waist:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.waist}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.waist}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.waist" name="waist"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Hips:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.hips}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.hips}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.hips" name="hips"> cm</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Thights:</th>
-                        <td style="border: 3px solid grey; padding: 5px">{{user.measurements.thights}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.thights}} cm</td>
+                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.thights" name="thights"> cm</td>
                       </tr>
                     </table>
                   </div>
@@ -124,19 +169,29 @@
               </tab>
               <tab heading="Workouts" class="text-white ml-ms">
                 <h4>Description</h4>
-                <p>{{user.description}}</p>
+                <p *ngIf="!isEditMode">{{user.description}}</p>
               </tab>
               <tab heading="Gallery" class="text-white ml-ms">
-                <h4>Description</h4>
-                <p>{{user.description}}</p>
+                <div class="row mt-3" style="margin:auto; justify-content: center;">
+                  <h4 class="text-center text-success">{{user.userName | titlecase}}'s photos</h4>
+                  <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
+                </div>
               </tab>
               <tab heading="Followers: 4" class="text-white ml-ms">
-                <h4>Description</h4>
-                <p>{{user.description}}</p>
+                <h4 class="text-center text-success mt-3">{{user.userName | titlecase}}'s followers</h4>
+                <div class="row">
+                  <div class="col-3" *ngFor="let follower of followers">
+                    <app-user-card [user]="follower"></app-user-card>
+                  </div>
+                </div>
               </tab>
               <tab heading="Follows: 3" class="text-white ml-ms">
-                <h4>Description</h4>
-                <p>{{user.description}}</p>
+                <h4 class="text-center text-success mt-3">{{user.userName | titlecase}}'s follows</h4>
+                <div class="row">
+                  <div class="col-3" *ngFor="let follow of follows">
+                    <app-user-card [user]="follow"></app-user-card>
+                  </div>
+                </div>
               </tab>
             </tabset>
           </div>
