@@ -7,5 +7,6 @@ namespace Application.Interfaces
     {
         Task<IReadOnlyList<Workout>> GetUserWorkoutsAsync(int id);
         Task<IReadOnlyList<Exercise>> GetExercisesAsync();
+        Task CreateExerciseAsync(Exercise exercise);
     }
 }

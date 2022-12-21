@@ -2,7 +2,6 @@ using Domain.Aggregates;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 
 namespace Infrastructure.Repositories
@@ -21,6 +20,12 @@ namespace Infrastructure.Repositories
         public async Task<IReadOnlyList<Exercise>> GetExercisesAsync()
         {
             return await _context.Excercises.ToListAsync();
+        }
+
+        public async Task CreateExerciseAsync(Exercise exercise)
+        {
+            _context.Add<Exercise>(exercise);
+            await _context.SaveChangesAsync();
         }
     }
 }
