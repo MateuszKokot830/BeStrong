@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {
@@ -10,6 +11,12 @@ namespace Infrastructure.Repositories
     {
         public PostRepository(DataContext context) : base(context)
         {
+        }
+
+        public async Task CreateCommentAsync(Comment comment)
+        {
+           _context.Set<Comment>().Add(comment);
+           await _context.SaveChangesAsync();
         }
     }
 }

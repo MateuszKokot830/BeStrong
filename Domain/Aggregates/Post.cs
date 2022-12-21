@@ -13,6 +13,8 @@ namespace Domain.Aggregates
         public DateTime CreatedDate => DateTime.Now;
         public int? WorkoutId { get; set; }
         public virtual Workout Workout { get; set; }
+        public int? WorkoutPlanId { get; set; }
+        public virtual WorkoutPlan WorkoutPlan { get; set; }
         public int Likes { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
     }

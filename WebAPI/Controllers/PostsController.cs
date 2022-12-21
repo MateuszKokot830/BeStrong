@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using Application.Commands.Posts.CreatePost;
 using Application.Queries.Posts.GetPosts;
-
+using Application.Commands.Posts.CreateComment;
 namespace WebAPI.Controllers
 {
     public class PostsController : BaseApiController
@@ -30,6 +30,14 @@ namespace WebAPI.Controllers
         {
             var posts = await _mediator.Send(new GetPostsQuery());
             return Ok(posts.ToList());
+        }
+
+        [SwaggerOperation(Summary = "Creates a comment to post")]
+        [HttpPost("Post")]
+        public async Task<ActionResult> CreateComment(CommentCreateDto commentCreateDto)
+        {
+            await _mediator.Send(new CreateCommentCommand () {CommentCreateDto = commentCreateDto});
+            return NoContent();
         }
     }
 }
