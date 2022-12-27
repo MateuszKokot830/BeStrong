@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = "Retrieves all workouts from specific user")]
-        [HttpGet]
-        public async Task<ActionResult> GetUserWorkouts()
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetUserWorkouts(int id)
         {
-            var workouts = await _mediator.Send(new GetUserWorkoutsQuery());
+            var workouts = await _mediator.Send(new GetUserWorkoutsQuery(){UserId = id});
             return Ok(workouts.ToList());
         }
 

@@ -36,6 +36,13 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
+            builder.Entity<Comment>(entity => {
+                entity.HasOne(x => x.Post)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(x => x.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
             builder.Entity<User>(entity => {
                 entity.OwnsOne(x => x.Measurements);
                 entity.HasOne(x => x.WorkoutPlan)

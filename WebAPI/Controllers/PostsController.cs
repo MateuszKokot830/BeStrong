@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
             return Ok(posts.ToList());
         }
 
-        [SwaggerOperation(Summary = "Retrieves all posts from followers")]
-        [HttpGet("users/{ids}")]
-        public async Task<ActionResult> GetUserPosts(List<int> ids)
+        [SwaggerOperation(Summary = "Retrieves all posts from specific followers by given ids")]
+        [HttpGet("users/followers")]
+        public async Task<ActionResult> GetUserPosts([FromQuery] List<int> ids)
         {
             var posts = await _mediator.Send(new GetFollowedUsersPostsQuery() {FollowersIds = ids});
             return Ok(posts.ToList());

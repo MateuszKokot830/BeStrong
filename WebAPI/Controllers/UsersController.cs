@@ -6,6 +6,8 @@ using MediatR;
 using Application.Queries.Users.GetUser;
 using Application.Queries.Users.GetUsers;
 using Application.Commands.Users.UpdateUser;
+using Application.Queries.Users.GetUsersByIds;
+using Application.Commands.Users.FollowUser;
 
 namespace WebAPI.Controllers
 {
@@ -27,6 +29,14 @@ namespace WebAPI.Controllers
             var users = await _mediator.Send(new GetUsersQuery());
             return Ok(users.ToList());
         }
+
+        [SwaggerOperation(Summary = "Retrieves specific followers by given ids")]
+        [HttpGet("followers")]
+        public async Task<ActionResult> GetUsersByIds([FromQuery] List<int> ids)
+        {
+            var users = await _mediator.Send(new GetUsersByIdsQuery() {UserIds = ids});
+            return Ok(users.ToList());
+        }
         
 
         [SwaggerOperation(Summary = "Retrieves a specific user by username")]
@@ -42,6 +52,14 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto) 
         {
             await _mediator.Send(new UpdateUserCommand() {UserUpdateDto = userUpdateDto});
+            return NoContent();
+        }
+
+        [SwaggerOperation(Summary = "Follows or unfollows a specific user")]
+        [HttpPut("followers/{id}")]
+        public async Task<ActionResult> FollowUser(int UserId, int id) 
+        {
+            await _mediator.Send(new FollowUserCommand() {UserId = UserId, FollowUserId = id});
             return NoContent();
         }
     }

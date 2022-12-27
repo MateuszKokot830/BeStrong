@@ -20,5 +20,8 @@ namespace Application.Dto
         public MeasurementsDto Measurements { get; set; }
         public ICollection<PhotoDto> Photos { get; set; }
         public ICollection<PostDto> Posts { get; set; }
+        public ICollection<FollowerDto> FollowedUsers { get; set; }
+        public ICollection<FollowerDto> Followers { get; set; }
+
     }
 }

@@ -2,7 +2,6 @@ using Application.Interfaces;
 using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
-using System.Security.Claims;
 
 namespace Application.Commands.Users.UpdateUser
 {
