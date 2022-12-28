@@ -11,6 +11,6 @@ namespace Domain.Aggregates
         public virtual User User { get; set; }
         public DateTime Date { get; set; }
         public string Name { get; set; }
-        public IEnumerable<WorkoutExercise> WorkoutExercises { get; set; }
+        public virtual ICollection<WorkoutExercise> WorkoutExercises { get; set; }
     }
 }

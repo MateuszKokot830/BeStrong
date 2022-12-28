@@ -8,6 +8,6 @@ namespace Domain.Entities
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public virtual WorkoutExercise WorkoutExercise { get; set; }
+        public virtual ICollection<WorkoutExercise> WorkoutExercise { get; set; }
     }
 }

@@ -12,6 +12,17 @@ namespace Infrastructure.Repositories
         {
         }
 
+        public override async Task AddAsync(Workout workout)
+        {
+            var wEx = workout.WorkoutExercises.ToList();
+            if (wEx!= null && wEx.Any())
+            {
+                _context.WorkoutExercises.AddRange(wEx);
+            }
+            _context.Workouts.Add(workout);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IReadOnlyList<Workout>> GetUserWorkoutsAsync(int id)
         {
             return await _context.Workouts.Include(w => w.WorkoutExercises).Where(w => w.UserId == id).ToListAsync();

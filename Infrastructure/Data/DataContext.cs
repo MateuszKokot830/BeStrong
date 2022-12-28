@@ -43,6 +43,18 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
+            builder.Entity<WorkoutExercise>(entity => {
+                entity.HasOne(x => x.Workout)
+                .WithMany(x => x.WorkoutExercises)
+                .HasForeignKey(x => x.WorkoutId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Exercise)
+                .WithMany(x => x.WorkoutExercise)
+                .HasForeignKey(x => x.ExerciseId)
+                .OnDelete(DeleteBehavior.NoAction);
+            });
+
             builder.Entity<User>(entity => {
                 entity.OwnsOne(x => x.Measurements);
                 entity.HasOne(x => x.WorkoutPlan)

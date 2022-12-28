@@ -5,6 +5,6 @@ namespace Application.Dto
         public int? UserId { get; set; }
         public DateTime Date { get; set; }
         public string Name { get; set; }
-        public IEnumerable<WorkoutExerciseDto> WorkoutExercises { get; set; }
+        public ICollection<WorkoutExerciseDto> WorkoutExercises { get; set; }
     }
 }

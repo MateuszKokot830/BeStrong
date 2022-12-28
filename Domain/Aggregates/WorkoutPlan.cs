@@ -8,9 +8,9 @@ namespace Domain.Aggregates
     {
         public int CreatedById { get; set; }
         public virtual User CreatedBy { get; set; }
-        public virtual IEnumerable<User> UsedBy { get; set; }
+        public virtual ICollection<User> UsedBy { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IEnumerable<Workout> Workouts { get; set; }
+        public virtual ICollection<Workout> Workouts { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221227230521_WorkoutExerciseAddFix")]
+    partial class WorkoutExerciseAddFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -337,7 +339,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExerciseId");
+                    b.HasIndex("ExerciseId")
+                        .IsUnique();
 
                     b.HasIndex("WorkoutId");
 
@@ -599,9 +602,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.WorkoutExercise", b =>
                 {
                     b.HasOne("Domain.Entities.Exercise", "Exercise")
-                        .WithMany("WorkoutExercise")
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithOne("WorkoutExercise")
+                        .HasForeignKey("Domain.Entities.WorkoutExercise", "ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Aggregates.Workout", "Workout")

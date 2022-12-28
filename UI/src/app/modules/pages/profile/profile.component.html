@@ -85,9 +85,9 @@
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} cm</td>
+                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} kg</td>
                         <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> cm</td>
+                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> kg</td>
                       </tr>
                       <tr class="text-white">
                         <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
@@ -129,7 +129,7 @@
                   </div>
                   <div class="col-8">
                     <h4 class="text-center mt-2 text-success">Last workout</h4>
-                    <!-- <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
+                    <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
                     <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
                       <thead>
                         <tr class="text-white">
@@ -163,7 +163,7 @@
                         <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
                         <td style="border: 3px solid grey; padding: 5px">-</td>
                       </tr>
-                    </table> -->
+                    </table>
                   </div>
                 </div>
               </tab>
