@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { Exercise } from 'src/app/core/models/Exercise';
 import { UserAuth } from 'src/app/core/models/User';
@@ -6,6 +8,7 @@ import { Workout, WorkoutExercise } from 'src/app/core/models/Workout';
 import { AccountService } from 'src/app/core/services/account.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
+import { ExerciseComponent } from '../../components/exercise/exercise/exercise.component';
 
 @Component({
   selector: 'app-workout',
@@ -18,8 +21,10 @@ export class WorkoutComponent implements OnInit {
   workout = {} as Workout;
   workoutExercise = {} as WorkoutExercise;
   exerciseCounter = 1;
+  bsModalRef: BsModalRef;
 
-  constructor(private workoutService: WorkoutService, private accountService: AccountService, private userService: UserService) {
+  constructor(private workoutService: WorkoutService, private accountService: AccountService,
+    private userService: UserService, private toastr: ToastrService, private modalService: BsModalService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: currentUser => this.currentUser = currentUser
     });
@@ -41,6 +46,10 @@ export class WorkoutComponent implements OnInit {
     this.userService.getUser(this.currentUser.username).subscribe({
       next: user => this.workout.userId = user.id
     });
+  }
+
+  addNewExerciseToggle() {
+      this.bsModalRef = this.modalService.show(ExerciseComponent);
   }
 
   addExercise() {
@@ -82,7 +91,8 @@ export class WorkoutComponent implements OnInit {
   }
 
   addWorkout() {
-    this.workoutService.addExercise(this.workout).subscribe();
+    this.workoutService.addWorkout(this.workout).subscribe();
     location.reload();
+    this.toastr.success('Workout has been saved!');
   }
 }

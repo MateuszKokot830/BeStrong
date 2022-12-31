@@ -3,7 +3,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <div><h2 class="text-center text-success mt-3">{{user.userName | titlecase}}</h2></div>
+          <div><h2 class="text-center text-info mt-3">{{user.userName | titlecase}}</h2></div>
           <img src="{{user.profilePhotoUrl || './assets/defaultPhoto.png'}}"
             alt="{{user.userName}}" class="card-imp-top img-thumbnail">
           <table class="text-white mb-2" cellPadding="3">
@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <th scope="row">Last workout:</th>
-              <td></td>
+              <td>{{sinceLastWorkout}}</td>
             </tr>
           </table>
         </div>
@@ -60,227 +60,149 @@
           <div class="mt-2 mb-2" *ngIf="isCurrentUser && isEditMode" style="position:absolute; left:775px;">
             <button type="submit" (click)="saveChanges()" class="btn btn-success btn-sm">Save</button> &nbsp;
           </div>
-          <div class="mt-2 mb-2" *ngIf="!isCurrentUser" style="position:absolute; left:650px;">
-            <button type="button" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
+          <div class="mt-2 mb-2" *ngIf="!isCurrentUser" style="position:absolute; left:640px;">
+            <button type="button" *ngIf="!isFollowed" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
+            <button type="button" *ngIf="isFollowed" class="btn btn-danger btn-sm bi-heart-fill"> Unfollow</button> &nbsp;
             <button type="button" class="btn btn-warning btn-sm bi-envelope"> Message</button>
           </div>
           <div class="mt-2">
             <tabset class="info-tab">
               <tab heading="Info">
-                <h4 class="text-center mt-3 text-success">Description</h4>
-                <p *ngIf="!isEditMode" class="text-white">{{user.description}}</p>
-                <textarea *ngIf="isEditMode" class="form-control"
-                [(ngModel)]="user.description"
-                name="description"
-                rows="5"></textarea>
                 <div class="row">
-                  <div class="col-4">
-                    <h4 class="text-center mt-2 text-success">Measurements</h4>
-                    <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Height:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.height}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.height" name="height"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} kg</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> kg</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.chest}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.chest" name="chest"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Shoulders:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.shoulders}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.shoulders" name="shoulders"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Arms:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.arms}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.arms" name="arms"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Waist:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.waist}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.waist" name="waist"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Hips:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.hips}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.hips" name="hips"> cm</td>
-                      </tr>
-                      <tr class="text-white">
-                        <th scope="row" style="border: 3px solid grey; padding: 5px">Thights:</th>
-                        <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.thights}} cm</td>
-                        <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                          <input type="text input-sm" size="3" [(ngModel)]="user.measurements.thights" name="thights"> cm</td>
-                      </tr>
-                    </table>
+                  <div class="col-12 card bg-dark mb-2 mt-3" style="height: 200px;">
+                    <div class="card-body">
+                    <h4 class="text-center mt-3 text-info">Description</h4>
+                    <p *ngIf="!isEditMode" class="text-white">{{user.description}}</p>
+                    <textarea *ngIf="isEditMode" class="form-control"
+                    [(ngModel)]="user.description"
+                    name="description"
+                    rows="4"></textarea>
+                    </div>
                   </div>
-                  <div class="col-8">
-                    <h4 class="text-center mt-2 text-success">Last workout</h4>
-                    <h5 class="text-center mt-2 text-white">18.12.2022 - "Chest+Triceps+Abs"</h5>
-                    <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                      <thead>
+                </div>
+                <div class="row">
+                  <div class="col-4 card bg-dark mb-2">
+                    <div class="card-body">
+                      <h4 class="text-center mt-2 mb-2 text-info">Measurements</h4>
+                      <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
                         <tr class="text-white">
-                          <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
-                          <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
-                          <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Height:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.height}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.height" name="height"> cm</td>
                         </tr>
-                      </thead>
-                      <tr class="text-white">
-                        <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
-                        <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
-                        <td style="border: 3px solid grey; padding: 5px">100 kg</td>
-                      </tr>
-                      <tr class="text-white">
-                        <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
-                        <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
-                        <td style="border: 3px solid grey; padding: 5px">15 kg</td>
-                      </tr>
-                      <tr class="text-white">
-                        <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
-                        <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
-                        <td style="border: 3px solid grey; padding: 5px">90 kg</td>
-                      </tr>
-                      <tr class="text-white">
-                        <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
-                        <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                        <td style="border: 3px solid grey; padding: 5px">-</td>
-                      </tr>
-                      <tr class="text-white">
-                        <td style="border: 3px solid grey; padding: 5px">Plank</td>
-                        <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
-                        <td style="border: 3px solid grey; padding: 5px">-</td>
-                      </tr>
-                    </table>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} kg</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> kg</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.chest}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.chest" name="chest"> cm</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Shoulders:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.shoulders}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.shoulders" name="shoulders"> cm</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Arms:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.arms}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.arms" name="arms"> cm</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Waist:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.waist}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.waist" name="waist"> cm</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Hips:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.hips}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.hips" name="hips"> cm</td>
+                        </tr>
+                        <tr class="text-white">
+                          <th scope="row" style="border: 3px solid grey; padding: 5px">Thights:</th>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.thights}} cm</td>
+                          <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
+                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.thights" name="thights"> cm</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-2"></div>
+                  <div class="col-6 card bg-dark mb-2">
+                    <div class="card-body">
+                      <h4 class="text-center mt-2 text-info">Last workout</h4>
+                      <h5 class="text-center mt-2 text-success">{{lastWorkout.date | date:'fullDate'}} <br> {{lastWorkout.name}}</h5>
+                      <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                        <thead>
+                          <tr class="text-white">
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Sets x Reps</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
+                          </tr>
+                        </thead>
+                        <tr class="text-white" *ngFor="let exercise of lastWorkout.workoutExercises">
+                          <td style="border: 3px solid grey; padding: 5px">{{getExerciseName(exercise.exerciseId)}}</td>
+                          <td style="border: 3px solid grey; padding: 5px">{{exercise.sets}}x{{exercise.reps}}</td>
+                          <td style="border: 3px solid grey; padding: 5px">{{exercise.weight}} kg</td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </tab>
               <tab heading="Workouts" class="text-white ml-ms">
-                <div class="row mt-3" style="margin:auto; justify-content: center;">
-                <h4 class="text-center text-success">{{user.userName | titlecase}}'s workout history</h4>
-                <div class="col-4">
-                  <h5 class="text-center mt-4 text-white">18.12.2022 - Chest+Abs</h5>
-                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                    <thead>
-                      <tr class="text-white">
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
-                      </tr>
-                    </thead>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Bench Press</td>
-                      <td style="border: 3px solid grey; padding: 5px">8/8/7/6</td>
-                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Bar Dip</td>
-                      <td style="border: 3px solid grey; padding: 5px">12/12/10</td>
-                      <td style="border: 3px solid grey; padding: 5px">15 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Tricep Pushdown</td>
-                      <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
-                      <td style="border: 3px solid grey; padding: 5px">90 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Ab Wheel Roll-Outs</td>
-                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                      <td style="border: 3px solid grey; padding: 5px">-</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Plank</td>
-                      <td style="border: 3px solid grey; padding: 5px">90s/90s/75s</td>
-                      <td style="border: 3px solid grey; padding: 5px">-</td>
-                    </tr>
-                  </table>
+                <div class="row mt-3" style="justify-content: center;" style="align-items: left; display: flex;" >
+                  <h4 class="text-center text-info mb-3">{{user.userName | titlecase}}'s workout history</h4>
+                  <div class="col-4" style="display: flex;" *ngFor="let workout of workouts">
+                  <div class="card bg-dark mb-4 mr-1">
+                    <div class="card-body">
+                      <h5 class="text-center mt-2 text-success">{{workout.date | date}} <br> {{workout.name}}</h5>
+                      <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
+                        <thead>
+                          <tr class="text-white">
+                            <th scope="col" style="border: 3px solid grey; padding: 2px">Exercise</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 2px">Sets x Reps</th>
+                            <th scope="col" style="border: 3px solid grey; padding: 2px">Weight</th>
+                          </tr>
+                        </thead>
+                        <tr class="text-white" *ngFor="let exercise of workout.workoutExercises">
+                          <td style="border: 3px solid grey; padding: 2px">{{getExerciseName(exercise.exerciseId)}}</td>
+                          <td style="border: 3px solid grey; padding: 2px">{{exercise.sets}}x{{exercise.reps}}</td>
+                          <td style="border: 3px solid grey; padding: 2px">{{exercise.weight}} kg</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  </div>
                 </div>
-                <div class="col-4">
-                  <h5 class="text-center mt-4 text-white">17.12.2022 - Legs</h5>
-                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                    <thead>
-                      <tr class="text-white">
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
-                      </tr>
-                    </thead>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Squat</td>
-                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Hip Thrusts</td>
-                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="col-4">
-                  <h5 class="text-center mt-4 text-white">16.12.2022 - Lats, Biceps</h5>
-                  <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
-                    <thead>
-                      <tr class="text-white">
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Exercise</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Sets & Reps</th>
-                        <th scope="col" style="border: 3px solid grey; padding: 5px">Weight</th>
-                      </tr>
-                    </thead>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Pull-Up</td>
-                      <td style="border: 3px solid grey; padding: 5px">5/5/5</td>
-                      <td style="border: 3px solid grey; padding: 5px">30 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Deadlift</td>
-                      <td style="border: 3px solid grey; padding: 5px">5/5/5</td>
-                      <td style="border: 3px solid grey; padding: 5px">100 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Barbell Curl</td>
-                      <td style="border: 3px solid grey; padding: 5px">15/15/15</td>
-                      <td style="border: 3px solid grey; padding: 5px">12 kg</td>
-                    </tr>
-                    <tr class="text-white">
-                      <td style="border: 3px solid grey; padding: 5px">Barbell Curl</td>
-                      <td style="border: 3px solid grey; padding: 5px">8/8/8</td>
-                      <td style="border: 3px solid grey; padding: 5px">40 kg</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
               </tab>
               <tab heading="Gallery" class="text-white ml-ms">
                 <div class="row mt-3" style="margin:auto; justify-content: center;">
-                  <h4 class="text-center text-success">{{user.userName | titlecase}}'s photos</h4>
+                  <h4 class="text-center text-info">{{user.userName | titlecase}}'s photos</h4>
                   <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
                 </div>
               </tab>
-              <tab heading="Followers: 4" class="text-white ml-ms">
-                <h4 class="text-center text-success mt-3">{{user.userName | titlecase}}'s followers</h4>
+              <tab heading="Followers: {{followers.length}}" class="text-white ml-ms">
+                <h4 class="text-center text-info mt-3">{{user.userName | titlecase}}'s followers</h4>
                 <div class="row">
                   <div class="col-3" *ngFor="let follower of followers">
                     <app-user-card [user]="follower"></app-user-card>
                   </div>
                 </div>
               </tab>
-              <tab heading="Follows: 3" class="text-white ml-ms">
-                <h4 class="text-center text-success mt-3">{{user.userName | titlecase}}'s follows</h4>
+              <tab heading="Follows: {{followedUsers.length}}" class="text-white ml-ms">
+                <h4 class="text-center text-info mt-3">{{user.userName | titlecase}}'s follows</h4>
                 <div class="row">
-                  <div class="col-3" *ngFor="let follow of follows">
+                  <div class="col-3" *ngFor="let follow of followedUsers">
                     <app-user-card [user]="follow"></app-user-card>
                   </div>
                 </div>

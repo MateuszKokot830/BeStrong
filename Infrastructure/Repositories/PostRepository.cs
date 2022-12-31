@@ -13,6 +13,12 @@ namespace Infrastructure.Repositories
         {
         }
 
+        public override async Task AddAsync(Post post) 
+        {
+            post.CreatedDate = DateTime.Now;
+           _context.Posts.Add(post);
+           await _context.SaveChangesAsync();
+        }
         public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int id)
         {
             return await _context.Posts.Include(c => c.Comments).Where(c => c.UserId == id).ToListAsync();
@@ -25,7 +31,8 @@ namespace Infrastructure.Repositories
 
         public async Task CreateCommentAsync(Comment comment)
         {
-           _context.Set<Comment>().Add(comment);
+            comment.CreatedDate = DateTime.Now;
+           _context.Comments.Add(comment);
            await _context.SaveChangesAsync();
         }
     }

@@ -1,1 +1,25 @@
-<p>posts works!</p>
+<div class="card" style="height: 700; position: relative;">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <div class="card bg-dark mt-3" *ngFor="let post of followerPosts">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h5 class="text-success text-left">{{getUsername(post.userId)}} has written:</h5>
+              </div>
+              <div class="col-6">
+                <h5 class="text-info text-right">{{post.createdDate | date:'medium'}}</h5>
+              </div>
+            </div>
+            <div class="row">
+              <p class="text-white">{{post.description}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3"></div>
+    </div>
+  </div>
+</div>

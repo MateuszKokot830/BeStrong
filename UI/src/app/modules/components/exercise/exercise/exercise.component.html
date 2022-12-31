@@ -1,0 +1,16 @@
+<form #registerForm="ngForm" (ngSubmit)="addExercise()" autocomplete="off">
+  <div class="modal-header text-center">
+      <h2 class="text-white w-100">Add new exercise</h2>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+        <input type="text" class="form-control mb-2" name="name" [(ngModel)]="exercise.name" placeholder="Exercise name">
+        <input type="text" class="form-control mb-2" name="description" [(ngModel)]="exercise.description" placeholder="Description">
+  </div>
+  <div class="modal-footer text-center">
+      <button class="btn btn-success mr-2" type="submit">Save exercise</button>
+      <button class="btn btn-secondary mr-2" type="button" (click)="bsModalRef.hide()">Cancel</button>
+  </div>
+</form>

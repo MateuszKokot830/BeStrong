@@ -18,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { UserCardComponent } from './shared/components/user-card/user-card.component';
+import { ExerciseComponent } from './modules/components/exercise/exercise/exercise.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { UserCardComponent } from './shared/components/user-card/user-card.compo
     WorkoutComponent,
     SearchComponent,
     UserCardComponent,
+    ExerciseComponent,
   ],
   imports: [
     BrowserModule,

@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int UserId { get; set; }
         public virtual User User { get; set; }
         public string Description { get; set; }
-        public DateTime CreatedDate => DateTime.Now;
+        public DateTime CreatedDate { get; set; }
         public int Likes { get; set; }
         public int PostId { get; set; }
         public virtual Post Post { get; set; }

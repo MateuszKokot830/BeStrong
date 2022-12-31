@@ -1,3 +1,4 @@
+import { Follower } from "./Follower";
 import { Photo } from "./Photo";
 
 export interface UserAuth {
@@ -21,6 +22,8 @@ export interface User {
     profilePhotoUrl: string;
     measurements: Measurements;
     photos: Photo[];
+    followedUsers: Follower[];
+    followers: Follower[]
 }
 
 export interface Measurements {
