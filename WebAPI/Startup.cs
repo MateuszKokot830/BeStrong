@@ -27,7 +27,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication();
-            services.AddInfrastructure();
+            services.AddInfrastructure(_config);
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();

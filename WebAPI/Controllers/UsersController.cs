@@ -8,6 +8,8 @@ using Application.Queries.Users.GetUsers;
 using Application.Commands.Users.UpdateUser;
 using Application.Queries.Users.GetUsersByIds;
 using Application.Commands.Users.FollowUser;
+using Application.Commands.Users.AddPhoto;
+using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -60,6 +62,14 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> FollowUser(int UserId, int id) 
         {
             await _mediator.Send(new FollowUserCommand() {UserId = UserId, FollowUserId = id});
+            return NoContent();
+        }
+
+        [SwaggerOperation(Summary = "Adds a photo assigned to current logged user")]
+        [HttpPut("photos")]
+        public async Task<ActionResult> AddPhoto(IFormFile file) 
+        {
+            await _mediator.Send(new AddPhotoCommand() {File = file, Username = User.GetUsername()});
             return NoContent();
         }
     }
