@@ -19,6 +19,8 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { UserCardComponent } from './shared/components/user-card/user-card.component';
 import { ExerciseComponent } from './modules/components/exercise/exercise/exercise.component';
+import { AddPostComponent } from './modules/components/add-post/add-post.component';
+import { AddCommentComponent } from './modules/components/add-comment/add-comment.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,8 @@ import { ExerciseComponent } from './modules/components/exercise/exercise/exerci
     SearchComponent,
     UserCardComponent,
     ExerciseComponent,
+    AddPostComponent,
+    AddCommentComponent,
   ],
   imports: [
     BrowserModule,

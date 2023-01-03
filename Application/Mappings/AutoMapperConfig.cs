@@ -17,6 +17,7 @@ namespace Application.Mappings
             config.CreateMap<MeasurementsDto, Measurements>().ReverseMap();
             config.CreateMap<User, UserRegisterRequestDto>().ReverseMap();
             config.CreateMap<CommentDto, Comment>().ReverseMap();
+            config.CreateMap<CommentCreateDto, Comment>().ReverseMap();
             config.CreateMap<ExerciseDto, Exercise>().ReverseMap();
             config.CreateMap<FollowerDto, Follower>().ReverseMap();
             config.CreateMap<PhotoDto, Photo>().ReverseMap();

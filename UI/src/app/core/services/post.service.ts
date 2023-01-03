@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Comment } from '../models/Comment';
 import { Post } from '../models/Post';
-import { User } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +19,13 @@ export class PostService {
     };
     httpRequest.slice(0, -1);
     return this.http.get<Post[]>(this.baseUrl + 'posts/users/followers?' + httpRequest);
+  }
+
+  createNewPost(post: Post) {
+    return this.http.post<Post>(this.baseUrl + 'posts', post);
+  }
+
+  addCommentToPost(comment: Comment) {
+    return this.http.post<Comment>(this.baseUrl + 'posts/comments', comment);
   }
 }

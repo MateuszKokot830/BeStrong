@@ -2,7 +2,7 @@ export interface Comment {
   id: number;
   userId: number;
   description: string;
-  isProfilePhoto: boolean;
+  createdDate: Date;
   likes: number;
   postId: number;
 }

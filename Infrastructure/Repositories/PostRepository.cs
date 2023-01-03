@@ -26,7 +26,10 @@ namespace Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> ids)
         {
-            return await _context.Posts.Include(c => c.Comments).Where(c => ids.Contains(c.UserId)).ToListAsync();
+            return await _context.Posts.Include(c => c.Comments)
+                .OrderByDescending(c => c.CreatedDate)
+                .Where(c => ids.Contains(c.UserId))
+                .ToListAsync();
         }
 
         public async Task CreateCommentAsync(Comment comment)

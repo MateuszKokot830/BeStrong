@@ -175,6 +175,7 @@ export class ProfileComponent implements OnInit {
         formData.append('file', file);
         return this.userService.addPhoto(formData, this.user.id).subscribe({
           next: _ => {
+            location.reload();
             this.toastr.success('Photo has been added');
           }
         });
@@ -184,6 +185,7 @@ export class ProfileComponent implements OnInit {
   setMainPhoto() {
     return this.userService.setMainPhoto(this.currentPhoto.id, this.user.id).subscribe({
       next: _ => {
+        location.reload();
         this.toastr.success('Main photo has been changed');
       }
     });
@@ -192,6 +194,7 @@ export class ProfileComponent implements OnInit {
   deletePhoto() {
     return this.userService.deletePhoto(this.currentPhoto.id, this.user.id).subscribe({
       next: _ => {
+        location.reload();
         this.toastr.success('Photo has been deleted');
       }
     });
