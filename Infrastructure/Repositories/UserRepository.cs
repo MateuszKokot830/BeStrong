@@ -66,5 +66,17 @@ namespace Infrastructure.Repositories
             _context.Followers.Remove(follower);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddPhoto(Photo photo)
+        {
+            _context.Photos.Add(photo);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeletePhoto(Photo photo)
+        {
+            _context.Photos.Remove(photo);
+            await _context.SaveChangesAsync();
+        }
     }
 }

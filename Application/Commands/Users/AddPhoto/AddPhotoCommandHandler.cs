@@ -2,7 +2,6 @@ using Application.Interfaces;
 using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Domain.Entities;
 using Application.Dto;
 
@@ -23,17 +22,20 @@ namespace Application.Commands.Users.AddPhoto
 
         public async Task<Unit> Handle(AddPhotoCommand request, CancellationToken cancellationToken)
         {   
-            var user = _userRepository.GetByUsernameAsync(request.Username).Result;
+            var user = _userRepository.GetByIdAsync(request.UserId).Result;
+
             var result = await _photoService.AddPhotoAsync(request.File);
 
-            var photo = new Photo {
+            var photo = new Photo 
+            {
                 Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
+                PublicId = result.PublicId,
+                UserId = user.Id
             };
 
-            if(user.Photos.Count == 0) photo.IsProfilePhoto = true;
+            if (user.Photos.Count == 0) photo.IsProfilePhoto = true;
 
-            user.Photos.Add(photo);
+            await _userRepository.AddPhoto(photo);
 
             return Unit.Value;
         }

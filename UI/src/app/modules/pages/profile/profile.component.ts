@@ -1,9 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { Exercise } from 'src/app/core/models/Exercise';
+import { Photo } from 'src/app/core/models/Photo';
 import { User, UserAuth } from 'src/app/core/models/User';
 import { Workout } from 'src/app/core/models/Workout';
 import { AccountService } from 'src/app/core/services/account.service';
@@ -30,9 +32,12 @@ export class ProfileComponent implements OnInit {
   isCurrentUser: boolean;
   isEditMode: boolean;
   isFollowed: boolean;
+  fileName = "";
+  currentPhoto: Photo | null = null;
 
   constructor(private userService: UserService, private accountService: AccountService,
-    private route: ActivatedRoute, private toastr: ToastrService, private workoutService: WorkoutService) {
+    private route: ActivatedRoute, private toastr: ToastrService, private workoutService: WorkoutService,
+    private http: HttpClient) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: currentUser => this.currentUser = currentUser
     });
@@ -87,7 +92,13 @@ export class ProfileComponent implements OnInit {
         big: photo.url
       });
     }
+
+    if (this.user.photos.length > 0) this.currentPhoto = this.user.photos[0];
     return imageUrls;
+  }
+
+  onChange(data: any): void {
+    this.currentPhoto = this.user.photos[data.index];
   }
 
   changeEditMode() {
@@ -153,5 +164,36 @@ export class ProfileComponent implements OnInit {
 
   followUser(id: number) {
     return this.userService.followUser(id).subscribe();
+  }
+
+  onFileSelected(event) {
+    const file:File = event.target.files[0];
+
+    if (file) {
+        this.fileName = file.name;
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.userService.addPhoto(formData, this.user.id).subscribe({
+          next: _ => {
+            this.toastr.success('Photo has been added');
+          }
+        });
+    }
+  }
+
+  setMainPhoto() {
+    return this.userService.setMainPhoto(this.currentPhoto.id, this.user.id).subscribe({
+      next: _ => {
+        this.toastr.success('Main photo has been changed');
+      }
+    });
+  }
+
+  deletePhoto() {
+    return this.userService.deletePhoto(this.currentPhoto.id, this.user.id).subscribe({
+      next: _ => {
+        this.toastr.success('Photo has been deleted');
+      }
+    });
   }
 }

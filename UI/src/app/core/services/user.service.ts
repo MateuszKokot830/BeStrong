@@ -37,7 +37,20 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/followers/' + id,  id);
   }
 
-  // getExercises() {
-  //   return this.http.get<Exercise[]>(this.baseUrl + 'Workouts/Exercises');
-  // }
+  addPhoto(file: FormData, id: number) {
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', '*/*');
+    return this.http.put(this.baseUrl + "users/" + id + "/photos", file, {headers: headers});
+  }
+
+  setMainPhoto(photoId: number, id: number)
+  {
+    return this.http.put(this.baseUrl + "users/" + id + "/photos/" + photoId, {photoId, id});
+  }
+
+  deletePhoto(photoId: number, id: number)
+  {
+    return this.http.delete(this.baseUrl + "users/" + id + "/photos/" + photoId);
+  }
 }

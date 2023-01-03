@@ -187,9 +187,23 @@
               </tab>
               <tab heading="Gallery" class="text-white ml-ms">
                 <div class="row mt-3" style="margin:auto; justify-content: center;">
-                  <h4 class="text-center text-info">{{user.userName | titlecase}}'s photos</h4>
-                  <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
-                </div>
+                  <div *ngIf="isCurrentUser && isEditMode" style="position:absolute; left:10px;">
+                    <input type="file" class="file-input" style="display: none;" (change)="onFileSelected($event)" #fileUpload>
+                    <div class="file-upload">
+                      <button class="upload-btn btn-sm btn-success" (click)="fileUpload.click()">
+                        <i class="bi bi-plus-square-dotted"></i> Add photo
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="isCurrentUser && isEditMode" style="position:absolute; left:635px;">
+                    <button class="btn btn-sm btn-warning" (click)="setMainPhoto()"><i class="bi bi-person-bounding-box"></i> Set as main</button>
+                  </div>
+                  <div *ngIf="isCurrentUser && isEditMode" style="position:absolute; left:750px;">
+                    <button class="btn btn-sm btn-danger" (click)="deletePhoto()"><i class="bi bi-trash"></i> Delete</button>
+                  </div>
+                  <h4 class="text-center text-info mb-2">{{user.userName | titlecase}}'s photos</h4>
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery mt-2" (change)="onChange($event)"></ngx-gallery>
+              </div>
               </tab>
               <tab heading="Followers: {{followers.length}}" class="text-white ml-ms">
                 <h4 class="text-center text-info mt-3">{{user.userName | titlecase}}'s followers</h4>

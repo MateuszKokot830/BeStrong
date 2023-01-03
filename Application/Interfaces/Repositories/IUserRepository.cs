@@ -11,5 +11,7 @@ namespace Application.Interfaces
         Task<bool> CheckPasswordAsync(User user, string password);
         Task AddFollowerAsync(Follower follower);
         Task DeleteFollowerAsync(Follower follower);
+        Task AddPhoto(Photo photo);
+        Task DeletePhoto(Photo photo);
     }
 }

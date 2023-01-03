@@ -10,6 +10,8 @@ using Application.Queries.Users.GetUsersByIds;
 using Application.Commands.Users.FollowUser;
 using Application.Commands.Users.AddPhoto;
 using WebAPI.Extensions;
+using Application.Commands.Users.SetMainPhoto;
+using Application.Commands.Users.DeletePhoto;
 
 namespace WebAPI.Controllers
 {
@@ -59,17 +61,33 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Follows or unfollows a specific user")]
         [HttpPut("followers/{id}")]
-        public async Task<ActionResult> FollowUser(int UserId, int id) 
+        public async Task<ActionResult> FollowUser(int userId, int id) 
         {
-            await _mediator.Send(new FollowUserCommand() {UserId = UserId, FollowUserId = id});
+            await _mediator.Send(new FollowUserCommand() {UserId = userId, FollowUserId = id});
             return NoContent();
         }
 
         [SwaggerOperation(Summary = "Adds a photo assigned to current logged user")]
-        [HttpPut("photos")]
-        public async Task<ActionResult> AddPhoto(IFormFile file) 
+        [HttpPut("{userId}/photos")]
+        public async Task<ActionResult> AddPhoto(IFormFile file, int userId) 
         {
-            await _mediator.Send(new AddPhotoCommand() {File = file, Username = User.GetUsername()});
+            await _mediator.Send(new AddPhotoCommand() {File = file, UserId = userId});
+            return NoContent();
+        }
+
+        [SwaggerOperation(Summary = "Sets a photo as a main photo to current logged user")]
+        [HttpPut("{userId}/photos/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId, int userId) 
+        {
+            await _mediator.Send(new SetMainPhotoCommand() {PhotoId = photoId, UserId = userId});
+            return NoContent();
+        }
+
+        [SwaggerOperation(Summary = "Deletes a photo from current logged user")]
+        [HttpDelete("{userId}/photos/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId, int userId) 
+        {
+            await _mediator.Send(new DeletePhotoCommand() {PhotoId = photoId, UserId = userId});
             return NoContent();
         }
     }
