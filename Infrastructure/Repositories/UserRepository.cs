@@ -4,12 +4,16 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
+using Application.Helpers;
+using AutoMapper;
+using Application.Dto;
 
 namespace Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly UserManager<User> _userManager;
+
         public UserRepository(DataContext context, UserManager<User> userManager) : base(context)
         {
             _userManager = userManager;
@@ -77,6 +81,14 @@ namespace Infrastructure.Repositories
         {
             _context.Photos.Remove(photo);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PaginationList<User>> GetUsersAsync(PaginationParams paginationParams) 
+        {
+            var query = _userManager.Users
+            .AsNoTracking();
+
+            return await PaginationList<User>.CreateAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

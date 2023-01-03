@@ -1,3 +1,5 @@
+using Application.Dto;
+using Application.Helpers;
 using Domain.Aggregates;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -13,5 +15,6 @@ namespace Application.Interfaces
         Task DeleteFollowerAsync(Follower follower);
         Task AddPhoto(Photo photo);
         Task DeletePhoto(Photo photo);
+        Task<PaginationList<User>> GetUsersAsync(PaginationParams paginationParams);
     }
 }

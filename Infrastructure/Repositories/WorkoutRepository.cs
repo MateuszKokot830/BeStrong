@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {
-    public class WorkoutRepository  : BaseRepository<Workout>, IWorkoutRepository
+    public class WorkoutRepository : BaseRepository<Workout>, IWorkoutRepository
     {
         public WorkoutRepository(DataContext context) : base(context)
         {

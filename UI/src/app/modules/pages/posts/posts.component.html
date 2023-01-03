@@ -4,45 +4,47 @@
       <h4 class="text-center text-info mt-1">Activity page
         <button (click)="addNewPostToggle()" class="btn btn-sm btn-secondary" style="position:absolute; left:1150px;"> + Add a new post</button>
       </h4>
-      <div class="col-3"></div>
-      <div class="col-6">
-        <div class="card bg-dark mt-3" *ngFor="let post of followerPosts">
-          <div class="card-body">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card bg-dark mt-5" *ngFor="let post of followerPosts">
+          <div class="card-header">
             <div class="row">
-              <div class="col-6" style="display: flex; align-items: center;">
-                <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
-                <h5 class="text-success text-left">{{getUsername(post.userId)}}:</h5>
-              </div>
-              <div class="col-6">
-                <h5 class="text-info text-right">{{post.createdDate | date:'medium'}}</h5>
+                <div class="col-6" style="display: flex; align-items: center;">
+                  <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
+                  <h5 class="text-success text-left">{{getUsername(post.userId)}}</h5>
+                </div>
+                <div class="col-6">
+                  <h5 class="text-info text-right">{{post.createdDate | date:'medium'}}</h5>
+                </div>
               </div>
             </div>
+            <div class="card-body">
             <div class="row">
-              <p class="text-white">{{post.description}}</p>
+              <h5 class="text-white mt-2">{{post.description}}</h5><p></p>
             </div>
             <div class="row">
-              <button (click)="addNewCommentToggle(post)" class="btn btn-sm btn-info mr-2" style="margin-left: auto; float: right; width: 20%;">Add comment</button>
+              <button (click)="addNewCommentToggle(post)" class="btn btn-sm btn-info mr-2" style="margin-left: auto; float: right; width: 15%;">Add comment</button>
             </div>
             <div class="card mt-3" *ngFor="let comment of post.comments">
               <div class="card-body">
                 <div class="row">
                   <div class="col-6" style="display: flex; align-items: center;">
                     <img src="{{getMainPhoto(comment.userId)}}" alt="main photo">
-                    <h5 class="text-left">{{getUsername(comment.userId)}}:</h5>
+                    <h5 class="text-left">{{getUsername(comment.userId)}}</h5>
                   </div>
                   <div class="col-6">
                     <p class="text-info text-right">{{comment.createdDate | date:'medium'}}</p>
                   </div>
                 </div>
                 <div class="row">
-                  <p class="text-white">{{comment.description}}</p>
+                  <h5 class="text-white mt-2">{{comment.description}}</h5>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-3"></div>
+      <div class="col-1"></div>
     </div>
   </div>
 </div>

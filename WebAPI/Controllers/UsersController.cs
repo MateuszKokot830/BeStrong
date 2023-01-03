@@ -12,6 +12,8 @@ using Application.Commands.Users.AddPhoto;
 using WebAPI.Extensions;
 using Application.Commands.Users.SetMainPhoto;
 using Application.Commands.Users.DeletePhoto;
+using Application.Helpers;
+using Application.Queries.Users.GetUsersList;
 
 namespace WebAPI.Controllers
 {
@@ -32,6 +34,19 @@ namespace WebAPI.Controllers
         {
             var users = await _mediator.Send(new GetUsersQuery());
             return Ok(users.ToList());
+        }
+
+        [SwaggerOperation(Summary = "Retrieves all users as pagination list")]
+        [HttpGet("list")]
+        public async Task<ActionResult> GetUsersList([FromQuery]PaginationParams paginationParams)
+        {
+            var users = await _mediator.Send(new GetUsersListQuery() { PaginationParams = paginationParams });
+            Response.AddPaginationHeader(new PaginationHeader(
+                users.CurrentPage, 
+                users.PageSize,
+                users.TotalItems,
+                users.TotalPages));
+            return Ok(users);
         }
 
         [SwaggerOperation(Summary = "Retrieves specific followers by given ids")]
