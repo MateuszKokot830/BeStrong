@@ -162,8 +162,12 @@ export class ProfileComponent implements OnInit {
     return this.exercises.find(x => x.id == id).name;
   }
 
-  followUser(id: number) {
-    return this.userService.followUser(id).subscribe();
+  followUser() {
+    return this.userService.followUser(this.currentUserAcc.id, this.user.id).subscribe({
+      next: _ => {
+        location.reload();
+      }
+    });
   }
 
   onFileSelected(event) {

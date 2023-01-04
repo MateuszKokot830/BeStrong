@@ -61,8 +61,8 @@
             <button type="submit" (click)="saveChanges()" class="btn btn-success btn-sm">Save</button> &nbsp;
           </div>
           <div class="mt-2 mb-2" *ngIf="!isCurrentUser" style="position:absolute; left:640px;">
-            <button type="button" *ngIf="!isFollowed" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
-            <button type="button" *ngIf="isFollowed" class="btn btn-danger btn-sm bi-heart-fill"> Unfollow</button> &nbsp;
+            <button type="button" (click)="followUser()" *ngIf="!isFollowed" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
+            <button type="button" (click)="followUser()" *ngIf="isFollowed" class="btn btn-danger btn-sm bi-heart-fill"> Unfollow</button> &nbsp;
             <button type="button" class="btn btn-warning btn-sm bi-envelope"> Message</button>
           </div>
           <div class="mt-2">
@@ -138,7 +138,7 @@
                   </div>
                   <div class="col-2"></div>
                   <div class="col-6 card bg-dark mb-2">
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="lastWorkout != null">
                       <h4 class="text-center mt-2 text-info">Last workout</h4>
                       <h5 class="text-center mt-2 text-success">{{lastWorkout.date | date:'fullDate'}} <br> {{lastWorkout.name}}</h5>
                       <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">

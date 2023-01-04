@@ -19,7 +19,7 @@ namespace Application.Commands.WorkoutPlans.CreateWorkoutPlan
 
         public async Task<Unit> Handle(CreateWorkoutPlanCommand request, CancellationToken cancellationToken)
         {   
-            var plan = _mapper.Map<WorkoutPlan>(request.WorkoutPlanDto);
+            var plan = _mapper.Map<WorkoutPlan>(request.WorkoutPlanCreateDto);
             await _workoutPlanRepository.AddAsync(plan);
 
             return Unit.Value;

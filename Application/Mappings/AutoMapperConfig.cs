@@ -26,6 +26,8 @@ namespace Application.Mappings
             config.CreateMap<PostCreateDto, Post>().ReverseMap();
             config.CreateMap<WorkoutDto, Workout>().ReverseMap();
             config.CreateMap<WorkoutExerciseDto, WorkoutExercise>().ReverseMap();
+            config.CreateMap<WorkoutPlanDto, WorkoutPlan>().ReverseMap();
+            config.CreateMap<WorkoutPlanCreateDto, WorkoutPlan>().ReverseMap();
         })
         .CreateMapper();
     }

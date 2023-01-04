@@ -6,6 +6,6 @@ namespace Application.Commands.WorkoutPlans.CreateWorkoutPlan
 {
     public class CreateWorkoutPlanCommand : IRequest
     {
-        public WorkoutPlanDto WorkoutPlanDto { get; set; }
+        public WorkoutPlanCreateDto WorkoutPlanCreateDto { get; set; }
     }
 }

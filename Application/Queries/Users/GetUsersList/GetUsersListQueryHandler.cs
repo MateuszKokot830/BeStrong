@@ -20,8 +20,7 @@ namespace Application.Queries.Users.GetUsersList
 
         public async Task<PaginationList<UserDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetUsersAsync(request.PaginationParams);
-            return _mapper.Map<PaginationList<UserDto>>(users);
+            return await _userRepository.GetUsersAsync(request.PaginationParams);
         }
     }
 }

@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-6" id="exercise">
-        <h4 class="text-center text-info">Add workout
+        <h4 class="text-center text-info mt-3">Add workout
           <button type="button" class="btn btn-secondary btn-sm" (click)="addExercise()" style="position: absolute; left: 425px;"> Add exercise</button>
           <button type="button" class="btn btn-success btn-sm" (click)="addWorkout()" style="float: right;"> Save workout</button>
         </h4>
@@ -51,19 +51,23 @@
           </div>
         </div>
       <div class="col-6">
-        <h4 class="text-center text-info">List of exercises
-          <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm" style="float: right;"> + Add exercise to list</button>
-        </h4>
-        <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
-          <tr>
-            <th scope="col" class="text-secondary">Name</th>
-            <th scope="col" class="text-secondary">Description</th>
-          </tr>
-            <tr *ngFor="let exercise of exercises">
-              <th scope="row">{{exercise.name}}</th>
-              <td >{{exercise.description}}</td>
-            </tr>
-        </table>
+        <div class="card bg-dark mt-3">
+            <div class="card-body">
+            <h4 class="text-center text-info mb-3">List of exercises
+              <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm" style="float: right;"> + Add exercise to list</button>
+            </h4>
+            <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
+              <tr>
+                <th scope="col" class="text-secondary">Name</th>
+                <th scope="col" class="text-secondary">Description</th>
+              </tr>
+                <tr *ngFor="let exercise of exercises">
+                  <th scope="row">{{exercise.name}}</th>
+                  <td >{{exercise.description}}</td>
+                </tr>
+            </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

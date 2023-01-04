@@ -5,18 +5,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Application.Helpers;
-using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Application.Dto;
+using AutoMapper;
 
 namespace Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public UserRepository(DataContext context, UserManager<User> userManager) : base(context)
+        public UserRepository(DataContext context, UserManager<User> userManager, IMapper mapper) : base(context)
         {
             _userManager = userManager;
+            _mapper = mapper;
+
         }
 
         public override async Task<User> GetByIdAsync(int id)
@@ -83,12 +87,14 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginationList<User>> GetUsersAsync(PaginationParams paginationParams) 
+        public async Task<PaginationList<UserDto>> GetUsersAsync(PaginationParams paginationParams) 
         {
-            var query = _userManager.Users
-            .AsNoTracking();
-
-            return await PaginationList<User>.CreateAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+            var query = _userManager.Users.AsQueryable();
+            query = query.Where(x => x.UserName != paginationParams.Username);
+            
+            return await PaginationList<UserDto>.CreateAsync(
+                query.ProjectTo<UserDto>(_mapper.ConfigurationProvider).AsNoTracking(), 
+                paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

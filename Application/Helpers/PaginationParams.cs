@@ -10,5 +10,6 @@ namespace Application.Helpers
             get => _PageSize; 
             set => _PageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
+        public string Username { get; set; }
     }
 }

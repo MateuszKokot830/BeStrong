@@ -15,6 +15,6 @@ namespace Application.Interfaces
         Task DeleteFollowerAsync(Follower follower);
         Task AddPhoto(Photo photo);
         Task DeletePhoto(Photo photo);
-        Task<PaginationList<User>> GetUsersAsync(PaginationParams paginationParams);
+        Task<PaginationList<UserDto>> GetUsersAsync(PaginationParams paginationParams);
     }
 }
