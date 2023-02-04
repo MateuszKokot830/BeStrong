@@ -8,6 +8,7 @@ import { MessagesComponent } from './modules/pages/messages/messages.component';
 import { StatisticsComponent } from './modules/pages/statistics/statistics.component';
 import { WorkoutComponent } from './modules/pages/workout/workout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { WorkoutPlanComponent } from './modules/pages/workout-plan/workout-plan.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
       {path: 'posts', component: PostsComponent},
       {path: 'profile/:username', component: ProfileComponent},
       {path: 'messages', component: MessagesComponent},
+      {path: 'workout-plan', component: WorkoutPlanComponent},
       {path: 'statistics', component: StatisticsComponent},
       {path: 'workout', component: WorkoutComponent}
     ]

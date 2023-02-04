@@ -21,6 +21,7 @@ import { UserCardComponent } from './shared/components/user-card/user-card.compo
 import { ExerciseComponent } from './modules/components/exercise/exercise/exercise.component';
 import { AddPostComponent } from './modules/components/add-post/add-post.component';
 import { AddCommentComponent } from './modules/components/add-comment/add-comment.component';
+import { WorkoutPlanComponent } from './modules/pages/workout-plan/workout-plan.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { AddCommentComponent } from './modules/components/add-comment/add-commen
     ExerciseComponent,
     AddPostComponent,
     AddCommentComponent,
+    WorkoutPlanComponent,
   ],
   imports: [
     BrowserModule,
