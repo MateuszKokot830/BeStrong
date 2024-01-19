@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
-import { Exercise } from 'src/app/core/models/Exercise';
-import { UserAuth } from 'src/app/core/models/User';
+import { Statistics } from 'src/app/core/models/Statistics';
+import { User, UserAuth } from 'src/app/core/models/User';
 import { AccountService } from 'src/app/core/services/account.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
@@ -14,9 +14,10 @@ import { WorkoutService } from 'src/app/core/services/workout.service';
 })
 export class StatisticsComponent implements OnInit {
   currentUser: UserAuth | null = null;
-  exercises: Exercise[] = [];
-  calculatorLift: number;
+  statistics = {} as Statistics;
+  calculatorWeight: number;
   calculatorReps: number;
+  calculatorResult: number;
 
   constructor(private workoutService: WorkoutService, private accountService: AccountService,
     private userService: UserService, private toastr: ToastrService) {
@@ -26,6 +27,26 @@ export class StatisticsComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.loadStatistics();
+    this.calculatorWeight = 0;
+    this.calculatorReps = 0;
+    this.calculatorResult = 0;
+  }
+
+  loadStatistics() {
+    this.userService.getUser(this.currentUser.username).subscribe({
+      next: user=> {
+          this.workoutService.getStatistics(user).subscribe({
+          next: statistics => this.statistics = statistics
+        })
+      }
+    });
+  }
+
+  calculate() {
+    this.workoutService.calculate(this.calculatorWeight, this.calculatorReps).subscribe({
+      next: result => this.calculatorResult = result
+    })
   }
 
 }

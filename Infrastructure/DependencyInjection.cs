@@ -23,6 +23,7 @@ namespace Infrastructure
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<INLoggerService, NLoggerService>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<ICalculatorService, CalculatorService>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             return services;

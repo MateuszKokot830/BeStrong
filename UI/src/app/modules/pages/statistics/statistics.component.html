@@ -9,43 +9,31 @@
             <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
               <tr>
                 <th scope="col" class="text-white">Total done workouts:</th>
-                <th scope="col" class="text-white">5</th>
+                <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Total done exercises:</th>
-                <th scope="col" class="text-white">13</th>
+                <th scope="col" class="text-white">{{statistics.totalExercises}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Total done sets:</th>
-                <th scope="col" class="text-white">40</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Total done reps:</th>
-                <th scope="col" class="text-white">152</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Total lifted weights:</th>
-                <th scope="col" class="text-white">850 kg</th>
+                <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Avg. workouts per week:</th>
-                <th scope="col" class="text-white">1.23</th>
+                <th scope="col" class="text-white">{{statistics.avgWorkoutsPerWeek}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Avg. exercises per workout:</th>
-                <th scope="col" class="text-white">2.4</th>
+                <th scope="col" class="text-white">{{statistics.avgExercisesPerWorkout}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Avg. sets per workout:</th>
-                <th scope="col" class="text-white">4</th>
+                <th scope="col" class="text-white">{{statistics.avgSetsPerWorkout}}</th>
               </tr>
               <tr>
-                <th scope="col" class="text-white">Avg. reps per workout:</th>
-                <th scope="col" class="text-white">8.2</th>
-              </tr>
-                            <tr>
                 <th scope="col" class="text-white">Favourite exercise:</th>
-                <th scope="col" class="text-white">Bench Press (3/5 workouts)</th>
+                <th scope="col" class="text-white">{{statistics.favouriteExercise}}</th>
               </tr>
             </table>
           </div>
@@ -57,16 +45,22 @@
             <h4 class="text-center text-info mt-1 mb-3">One Rep Max calculator
             </h4>
             <div style="text-align: center; display: flex; justify-content: center;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <h5 class="text-center text-white">Select lift: </h5>&nbsp;&nbsp;&nbsp;
-              <input class="form-control mb-2" style="width: 300px;" type="text" name="lift" [(ngModel)]="calculatorLift" placeholder="0">
+              <input class="form-control mb-2" style="width: 300px;" type="text" name="weigth" [(ngModel)]="calculatorWeight" placeholder="0"> &nbsp;&nbsp;kg
             </div>
             <div style="text-align: center; display: flex; justify-content: center;">
-              &nbsp;&nbsp;&nbsp;
               <h5 class="text-center text-white">Select reps: </h5>&nbsp;&nbsp;&nbsp;
-              <input class="form-control" style="width: 300px;" type="text" name="reps" [(ngModel)]="calculatorReps" placeholder="0"> &nbsp;&nbsp;kg
+              <input class="form-control" style="width: 300px;" type="text" name="reps" [(ngModel)]="calculatorReps" placeholder="0">
             </div>
             <div style="text-align: center; display: flex; justify-content: center;">
-              <button type="button" class="btn btn-success btn-sm mt-3" style="text-align: center;"> Calculate</button>
+              <button class="btn btn-success btn-sm mt-3" type="button" (click)="calculate()" style="text-align: center;"> Calculate</button>
+            </div>
+          </div>
+          <div class="card bg-dark mt-3">
+            <div class="card-body">
+              <h4 class="text-center text-info mt-1 mb-3">Your current one rep max is: {{calculatorResult}} kg
+              </h4>
             </div>
           </div>
         </div>

@@ -2,20 +2,24 @@ using Application.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
+using Application.Interfaces;
 using Application.Queries.Workouts.GetUserWorkouts;
 using Application.Commands.Workouts.CreateWorkout;
 using Application.Queries.Workouts.GetExercises;
 using Application.Commands.Workouts.CreateExercise;
+using Application.Queries.Workouts.GetWorkoutStatistics;
 
 namespace WebAPI.Controllers
 {
     public class WorkoutsController : BaseApiController
     {
         private readonly IMediator _mediator;
+        private readonly ICalculatorService _calculator;
 
-        public WorkoutsController(IMediator mediator)
+        public WorkoutsController(IMediator mediator, ICalculatorService calculator)
         {
             _mediator = mediator;
+            _calculator = calculator;
         }
 
         [SwaggerOperation(Summary = "Creates a new workout")]
@@ -32,6 +36,22 @@ namespace WebAPI.Controllers
         {
             var workouts = await _mediator.Send(new GetUserWorkoutsQuery(){UserId = id});
             return Ok(workouts.ToList());
+        }
+
+        [SwaggerOperation(Summary = "Retrieves workout statistics from specific user")]
+        [HttpGet("statistics/{id}")]
+        public async Task<ActionResult> GetWorkoutStatistics(int id)
+        {
+            var statistics = await _mediator.Send(new GetWorkoutStatisticsQuery(){UserId = id});
+            return Ok(statistics);
+        }
+        
+        [SwaggerOperation(Summary = "Calculate One Rep Max value")]
+        [HttpGet("weight/{weight}/reps/{reps}")]
+        public async Task<ActionResult> CalculateOneRepMax(int weight, int reps)
+        {
+            var value = _calculator.CalculateOneRepMax(weight, reps);
+            return Ok(value);
         }
 
         [SwaggerOperation(Summary = "Creates a new exercise")]
