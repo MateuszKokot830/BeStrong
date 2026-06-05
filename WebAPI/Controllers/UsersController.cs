@@ -20,13 +20,10 @@ namespace WebAPI.Controllers
     public class UsersController : BaseApiController
     {
         private readonly IMediator _mediator;
-        private readonly ITokenService _tokenService;
-        public UsersController(IMediator mediator, ITokenService tokenService)
+        public UsersController(IMediator mediator)
         {
             _mediator = mediator;
-            _tokenService = tokenService;
         }
-
 
         [SwaggerOperation(Summary = "Retrieves all users")]
         [HttpGet]
@@ -57,7 +54,6 @@ namespace WebAPI.Controllers
             return Ok(users.ToList());
         }
         
-
         [SwaggerOperation(Summary = "Retrieves a specific user by username")]
         [HttpGet("{username}")]
         public async Task<ActionResult> GetUser(string username)
@@ -75,7 +71,7 @@ namespace WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = "Follows or unfollows a specific user")]
-        [HttpPut("followers/{id}")]
+        [HttpPut("{userId}/followers/{id}")]
         public async Task<ActionResult> FollowUser(int userId, int id) 
         {
             await _mediator.Send(new FollowUserCommand() {UserId = userId, FollowUserId = id});

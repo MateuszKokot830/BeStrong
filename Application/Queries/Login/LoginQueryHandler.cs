@@ -2,10 +2,8 @@ using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
-using Domain.Aggregates;
 using Domain.Errors;
 using ErrorOr;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Queries.Login
 {

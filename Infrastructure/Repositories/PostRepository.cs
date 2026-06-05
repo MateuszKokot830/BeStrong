@@ -19,16 +19,18 @@ namespace Infrastructure.Repositories
            _context.Posts.Add(post);
            await _context.SaveChangesAsync();
         }
-        public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int id)
+        public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int userId)
         {
-            return await _context.Posts.Include(c => c.Comments).Where(c => c.UserId == id).ToListAsync();
+            return await _context.Posts.Include(c => c.Comments)
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> ids)
+        public async Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> userIds)
         {
             return await _context.Posts.Include(c => c.Comments)
                 .OrderByDescending(c => c.CreatedDate)
-                .Where(c => ids.Contains(c.UserId))
+                .Where(c => userIds.Contains(c.UserId))
                 .ToListAsync();
         }
 
@@ -37,6 +39,12 @@ namespace Infrastructure.Repositories
             comment.CreatedDate = DateTime.Now;
            _context.Comments.Add(comment);
            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCommentAsync(Comment comment)
+        {
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,14 +1,10 @@
 using Application.Interfaces;
-using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
-using Domain.Entities;
-using Application.Dto;
-using ErrorOr;
 
 namespace Application.Commands.Users.SetMainPhoto
 {
-    public class SetMainPhotoCommandHandler : IRequestHandler<SetMainPhotoCommand, ErrorOr<Unit>>
+    public class SetMainPhotoCommandHandler : IRequestHandler<SetMainPhotoCommand, Unit>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPhotoService _photoService;
@@ -21,7 +17,7 @@ namespace Application.Commands.Users.SetMainPhoto
             _mapper = mapper;
         }
 
-        public async Task<ErrorOr<Unit>> Handle(SetMainPhotoCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SetMainPhotoCommand request, CancellationToken cancellationToken)
         {   
             var user = _userRepository.GetByIdAsync(request.UserId).Result;
 

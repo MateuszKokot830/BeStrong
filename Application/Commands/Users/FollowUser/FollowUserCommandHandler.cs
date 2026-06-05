@@ -1,8 +1,6 @@
 using Application.Interfaces;
-using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Domain.Entities;
 
 namespace Application.Commands.Users.FollowUser
@@ -24,11 +22,11 @@ namespace Application.Commands.Users.FollowUser
             var followUser = _userRepository.GetByIdAsync(request.FollowUserId).Result;
 
             var isFollowed = user.FollowedUsers.FirstOrDefault(x => x.FollowedUserId == followUser.Id);
-            if (isFollowed != null) // Unfollow
+            if (isFollowed != null)
             {
                 await _userRepository.DeleteFollowerAsync(isFollowed);
             }
-            else // Follow
+            else
             {
                 var follower = new Follower 
                 {

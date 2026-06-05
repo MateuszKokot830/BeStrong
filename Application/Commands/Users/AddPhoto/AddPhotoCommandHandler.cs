@@ -1,9 +1,7 @@
 using Application.Interfaces;
-using Domain.Aggregates;
 using AutoMapper;
 using MediatR;
 using Domain.Entities;
-using Application.Dto;
 
 namespace Application.Commands.Users.AddPhoto
 {
@@ -11,13 +9,11 @@ namespace Application.Commands.Users.AddPhoto
     {
         private readonly IUserRepository _userRepository;
         private readonly IPhotoService _photoService;
-        private readonly IMapper _mapper;
 
-        public AddPhotoCommandHandler(IUserRepository userRepository, IPhotoService photoService, IMapper mapper)
+        public AddPhotoCommandHandler(IUserRepository userRepository, IPhotoService photoService)
         {
             _userRepository = userRepository;
             _photoService = photoService;
-            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(AddPhotoCommand request, CancellationToken cancellationToken)

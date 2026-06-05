@@ -1,5 +1,4 @@
 using Application.Dto;
-using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
@@ -28,7 +27,6 @@ namespace WebAPI.Controllers
                 authResult => Ok(authResult),
                 errors => Problem(errors));
         }
-
 
         [SwaggerOperation(Summary = "Login a user with given username and password")]
         [HttpPost("login")]

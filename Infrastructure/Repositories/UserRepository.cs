@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
 
         }
-
+    
         public override async Task<User> GetByIdAsync(int id)
         {
             return await _userManager.Users

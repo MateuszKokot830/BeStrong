@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Runtime.CompilerServices;
 using Application.Dto;
 using Application.Interfaces;
 using AutoMapper;

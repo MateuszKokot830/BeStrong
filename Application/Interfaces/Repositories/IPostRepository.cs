@@ -5,8 +5,9 @@ namespace Application.Interfaces
 {
     public interface IPostRepository : IAsyncRepository<Post>
     {
-        Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int id);
-        Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> ids);
+        Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int userId);
+        Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> userIds);
         Task CreateCommentAsync(Comment comment);
+        Task DeleteCommentAsync(Comment comment);
     }
 }

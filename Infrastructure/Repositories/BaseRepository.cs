@@ -1,7 +1,7 @@
 using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+
 
 namespace Infrastructure.Repositories
 {
@@ -34,6 +34,7 @@ namespace Infrastructure.Repositories
             //_context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+        
         public virtual async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);

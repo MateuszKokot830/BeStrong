@@ -1,7 +1,5 @@
 using Domain.Aggregates;
 using Domain.Entities;
-using Domain.ValueObjects;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
