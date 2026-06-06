@@ -1,24 +1,17 @@
-using Application.Dto;
-using Application.Interfaces;
 using AutoMapper;
 using MediatR;
 using Domain.Aggregates;
+using Application.Interfaces.Repositories;
 
 namespace Application.Commands.WorkoutPlans.CreateWorkoutPlan
 {
-    public class CreateWorkoutPlanCommandHandler : IRequestHandler<CreateWorkoutPlanCommand>
+    public class CreateWorkoutPlanCommandHandler(IWorkoutPlanRepository workoutPlanRepository, IMapper mapper) : IRequestHandler<CreateWorkoutPlanCommand>
     {
-        private readonly IWorkoutPlanRepository _workoutPlanRepository;
-        private readonly IMapper _mapper;
-
-        public CreateWorkoutPlanCommandHandler(IWorkoutPlanRepository workoutPlanRepository, IMapper mapper)
-        {
-            _workoutPlanRepository = workoutPlanRepository;
-            _mapper = mapper;
-        }
+        private readonly IWorkoutPlanRepository _workoutPlanRepository = workoutPlanRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Unit> Handle(CreateWorkoutPlanCommand request, CancellationToken cancellationToken)
-        {   
+        {
             var plan = _mapper.Map<WorkoutPlan>(request.WorkoutPlanCreateDto);
             await _workoutPlanRepository.AddAsync(plan);
 

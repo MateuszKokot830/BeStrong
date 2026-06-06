@@ -25,16 +25,18 @@ namespace Domain.ValueObjects
             Thights = thights;
         }
 
+        public Measurements() { }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Height;
-            yield return Weight;
-            yield return Chest;
-            yield return Shoulders;
-            yield return Arms;
-            yield return Waist;
-            yield return Hips;
-            yield return Thights;
+            yield return Height ?? 0;
+            yield return Weight ?? 0m;
+            yield return Chest ?? 0m;
+            yield return Shoulders ?? 0m;
+            yield return Arms ?? 0m;
+            yield return Waist ?? 0m;
+            yield return Hips ?? 0m;
+            yield return Thights ?? 0m;
         }
     }
 }

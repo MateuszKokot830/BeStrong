@@ -8,11 +8,13 @@ namespace Domain.Entities
     public class Comment : Entity<int>
     {
         public int UserId { get; set; }
-        public virtual User User { get; set; }
-        public string Description { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+        public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Likes { get; set; }
         public int PostId { get; set; }
-        public virtual Post Post { get; set; }
+        [ForeignKey("PostId")]
+        public virtual Post? Post { get; set; }
     }
 }

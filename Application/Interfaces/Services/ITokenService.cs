@@ -1,9 +1,9 @@
-using Application.Dto;
+using Application.Dto.User;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.Services
 {
     public interface ITokenService
     {
-         string CreateToken(UserDto user);
+        string? CreateToken(UserDto user);
     }
 }

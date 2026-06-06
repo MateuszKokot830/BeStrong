@@ -1,27 +1,23 @@
-using Application.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using ErrorOr;
 using Application.Commands.Register;
 using Application.Queries.Login;
+using Application.Dto.Auth;
 
 namespace WebAPI.Controllers
 {
-    public class AuthController : BaseApiController
+    public class AuthController(IMediator mediator) : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public AuthController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [SwaggerOperation(Summary = "Creates a user with given username and password")]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterRequestDto userRegisterRequestDto)
         {
             ErrorOr<UserAuthResponseDto> authResult = await _mediator.Send(new RegisterCommand() {
-                userRegisterRequestDto = userRegisterRequestDto});
+                UserRegisterRequestDto = userRegisterRequestDto});
 
             return authResult.Match(
                 authResult => Ok(authResult),

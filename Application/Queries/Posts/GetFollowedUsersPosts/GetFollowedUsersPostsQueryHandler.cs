@@ -1,20 +1,14 @@
-using Application.Dto;
-using Application.Interfaces;
+using Application.Dto.Post;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Queries.Posts.GetFollowedUsersPosts
 {
-    public class GetFollowedUsersPostsQueryHandler : IRequestHandler<GetFollowedUsersPostsQuery, IEnumerable<PostDto>>
+    public class GetFollowedUsersPostsQueryHandler(IPostRepository postRepository, IMapper mapper) : IRequestHandler<GetFollowedUsersPostsQuery, IEnumerable<PostDto>>
     {
-        private readonly IPostRepository _postRepository;
-        private readonly IMapper _mapper;
-
-        public GetFollowedUsersPostsQueryHandler(IPostRepository postRepository, IMapper mapper)
-        {
-            _postRepository = postRepository;
-            _mapper = mapper;
-        }
+        private readonly IPostRepository _postRepository = postRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IEnumerable<PostDto>> Handle(GetFollowedUsersPostsQuery request, CancellationToken cancellationToken)
         {

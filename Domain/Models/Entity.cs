@@ -3,24 +3,24 @@ namespace Domain.Models
     public abstract class Entity<TId> : IEquatable<Entity<TId>>
         where TId : notnull
     {
-        public TId Id { get; set; }
+        public TId Id { get; set; } = default!;
 
-        public bool Equals(Entity<TId> other)
+        public bool Equals(Entity<TId>? other)
         {
-            return Equals((object)other);
-        } 
+            return Equals((object?)other);
+        }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Entity<TId> entity && Id.Equals(entity.Id);
         }
 
-        public static bool operator ==(Entity<TId> left, Entity<TId> right)
+        public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Entity<TId> left, Entity<TId> right)
+        public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
         {
             return !Equals(left, right);
         }

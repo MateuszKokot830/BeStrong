@@ -5,7 +5,7 @@ namespace Application.Commands.Users.AddPhoto
 {
     public class AddPhotoCommand : IRequest
     {
-        public IFormFile File  { get; set; }
+        public required IFormFile File { get; set; }
         public int UserId { get; set; }
     }
 }

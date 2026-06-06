@@ -1,13 +1,15 @@
 namespace Domain.Common
 {
-    public enum DateUnit {
+    public enum DateUnit
+    {
         Year,
         Month,
         Day
-    }  
+    }
 
-    public enum Gender {
+    public enum Gender
+    {
         Male,
         Female
-    }  
+    }
 }

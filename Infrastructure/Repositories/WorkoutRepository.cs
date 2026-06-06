@@ -1,21 +1,17 @@
 using Domain.Aggregates;
-using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Application.Interfaces.Repositories;
 
 namespace Infrastructure.Repositories
 {
-    public class WorkoutRepository : BaseRepository<Workout>, IWorkoutRepository
+    public class WorkoutRepository(DataContext context) : BaseRepository<Workout>(context), IWorkoutRepository
     {
-        public WorkoutRepository(DataContext context) : base(context)
-        {
-        }
-
         public override async Task AddAsync(Workout workout)
         {
             var wEx = workout.WorkoutExercises.ToList();
-            if (wEx!= null && wEx.Any())
+            if (wEx != null && wEx.Any())
             {
                 _context.WorkoutExercises.AddRange(wEx);
             }

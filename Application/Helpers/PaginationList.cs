@@ -15,10 +15,10 @@ namespace Application.Helpers
 
         public PaginationList(int totalItems, int currentPage, int totalPages, int pageSize)
         {
-            this.TotalItems = totalItems;
-            this.CurrentPage = currentPage;
-            this.TotalPages = totalPages;
-            this.PageSize = pageSize;
+            TotalItems = totalItems;
+            CurrentPage = currentPage;
+            TotalPages = totalPages;
+            PageSize = pageSize;
 
         }
         public int TotalItems { get; set; }
@@ -30,8 +30,8 @@ namespace Application.Helpers
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            
-            return new PaginationList<T>(items, count, pageNumber, pageSize);
+
+            return new(items, count, pageNumber, pageSize);
         }
     }
 }

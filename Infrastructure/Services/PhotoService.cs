@@ -1,4 +1,4 @@
-using Application.Interfaces;
+using Application.Interfaces.Services;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Infrastructure.Helpers;
@@ -25,7 +25,7 @@ namespace Infrastructure.Services
         {
             var uploadResult = new ImageUploadResult();
 
-            if (file.Length > 0) 
+            if (file.Length > 0)
             {
                 using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams
@@ -35,12 +35,12 @@ namespace Infrastructure.Services
                     Folder = "da-net7"
                 };
                 uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            } 
+            }
 
             return uploadResult;
         }
 
-        public async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        public async Task<DeletionResult> DeletePhotoAsync(string? publicId)
         {
             var deleteParams = new DeletionParams(publicId);
 

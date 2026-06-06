@@ -1,5 +1,4 @@
-
-namespace Application.Dto
+namespace Application.Dto.Statistics
 {
     public class StatisticsDto
     {
@@ -9,6 +8,6 @@ namespace Application.Dto
         public decimal AvgWorkoutsPerWeek { get; set; }
         public decimal AvgExercisesPerWorkout { get; set; }
         public decimal AvgSetsPerWorkout { get; set; }
-        public string FavouriteExercise { get; set; }
+        public string? FavouriteExercise { get; set; }
     }
 }

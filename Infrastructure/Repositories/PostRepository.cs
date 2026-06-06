@@ -1,23 +1,18 @@
 using Domain.Aggregates;
-using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
+using Application.Interfaces.Repositories;
 
 namespace Infrastructure.Repositories
 {
-    public class PostRepository : BaseRepository<Post>, IPostRepository
+    public class PostRepository(DataContext context) : BaseRepository<Post>(context), IPostRepository
     {
-        public PostRepository(DataContext context) : base(context)
-        {
-        }
-
-        public override async Task AddAsync(Post post) 
+        public override async Task AddAsync(Post post)
         {
             post.CreatedDate = DateTime.Now;
-           _context.Posts.Add(post);
-           await _context.SaveChangesAsync();
+            _context.Posts.Add(post);
+            await _context.SaveChangesAsync();
         }
         public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int userId)
         {
@@ -37,8 +32,8 @@ namespace Infrastructure.Repositories
         public async Task CreateCommentAsync(Comment comment)
         {
             comment.CreatedDate = DateTime.Now;
-           _context.Comments.Add(comment);
-           await _context.SaveChangesAsync();
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteCommentAsync(Comment comment)

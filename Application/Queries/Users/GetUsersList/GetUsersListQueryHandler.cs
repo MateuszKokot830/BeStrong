@@ -1,22 +1,13 @@
-using Application.Dto;
+using Application.Dto.User;
 using Application.Helpers;
-using Application.Interfaces;
-using AutoMapper;
-using Domain.Aggregates;
+using Application.Interfaces.Repositories;
 using MediatR;
 
 namespace Application.Queries.Users.GetUsersList
 {
-    public class GetUsersListQueryHandler : IRequestHandler<GetUsersListQuery, PaginationList<UserDto>>
+    public class GetUsersListQueryHandler(IUserRepository userRepository) : IRequestHandler<GetUsersListQuery, PaginationList<UserDto>>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-
-        public GetUsersListQueryHandler(IUserRepository userRepository, IMapper mapper)
-        {
-            _userRepository = userRepository;
-            _mapper = mapper;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
 
         public async Task<PaginationList<UserDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {

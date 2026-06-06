@@ -1,5 +1,5 @@
-using Application.Dto;
-using Application.Interfaces;
+using Application.Dto.User;
+using Application.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,14 +13,15 @@ namespace Infrastructure.Services
         private readonly SymmetricSecurityKey _key;
         public TokenService(IConfiguration config)
         {
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            var tokenKey = config["TokenKey"] ?? string.Empty;
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
         }
 
-        public string CreateToken(UserDto user)
+        public string? CreateToken(UserDto user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new(JwtRegisteredClaimNames.NameId, user.UserName ?? string.Empty)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

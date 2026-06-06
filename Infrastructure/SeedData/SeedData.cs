@@ -14,15 +14,18 @@ namespace Infrastructure.SeedData
             if (await context.Users.AnyAsync()) return;
 
             var userData = await File.ReadAllTextAsync("../Infrastructure/SeedData/UserSeedData.json");
-            var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-            var users = JsonSerializer.Deserialize<List<User>>(userData);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var users = JsonSerializer.Deserialize<List<User>>(userData) ?? [];
 
-            foreach(var user in users)
+            foreach (var user in users)
             {
-                if (!context.Users.Any(u => u.UserName.ToLower() == user.UserName.ToLower()))
+                if (user.UserName == null)
+                    continue;
+
+                if (!context.Users.Any(u => u.UserName != null && u.UserName.Equals(user.UserName, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     var password = new PasswordHasher<User>();
-                    var hashed = password.HashPassword(user,"Password");
+                    var hashed = password.HashPassword(user, "Password");
                     user.PasswordHash = hashed;
                     user.UserName = user.UserName.ToLower();
                     context.Users.Add(user);
@@ -37,14 +40,14 @@ namespace Infrastructure.SeedData
             if (await context.Excercises.AnyAsync()) return;
 
             var exercisesData = await File.ReadAllTextAsync("../Infrastructure/SeedData/ExerciseSeedData.json");
-            var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-            var exercises = JsonSerializer.Deserialize<List<Exercise>>(exercisesData);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var exercises = JsonSerializer.Deserialize<List<Exercise>>(exercisesData) ?? [];
 
-            foreach(var exercise in exercises)
+            foreach (var exercise in exercises)
             {
-                if (!context.Excercises.Any(u => u.Name.ToLower() == exercise.Name.ToLower()))
+                if (!context.Excercises.Any(u => u.Name.Equals(exercise.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                     context.Excercises.Add(exercise);
+                    context.Excercises.Add(exercise);
                 }
             }
 

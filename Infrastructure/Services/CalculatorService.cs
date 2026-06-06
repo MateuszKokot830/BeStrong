@@ -1,4 +1,4 @@
-using Application.Interfaces;
+using Application.Interfaces.Services;
 
 namespace Infrastructure.Services
 {
@@ -8,7 +8,7 @@ namespace Infrastructure.Services
         {
             if (reps == 0) return 0;
 
-            return (int)Math.Ceiling(weight / ( 1.0278 - 0.0278 * reps ));
+            return (int)Math.Ceiling(weight / (1.0278 - 0.0278 * reps));
         }
     }
 }

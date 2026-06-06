@@ -1,17 +1,11 @@
-using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using MediatR;
-using ErrorOr;
 
 namespace Application.Commands.Posts.DeleteComment
 {
-    public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, Unit>
+    public class DeleteCommentCommandHandler(IPostRepository postRepository) : IRequestHandler<DeleteCommentCommand, Unit>
     {
-        private readonly IPostRepository _postRepository;
-
-        public DeleteCommentCommandHandler(IPostRepository postRepository)
-        {
-            _postRepository = postRepository;
-        }
+        private readonly IPostRepository _postRepository = postRepository;
 
         public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {

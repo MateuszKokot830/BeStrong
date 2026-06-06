@@ -1,11 +1,11 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Interfaces
+namespace Application.Interfaces.Services
 {
     public interface IPhotoService
     {
-         Task<ImageUploadResult> AddPhotoAsync(IFormFile file);
-         Task<DeletionResult> DeletePhotoAsync(string publicId);
+        Task<ImageUploadResult> AddPhotoAsync(IFormFile file);
+        Task<DeletionResult> DeletePhotoAsync(string? publicId);
     }
 }

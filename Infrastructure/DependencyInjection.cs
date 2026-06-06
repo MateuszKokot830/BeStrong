@@ -1,4 +1,5 @@
-using Application.Interfaces;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories;
@@ -11,7 +12,7 @@ namespace Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
-        {   
+        {
             services.AddDbContext<DataContext>();
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
@@ -19,7 +20,7 @@ namespace Infrastructure
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             services.AddScoped<IWorkoutPlanRepository, WorkoutPlanRepository>();
-            
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<INLoggerService, NLoggerService>();
             services.AddScoped<IPhotoService, PhotoService>();

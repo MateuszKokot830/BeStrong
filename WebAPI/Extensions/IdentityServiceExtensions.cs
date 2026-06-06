@@ -21,17 +21,21 @@ namespace WebAPI.Extensions
                 .AddRoleManager<RoleManager<Role>>()
                 .AddEntityFrameworkStores<DataContext>();
 
+            var tokenKey = config["TokenKey"];
+            if (string.IsNullOrWhiteSpace(tokenKey))
+                throw new InvalidOperationException("Configuration value 'TokenKey' is missing or empty.");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
 
             return services;
         }

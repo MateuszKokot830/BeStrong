@@ -1,24 +1,19 @@
-using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IAsyncRepository<T> where T : class
+    public class BaseRepository<T>(DataContext context) : IAsyncRepository<T> where T : class
     {
-        protected readonly DataContext _context;
-        public BaseRepository(DataContext context)
-        {
-            _context = context;
-        }
+        protected readonly DataContext _context = context;
 
         public virtual async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T?> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -31,10 +26,10 @@ namespace Infrastructure.Repositories
 
         public virtual async Task UpdateAsync(T entity)
         {
-            //_context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
-        
+
         public virtual async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);

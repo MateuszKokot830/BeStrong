@@ -2,7 +2,8 @@ using Application.Commands.Posts.CreateComment;
 using Application.Commands.Posts.CreatePost;
 using Application.Commands.Posts.DeleteComment;
 using Application.Commands.Posts.DeletePost;
-using Application.Dto;
+using Application.Dto.Comment;
+using Application.Dto.Post;
 using Application.Queries.Posts.GetFollowedUsersPosts;
 using Application.Queries.Posts.GetPosts;
 using Application.Queries.Posts.GetUserPosts;
@@ -12,14 +13,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebAPI.Controllers
 {
-    public class PostsController : BaseApiController
+    public class PostsController(IMediator mediator) : BaseApiController
     {
-        private readonly IMediator _mediator;
-
-        public PostsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [SwaggerOperation(Summary = "Creates a new post")]
         [HttpPost]

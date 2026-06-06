@@ -1,20 +1,14 @@
-using Application.Dto;
-using Application.Interfaces;
+using Application.Dto.Exercise;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Queries.Workouts.GetExercises
 {
-    public class GetExercisesQueryHandler : IRequestHandler<GetExercisesQuery, IEnumerable<ExerciseDto>>
+    public class GetExercisesQueryHandler(IWorkoutRepository workoutRepository, IMapper mapper) : IRequestHandler<GetExercisesQuery, IEnumerable<ExerciseDto>>
     {
-        private readonly IWorkoutRepository _workoutRepository;
-        private readonly IMapper _mapper;
-
-        public GetExercisesQueryHandler(IWorkoutRepository workoutRepository, IMapper mapper)
-        {
-            _workoutRepository = workoutRepository;
-            _mapper = mapper;
-        }
+        private readonly IWorkoutRepository _workoutRepository = workoutRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IEnumerable<ExerciseDto>> Handle(GetExercisesQuery request, CancellationToken cancellationToken)
         {

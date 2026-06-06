@@ -6,6 +6,6 @@ namespace Domain.Entities
     [Table("Roles")]
     public class Role : IdentityRole<int>
     {
-        
+
     }
 }

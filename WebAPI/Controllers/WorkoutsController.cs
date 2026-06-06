@@ -1,13 +1,14 @@
-using Application.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
-using Application.Interfaces;
 using Application.Queries.Workouts.GetUserWorkouts;
 using Application.Commands.Workouts.CreateWorkout;
 using Application.Queries.Workouts.GetExercises;
 using Application.Commands.Workouts.CreateExercise;
 using Application.Queries.Workouts.GetWorkoutStatistics;
+using Application.Interfaces.Services;
+using Application.Dto.Workout;
+using Application.Dto.Exercise;
 
 namespace WebAPI.Controllers
 {

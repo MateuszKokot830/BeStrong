@@ -8,9 +8,10 @@ namespace Domain.Aggregates
     public class Workout : AggregateRoot<int>
     {
         public int? UserId { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
         public DateTime Date { get; set; }
-        public string Name { get; set; }
-        public virtual ICollection<WorkoutExercise> WorkoutExercises { get; set; }
+        public string? Name { get; set; }
+        public virtual ICollection<WorkoutExercise> WorkoutExercises { get; set; } = [];
     }
 }

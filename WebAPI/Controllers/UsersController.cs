@@ -1,9 +1,7 @@
-using Application.Dto;
-using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
-using Application.Queries.Users.GetUser;
+using Application.Queries.Users.GetUserByUsername;
 using Application.Queries.Users.GetUsers;
 using Application.Commands.Users.UpdateUser;
 using Application.Queries.Users.GetUsersByIds;
@@ -14,16 +12,13 @@ using Application.Commands.Users.SetMainPhoto;
 using Application.Commands.Users.DeletePhoto;
 using Application.Helpers;
 using Application.Queries.Users.GetUsersList;
+using Application.Dto.User;
 
 namespace WebAPI.Controllers
 {
-    public class UsersController : BaseApiController
+    public class UsersController(IMediator mediator) : BaseApiController
     {
-        private readonly IMediator _mediator;
-        public UsersController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [SwaggerOperation(Summary = "Retrieves all users")]
         [HttpGet]
@@ -58,7 +53,7 @@ namespace WebAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult> GetUser(string username)
         {
-            var user = await _mediator.Send(new GetUserQuery() {Username = username});
+            var user = await _mediator.Send(new GetUserByUsernameQuery() {Username = username});
             return Ok(user);
         }
 

@@ -1,4 +1,4 @@
-using Application.Dto;
+using Application.Dto.Auth;
 using ErrorOr;
 using MediatR;
 
@@ -6,6 +6,6 @@ namespace Application.Queries.Login
 {
     public class LoginQuery : IRequest<ErrorOr<UserAuthResponseDto>>
     {
-        public UserLoginRequestDto userLoginRequestDto { get; set; }
+        public required UserLoginRequestDto userLoginRequestDto { get; set; }
     }
 }

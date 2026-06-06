@@ -1,10 +1,10 @@
-using Application.Dto;
+using Application.Dto.User;
 using MediatR;
 
 namespace Application.Commands.Users.UpdateUser
 {
     public class UpdateUserCommand : IRequest
     {
-        public UserUpdateDto UserUpdateDto { get; set; }
+        public required UserUpdateDto UserUpdateDto { get; set; }
     }
 }

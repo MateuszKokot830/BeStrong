@@ -1,9 +1,9 @@
-using Application.Dto;
+using Application.Dto.Statistics;
 using MediatR;
 
 namespace Application.Queries.Workouts.GetWorkoutStatistics
 {
-    public class GetWorkoutStatisticsQuery: IRequest<StatisticsDto>
+    public class GetWorkoutStatisticsQuery : IRequest<StatisticsDto>
     {
         public int UserId { get; set; }
     }

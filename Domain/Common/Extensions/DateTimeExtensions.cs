@@ -10,7 +10,7 @@ namespace Domain.Common.Extensions
             return age;
         }
 
-        public static string GetTimeDifferenceString(this DateTime date)
+        public static string? GetTimeDifferenceString(this DateTime date)
         {
             var today = DateTime.Today;
             var timeSpanDifference = today - date;
@@ -19,8 +19,8 @@ namespace Domain.Common.Extensions
             int Months = dateDifference.Month - 1;
             int Days = dateDifference.Day - 1;
             var result = string.Concat(
-                Year != 0 ? Year + " years " : null, 
-                Months != 0 ? Months + " months " : null, 
+                Year != 0 ? Year + " years " : null,
+                Months != 0 ? Months + " months " : null,
                 Days != 0 ? Days + " days " : null);
             return result;
         }

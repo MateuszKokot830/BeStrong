@@ -1,4 +1,4 @@
-using Application.Dto;
+using Application.Dto.Workout;
 using MediatR;
 
 namespace Application.Queries.Workouts.GetUserWorkouts

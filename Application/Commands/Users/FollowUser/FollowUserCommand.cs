@@ -1,4 +1,3 @@
-using Application.Dto;
 using MediatR;
 
 namespace Application.Commands.Users.FollowUser

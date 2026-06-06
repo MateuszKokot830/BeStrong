@@ -1,42 +1,40 @@
-using Application.Dto;
-using Application.Interfaces;
 using AutoMapper;
 using MediatR;
 using Domain.Aggregates;
 using Domain.Errors;
 using ErrorOr;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using Application.Dto.Auth;
+using Application.Dto.User;
 
 namespace Application.Commands.Register
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<UserAuthResponseDto>>
+    public class RegisterCommandHandler(IUserRepository userRepository,
+                                IMapper mapper,
+                                ITokenService tokenService) : IRequestHandler<RegisterCommand, ErrorOr<UserAuthResponseDto>>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-        private readonly ITokenService _tokenService;
-        public RegisterCommandHandler(IUserRepository userRepository, 
-                                    IMapper mapper, 
-                                    ITokenService tokenService)
-        {
-            _userRepository = userRepository;
-            _mapper = mapper;
-            _tokenService = tokenService;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ITokenService _tokenService = tokenService;
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetByUsernameAsync(request.userRegisterRequestDto.UserName) != null) 
+            if (await _userRepository.GetByUsernameAsync(request.UserRegisterRequestDto.UserName) != null)
                 return Errors.User.DuplicateUsername;
 
-            var user = _mapper.Map<User>(request.userRegisterRequestDto);
+            var user = _mapper.Map<User>(request.UserRegisterRequestDto);
 
-            var result = _userRepository.RegisterUserAsync(user, request.userRegisterRequestDto.Password);
-            if (!result.Result.Succeeded) return Errors.User.FailedRegister;
+            var result = await _userRepository.RegisterUserAsync(user, request.UserRegisterRequestDto.Password);
+
+            if (!result.Succeeded)
+                return Errors.User.FailedRegister;
 
             var userDto = _mapper.Map<UserDto>(user);
 
-            return new UserAuthResponseDto 
+            return new UserAuthResponseDto
             {
-                Username = user.UserName, 
+                Username = user.UserName,
                 Token = _tokenService.CreateToken(userDto)
             };
         }

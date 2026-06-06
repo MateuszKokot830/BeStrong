@@ -1,20 +1,14 @@
-using Application.Dto;
-using Application.Interfaces;
+using Application.Dto.User;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Queries.Users.GetUsersByIds
 {
-    public class GetUsersByIdsQueryHandler : IRequestHandler<GetUsersByIdsQuery, IEnumerable<UserDto>>
+    public class GetUsersByIdsQueryHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<GetUsersByIdsQuery, IEnumerable<UserDto>>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-
-        public GetUsersByIdsQueryHandler(IUserRepository userRepository, IMapper mapper)
-        {
-            _userRepository = userRepository;
-            _mapper = mapper;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IEnumerable<UserDto>> Handle(GetUsersByIdsQuery request, CancellationToken cancellationToken)
         {

@@ -8,14 +8,17 @@ namespace Domain.Aggregates
     public class Post : AggregateRoot<int>
     {
         public int UserId { get; set; }
-        public virtual User User { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedDate  { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
         public int? WorkoutId { get; set; }
-        public virtual Workout Workout { get; set; }
+        [ForeignKey("WorkoutId")]
+        public virtual Workout? Workout { get; set; }
         public int? WorkoutPlanId { get; set; }
-        public virtual WorkoutPlan WorkoutPlan { get; set; }
+        [ForeignKey("WorkoutPlanId")]
+        public virtual WorkoutPlan? WorkoutPlan { get; set; }
         public int Likes { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = [];
     }
 }

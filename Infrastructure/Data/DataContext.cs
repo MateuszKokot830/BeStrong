@@ -22,7 +22,8 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Follower>(entity => {
+            builder.Entity<Follower>(entity =>
+            {
                 entity.HasOne(x => x.User)
                 .WithMany(x => x.FollowedUsers)
                 .HasForeignKey(x => x.FollowedUserId)
@@ -34,14 +35,16 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
-            builder.Entity<Comment>(entity => {
+            builder.Entity<Comment>(entity =>
+            {
                 entity.HasOne(x => x.Post)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            builder.Entity<WorkoutExercise>(entity => {
+            builder.Entity<WorkoutExercise>(entity =>
+            {
                 entity.HasOne(x => x.Workout)
                 .WithMany(x => x.WorkoutExercises)
                 .HasForeignKey(x => x.WorkoutId)
@@ -53,7 +56,8 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);
             });
 
-            builder.Entity<User>(entity => {
+            builder.Entity<User>(entity =>
+            {
                 entity.OwnsOne(x => x.Measurements);
                 entity.HasOne(x => x.WorkoutPlan)
                 .WithMany(x => x.UsedBy)
@@ -61,7 +65,8 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
             });
 
-            builder.Entity<WorkoutPlan>(entity => {
+            builder.Entity<WorkoutPlan>(entity =>
+            {
                 entity.HasOne(x => x.CreatedBy)
                 .WithMany(x => x.CreatedWorkoutPlans)
                 .HasForeignKey(x => x.CreatedById)

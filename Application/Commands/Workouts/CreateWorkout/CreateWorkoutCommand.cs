@@ -1,11 +1,10 @@
-using Application.Dto;
-using ErrorOr;
+using Application.Dto.Workout;
 using MediatR;
 
 namespace Application.Commands.Workouts.CreateWorkout
 {
     public class CreateWorkoutCommand : IRequest
     {
-        public WorkoutDto WorkoutDto { get; set; }
+        public required WorkoutDto WorkoutDto { get; set; }
     }
 }

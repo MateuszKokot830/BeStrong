@@ -8,8 +8,10 @@ namespace Domain.Entities
     public class Follower : Entity<int>
     {
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
         public int FollowedUserId { get; set; }
-        public virtual User FollowedUser { get; set; }
+        [ForeignKey("FollowedUserId")]
+        public virtual User? FollowedUser { get; set; }
     }
 }

@@ -1,8 +1,8 @@
-using Application.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
 using Application.Commands.WorkoutPlans.CreateWorkoutPlan;
+using Application.Dto.WorkoutPlan;
 
 namespace WebAPI.Controllers
 {
@@ -10,10 +10,7 @@ namespace WebAPI.Controllers
     {
         private readonly IMediator _mediator;
 
-        public WorkoutPlansController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public WorkoutPlansController(IMediator mediator) => _mediator = mediator;
 
         [SwaggerOperation(Summary = "Creates a new workout plan")]
         [HttpPost]

@@ -4,28 +4,28 @@ namespace Domain.Models
     {
         protected abstract IEnumerable<object> GetEqualityComponents();
 
-        public bool Equals(ValueObject other)
+        public bool Equals(ValueObject? other)
         {
-            return Equals((object)other);
+            return Equals((object?)other);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
                 return false;
             }
-            var valueObject = (ValueObject)obj;
 
-            return this.GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
+            var other = (ValueObject)obj;
+            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
 
-        public static bool operator ==(ValueObject left, ValueObject right) 
+        public static bool operator ==(ValueObject left, ValueObject right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValueObject left, ValueObject right) 
+        public static bool operator !=(ValueObject left, ValueObject right)
         {
             return !Equals(left, right);
         }

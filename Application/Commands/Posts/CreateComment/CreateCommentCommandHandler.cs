@@ -1,21 +1,14 @@
-using Application.Dto;
-using Application.Interfaces;
 using AutoMapper;
 using MediatR;
 using Domain.Entities;
+using Application.Interfaces.Repositories;
 
 namespace Application.Commands.Posts.CreateComment
 {
-    public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand>
+    public class CreateCommentCommandHandler(IPostRepository postRepository, IMapper mapper) : IRequestHandler<CreateCommentCommand>
     {
-        private readonly IPostRepository _postRepository;
-        private readonly IMapper _mapper;
-
-        public CreateCommentCommandHandler(IPostRepository postRepository, IMapper mapper)
-        {
-            _postRepository = postRepository;
-            _mapper = mapper;
-        }
+        private readonly IPostRepository _postRepository = postRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Unit> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
         {
