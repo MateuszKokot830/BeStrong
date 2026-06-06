@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Posts.GetUserPosts
 {
-    public class GetUserPostsQuery : IRequest<IEnumerable<PostDto>>
-    {
-        public int UserId { get; set; }
-    }
+    public record GetUserPostsQuery(int UserId) : IRequest<IEnumerable<PostDto>>;
 }

@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Users.GetUserByUsername
 {
-    public class GetUserByUsernameQuery : IRequest<UserDto>
-    {
-        public required string Username { get; set; }
-    }
+    public record GetUserByUsernameQuery(string Username) : IRequest<UserDto>;
 }

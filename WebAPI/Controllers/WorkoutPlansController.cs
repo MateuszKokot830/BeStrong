@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateWorkout(WorkoutPlanCreateDto workoutPlanCreateDto)
         {
-            await _mediator.Send(new CreateWorkoutPlanCommand() {WorkoutPlanCreateDto = workoutPlanCreateDto});
+            await _mediator.Send(new CreateWorkoutPlanCommand(workoutPlanCreateDto));
             return NoContent();
         }
     }

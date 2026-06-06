@@ -2,9 +2,5 @@ using MediatR;
 
 namespace Application.Commands.Posts.DeletePost
 {
-    public class DeletePostCommand : IRequest<Unit>
-    {
-        public int PostId { get; set; }
-        public int UserId { get; set; }
-    }
+    public record DeletePostCommand(int PostId, int UserId) : IRequest<Unit>;
 }

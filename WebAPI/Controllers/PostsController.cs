@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePost(PostCreateDto postCreateDto)
         {
-            await _mediator.Send(new CreatePostCommand() {PostCreateDto = postCreateDto});
+            await _mediator.Send(new CreatePostCommand(postCreateDto));
             return NoContent();
         }
 
@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpGet("users/{userId}")]
         public async Task<ActionResult> GetUserPosts(int userId)
         {
-            var posts = await _mediator.Send(new GetUserPostsQuery() {UserId = userId});
+            var posts = await _mediator.Send(new GetUserPostsQuery(userId));
             return Ok(posts.ToList());
         }
 
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
         [HttpGet("users/followers")]
         public async Task<ActionResult> GetUserPosts([FromQuery] List<int> ids)
         {
-            var posts = await _mediator.Send(new GetFollowedUsersPostsQuery() {FollowersIds = ids});
+            var posts = await _mediator.Send(new GetFollowedUsersPostsQuery(ids));
             return Ok(posts.ToList());
         }
 
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
         [HttpPost("comments")]
         public async Task<ActionResult> CreateComment(CommentCreateDto commentCreateDto)
         {
-            await _mediator.Send(new CreateCommentCommand () {CommentCreateDto = commentCreateDto});
+            await _mediator.Send(new CreateCommentCommand(commentCreateDto));
             return NoContent();
         }
 
@@ -61,7 +61,8 @@ namespace WebAPI.Controllers
         [HttpDelete("{postId}")]
         public async Task<ActionResult> DeletePost(int postId)
         {
-            await _mediator.Send(new DeletePostCommand() { PostId = postId });
+            var userId = GetCurrentUserId();
+            await _mediator.Send(new DeletePostCommand(postId, userId));
             return NoContent();
         }
 
@@ -69,7 +70,8 @@ namespace WebAPI.Controllers
         [HttpDelete("comments/{commentId}")]
         public async Task<ActionResult> DeleteComment(int commentId)
         {
-            await _mediator.Send(new DeleteCommentCommand() { CommentId = commentId });
+            var userId = GetCurrentUserId();
+            await _mediator.Send(new DeleteCommentCommand(commentId, userId));
             return NoContent();
         }
     }

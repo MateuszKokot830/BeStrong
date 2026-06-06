@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         [HttpGet("list")]
         public async Task<ActionResult> GetUsersList([FromQuery]PaginationParams paginationParams)
         {
-            var users = await _mediator.Send(new GetUsersListQuery() { PaginationParams = paginationParams });
+            var users = await _mediator.Send(new GetUsersListQuery(paginationParams));
             Response.AddPaginationHeader(new PaginationHeader(
                 users.CurrentPage, 
                 users.PageSize,
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
         [HttpGet("followers")]
         public async Task<ActionResult> GetUsersByIds([FromQuery] List<int> ids)
         {
-            var users = await _mediator.Send(new GetUsersByIdsQuery() {UserIds = ids});
+            var users = await _mediator.Send(new GetUsersByIdsQuery(ids));
             return Ok(users.ToList());
         }
         
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult> GetUser(string username)
         {
-            var user = await _mediator.Send(new GetUserByUsernameQuery() {Username = username});
+            var user = await _mediator.Send(new GetUserByUsernameQuery(username));
             return Ok(user);
         }
 
@@ -61,7 +61,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto) 
         {
-            await _mediator.Send(new UpdateUserCommand() {UserUpdateDto = userUpdateDto});
+            await _mediator.Send(new UpdateUserCommand(userUpdateDto));
             return NoContent();
         }
 
@@ -69,7 +69,7 @@ namespace WebAPI.Controllers
         [HttpPut("{userId}/followers/{id}")]
         public async Task<ActionResult> FollowUser(int userId, int id) 
         {
-            await _mediator.Send(new FollowUserCommand() {UserId = userId, FollowUserId = id});
+            await _mediator.Send(new FollowUserCommand(userId, id));
             return NoContent();
         }
 
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
         [HttpPut("{userId}/photos")]
         public async Task<ActionResult> AddPhoto(IFormFile file, int userId) 
         {
-            await _mediator.Send(new AddPhotoCommand() {File = file, UserId = userId});
+            await _mediator.Send(new AddPhotoCommand(file, userId));
             return NoContent();
         }
 
@@ -85,7 +85,7 @@ namespace WebAPI.Controllers
         [HttpPut("{userId}/photos/{photoId}")]
         public async Task<ActionResult> SetMainPhoto(int photoId, int userId) 
         {
-            await _mediator.Send(new SetMainPhotoCommand() {PhotoId = photoId, UserId = userId});
+            await _mediator.Send(new SetMainPhotoCommand(photoId, userId));
             return NoContent();
         }
 
@@ -93,7 +93,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{userId}/photos/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int photoId, int userId) 
         {
-            await _mediator.Send(new DeletePhotoCommand() {PhotoId = photoId, UserId = userId});
+            await _mediator.Send(new DeletePhotoCommand(photoId, userId));
             return NoContent();
         }
     }

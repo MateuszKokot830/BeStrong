@@ -20,7 +20,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             var workouts = await _workoutRepository.GetUserWorkoutsAsync(request.UserId);
 
             if (user is null || workouts is null)
-                return new StatisticsDto();
+                throw new ArgumentNullException("User or workouts not found");
 
             var workoutsDto = _mapper.Map<IEnumerable<WorkoutDto>>(workouts).ToList();
             var totalWorkouts = workoutsDto.Count();
@@ -29,7 +29,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             var totalSets = workoutsDto.SelectMany(x => x.WorkoutExercises).Sum(y => y.Sets);
             var avgWorkoutsPerWeek = (decimal)(totalWorkouts / ((DateTime.Now.Day - user.DateOfWorkoutStart.Day) / 7));
             var avgExercisesPerWorkout = (decimal)(totalExercises / totalWorkouts);
-            var AvgSetsPerWorkout = (decimal)(totalSets / totalWorkouts);
+            var avgSetsPerWorkout = (decimal)(totalSets / totalWorkouts);
 
             var groupedExercises = exercises.GroupBy(x => x.ExerciseId)
                 .Select(y => new { Id = y.Key, Count = y.Count() })
@@ -42,16 +42,14 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
                 .Select(x => x.Name)
                 .FirstOrDefault();
 
-            var statistics = new StatisticsDto
-            {
-                TotalWorkouts = totalWorkouts,
-                TotalExercises = totalExercises,
-                TotalSets = totalSets,
-                AvgWorkoutsPerWeek = avgExercisesPerWorkout,
-                AvgExercisesPerWorkout = avgExercisesPerWorkout,
-                AvgSetsPerWorkout = AvgSetsPerWorkout,
-                FavouriteExercise = favouriteExercise
-            };
+            var statistics = new StatisticsDto(
+                totalWorkouts,
+                totalExercises,
+                totalSets,
+                avgWorkoutsPerWeek,
+                avgExercisesPerWorkout,
+                avgSetsPerWorkout,
+                favouriteExercise);
 
             return statistics;
         }

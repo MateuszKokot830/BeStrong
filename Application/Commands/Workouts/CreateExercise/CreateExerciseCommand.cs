@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Commands.Workouts.CreateExercise
 {
-    public class CreateExerciseCommand : IRequest
-    {
-        public required ExerciseDto ExerciseDto { get; set; }
-    }
+    public record CreateExerciseCommand(ExerciseDto ExerciseDto) : IRequest;
 }

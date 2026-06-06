@@ -4,8 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Users.GetUsersList
 {
-    public class GetUsersListQuery : IRequest<PaginationList<UserDto>>
-    {
-        public required PaginationParams PaginationParams { get; set; }
-    }
+    public record GetUsersListQuery(PaginationParams PaginationParams) : IRequest<PaginationList<UserDto>>;
 }

@@ -4,8 +4,5 @@ using MediatR;
 
 namespace Application.Commands.Register
 {
-    public class RegisterCommand : IRequest<ErrorOr<UserAuthResponseDto>>
-    {
-        public required UserRegisterRequestDto UserRegisterRequestDto { get; set; }
-    }
+    public record RegisterCommand(UserRegisterRequestDto UserRegisterRequestDto) : IRequest<ErrorOr<UserAuthResponseDto>>;
 }

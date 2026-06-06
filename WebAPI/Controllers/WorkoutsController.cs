@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateWorkout(WorkoutDto workoutDto)
         {
-            await _mediator.Send(new CreateWorkoutCommand() {WorkoutDto = workoutDto});
+            await _mediator.Send(new CreateWorkoutCommand(workoutDto));
             return NoContent();
         }
 
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUserWorkouts(int id)
         {
-            var workouts = await _mediator.Send(new GetUserWorkoutsQuery(){UserId = id});
+            var workouts = await _mediator.Send(new GetUserWorkoutsQuery(id));
             return Ok(workouts.ToList());
         }
 
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
         [HttpGet("statistics/{id}")]
         public async Task<ActionResult> GetWorkoutStatistics(int id)
         {
-            var statistics = await _mediator.Send(new GetWorkoutStatisticsQuery(){UserId = id});
+            var statistics = await _mediator.Send(new GetWorkoutStatisticsQuery(id));
             return Ok(statistics);
         }
         
@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
         [HttpPost("exercises")]
         public async Task<ActionResult> CreateExercise(ExerciseDto exerciseDto)
         {
-            await _mediator.Send(new CreateExerciseCommand() {ExerciseDto = exerciseDto});
+            await _mediator.Send(new CreateExerciseCommand(exerciseDto));
             return NoContent();
         }
 

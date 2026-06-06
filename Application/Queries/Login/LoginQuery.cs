@@ -4,8 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Login
 {
-    public class LoginQuery : IRequest<ErrorOr<UserAuthResponseDto>>
-    {
-        public required UserLoginRequestDto userLoginRequestDto { get; set; }
-    }
+    public record LoginQuery(UserLoginRequestDto UserLoginRequestDto) : IRequest<ErrorOr<UserAuthResponseDto>>;
 }

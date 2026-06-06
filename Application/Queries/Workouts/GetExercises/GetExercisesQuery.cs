@@ -3,7 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Workouts.GetExercises
 {
-    public class GetExercisesQuery : IRequest<IEnumerable<ExerciseDto>>
-    {
-    }
+    public record GetExercisesQuery : IRequest<IEnumerable<ExerciseDto>>;
 }

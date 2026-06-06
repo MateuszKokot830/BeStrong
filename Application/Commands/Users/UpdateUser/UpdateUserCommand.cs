@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Commands.Users.UpdateUser
 {
-    public class UpdateUserCommand : IRequest
-    {
-        public required UserUpdateDto UserUpdateDto { get; set; }
-    }
+    public record UpdateUserCommand(UserUpdateDto UserUpdateDto) : IRequest;
 }

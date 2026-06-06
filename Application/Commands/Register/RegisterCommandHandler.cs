@@ -32,11 +32,7 @@ namespace Application.Commands.Register
 
             var userDto = _mapper.Map<UserDto>(user);
 
-            return new UserAuthResponseDto
-            {
-                Username = user.UserName,
-                Token = _tokenService.CreateToken(userDto)
-            };
+            return new UserAuthResponseDto(user.UserName, _tokenService.CreateToken(userDto));
         }
     }
 }

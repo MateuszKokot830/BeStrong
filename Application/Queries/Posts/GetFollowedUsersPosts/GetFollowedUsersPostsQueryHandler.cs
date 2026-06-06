@@ -12,7 +12,7 @@ namespace Application.Queries.Posts.GetFollowedUsersPosts
 
         public async Task<IEnumerable<PostDto>> Handle(GetFollowedUsersPostsQuery request, CancellationToken cancellationToken)
         {
-            var posts = await _postRepository.GetAllFollowedUsersPostsAsync(request.FollowersIds);
+            var posts = await _postRepository.GetAllFollowedUsersPostsAsync([.. request.FollowersIds]);
 
             return _mapper.Map<IEnumerable<PostDto>>(posts);
         }

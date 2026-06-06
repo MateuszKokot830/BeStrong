@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Users.GetUsersByIds
 {
-    public class GetUsersByIdsQuery : IRequest<IEnumerable<UserDto>>
-    {
-        public List<int> UserIds { get; set; } = [];
-    }
+    public record GetUsersByIdsQuery(IReadOnlyCollection<int> UserIds) : IRequest<IEnumerable<UserDto>>;
 }

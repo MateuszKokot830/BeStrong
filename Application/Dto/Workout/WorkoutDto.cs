@@ -1,10 +1,10 @@
 namespace Application.Dto.Workout
 {
-    public class WorkoutDto
-    {
-        public int? UserId { get; set; }
-        public DateTime Date { get; set; }
-        public string? Name { get; set; }
-        public ICollection<WorkoutExerciseDto> WorkoutExercises { get; set; } = [];
-    }
+    public record WorkoutDto(
+        int Id,
+        int? UserId,
+        DateTime Date,
+        string? Name,
+        IReadOnlyCollection<WorkoutExerciseDto> WorkoutExercises
+    );
 }

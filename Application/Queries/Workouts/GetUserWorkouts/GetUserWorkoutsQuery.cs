@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Workouts.GetUserWorkouts
 {
-    public class GetUserWorkoutsQuery : IRequest<IEnumerable<WorkoutDto>>
-    {
-        public int UserId { get; set; }
-    }
+    public record GetUserWorkoutsQuery(int UserId) : IRequest<IEnumerable<WorkoutDto>>;
 }

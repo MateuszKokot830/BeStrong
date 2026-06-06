@@ -2,9 +2,5 @@ using MediatR;
 
 namespace Application.Commands.Users.SetMainPhoto
 {
-    public class SetMainPhotoCommand : IRequest<Unit>
-    {
-        public int PhotoId { get; set; }
-        public int UserId { get; set; }
-    }
+    public record SetMainPhotoCommand(int PhotoId, int UserId) : IRequest<Unit>;
 }

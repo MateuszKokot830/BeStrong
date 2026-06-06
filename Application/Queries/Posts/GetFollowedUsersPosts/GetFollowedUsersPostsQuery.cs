@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Queries.Posts.GetFollowedUsersPosts
 {
-    public class GetFollowedUsersPostsQuery : IRequest<IEnumerable<PostDto>>
-    {
-        public List<int> FollowersIds { get; set; } = [];
-    }
+    public record GetFollowedUsersPostsQuery(IReadOnlyCollection<int> FollowersIds) : IRequest<IEnumerable<PostDto>>;
 }

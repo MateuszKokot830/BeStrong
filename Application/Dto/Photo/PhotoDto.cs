@@ -1,10 +1,9 @@
 namespace Application.Dto.Photo
 {
-    public class PhotoDto
-    {
-        public int Id { get; set; }
-        public string? PublicId { get; set; }
-        public string? Url { get; set; }
-        public bool IsProfilePhoto { get; set; }
-    }
+    public record PhotoDto(
+        int Id,
+        string? PublicId,
+        string? Url,
+        bool IsProfilePhoto
+    );
 }

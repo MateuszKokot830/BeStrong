@@ -3,8 +3,5 @@ using MediatR;
 
 namespace Application.Commands.Posts.CreatePost
 {
-    public class CreatePostCommand : IRequest
-    {
-        public required PostCreateDto PostCreateDto { get; set; }
-    }
+    public record CreatePostCommand(PostCreateDto PostCreateDto) : IRequest;
 }
