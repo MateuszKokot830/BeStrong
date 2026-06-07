@@ -1,6 +1,8 @@
+using Application.Dto.Exercise;
 using Application.Dto.Statistics;
 using Application.Dto.Workout;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Errors;
 using ErrorOr;
@@ -8,13 +10,16 @@ using MediatR;
 
 namespace Application.Queries.Workouts.GetWorkoutStatistics
 {
-    public class GetWorkoutStatisticsQueryHandler(IWorkoutRepository workoutRepository,
-                                            IUserRepository userRepository,
-                                            IMapper mapper) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
+    public class GetWorkoutStatisticsQueryHandler(
+        IWorkoutRepository workoutRepository,
+        IUserRepository userRepository,
+        IMapper mapper,
+        IStatisticsService statisticsService) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
     {
         private readonly IWorkoutRepository _workoutRepository = workoutRepository;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
+        private readonly IStatisticsService _statisticsService = statisticsService;
 
         public async Task<ErrorOr<StatisticsDto>> Handle(GetWorkoutStatisticsQuery request, CancellationToken cancellationToken)
         {
@@ -23,37 +28,12 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
                 return Errors.User.NotFound;
 
             var workouts = await _workoutRepository.GetUserWorkoutsAsync(request.UserId, cancellationToken);
-            if (workouts is null)
-                return Errors.Workout.NotFound;
+            var exercises = await _workoutRepository.GetExercisesAsync(cancellationToken);
 
-            var workoutsDto = _mapper.Map<IEnumerable<WorkoutDto>>(workouts).ToList();
-            var totalWorkouts = workoutsDto.Count();
-            var exercises = workoutsDto.SelectMany(x => x.WorkoutExercises).ToList();
-            var totalExercises = exercises.Count();
-            var totalSets = workoutsDto.SelectMany(x => x.WorkoutExercises).Sum(y => y.Sets);
-            var avgWorkoutsPerWeek = (decimal)(totalWorkouts / ((DateTime.Now.Day - user.DateOfWorkoutStart.Day) / 7));
-            var avgExercisesPerWorkout = (decimal)(totalExercises / totalWorkouts);
-            var avgSetsPerWorkout = (decimal)(totalSets / totalWorkouts);
+            var workoutDtos = _mapper.Map<IReadOnlyList<WorkoutDto>>(workouts);
+            var exerciseDtos = _mapper.Map<IReadOnlyList<ExerciseDto>>(exercises);
 
-            var groupedExercises = exercises.GroupBy(x => x.ExerciseId)
-                .Select(y => new { Id = y.Key, Count = y.Count() })
-                .ToList();
-
-            var favouriteExerciseId = groupedExercises.OrderByDescending(x => x.Count).FirstOrDefault();
-            var exercisesList = await _workoutRepository.GetExercisesAsync(cancellationToken);
-            var favouriteExercise = exercisesList
-                .Where(x => x.Id == favouriteExerciseId?.Id)
-                .Select(x => x.Name)
-                .FirstOrDefault();
-
-            return new StatisticsDto(
-                totalWorkouts,
-                totalExercises,
-                totalSets,
-                avgWorkoutsPerWeek,
-                avgExercisesPerWorkout,
-                avgSetsPerWorkout,
-                favouriteExercise);
+            return _statisticsService.Calculate(workoutDtos, user.DateOfWorkoutStart, exerciseDtos);
         }
     }
 }
