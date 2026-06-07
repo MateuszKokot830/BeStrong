@@ -4,6 +4,6 @@ namespace Application.Interfaces.Services
 {
     public interface ITokenService
     {
-        string? CreateToken(UserDto user);
+        Task<string?> CreateTokenAsync(UserDto user, CancellationToken cancellationToken = default);
     }
 }

@@ -7,7 +7,7 @@ namespace Application.Dto.User
 {
     public record UserDto(
         int Id,
-        string? UserName,
+        string UserName,
         DateTime DateOfBirth,
         DateTime DateOfWorkoutStart,
         string? Name,

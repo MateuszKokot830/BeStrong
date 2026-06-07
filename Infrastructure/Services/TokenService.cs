@@ -1,41 +1,50 @@
-using Application.Dto.User;
-using Application.Interfaces.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Dto.User;
+using Application.Interfaces.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Services
+namespace Infrastructure.Services;
+
+public class TokenService(
+    UserManager<IdentityUser> userManager,
+    IConfiguration configuration) : ITokenService
 {
-    public class TokenService : ITokenService
+    public async Task<string?> CreateTokenAsync(UserDto user, CancellationToken cancellationToken = default)
     {
-        private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config)
+        var claims = new List<Claim>
         {
-            var tokenKey = config["TokenKey"] ?? string.Empty;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.GivenName, user.Name!),
+            new(ClaimTypes.Surname, user.Surname!)
+        };
+
+        if (userManager != null)
+        {
+            var identityUser = await userManager.FindByNameAsync(user.UserName ?? string.Empty);
+            if (identityUser != null)
+            {
+                var roles = await userManager.GetRolesAsync(identityUser);
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
         }
 
-        public string? CreateToken(UserDto user)
-        {
-            var claims = new List<Claim>
-            {
-                new(JwtRegisteredClaimNames.NameId, user.UserName ?? string.Empty)
-            };
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"] ?? configuration["TokenKey"] ?? string.Empty));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var expiresAt = DateTime.UtcNow.AddMinutes(double.Parse(configuration["Jwt:ExpirationInMinutes"] ?? "60"));
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+        var token = new JwtSecurityToken(
+            issuer: configuration["Jwt:Issuer"] ?? "BeStrong",
+            audience: configuration["Jwt:Audience"] ?? "BeStrongUsers",
+            claims: claims,
+            expires: expiresAt,
+            signingCredentials: credentials);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+        return accessToken;
     }
 }

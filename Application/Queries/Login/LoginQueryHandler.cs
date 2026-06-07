@@ -30,8 +30,9 @@ namespace Application.Queries.Login
                 return Errors.Auth.InvalidPassword;
 
             var userDto = _mapper.Map<UserDto>(user);
+            var token = await _tokenService.CreateTokenAsync(userDto);
 
-            return new UserAuthResponseDto(user.UserName, _tokenService.CreateToken(userDto));
+            return new UserAuthResponseDto(user.UserName, token);
         }
     }
 }

@@ -1,6 +1,6 @@
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -10,8 +10,12 @@ namespace WebAPI.Controllers
     {
         protected int GetCurrentUserId()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return int.TryParse(userId, out var id) ? id : 0;
+            return User.GetUserId();
+        }
+
+        protected string GetCurrentUsername()
+        {
+            return User.GetUsername();
         }
 
         protected IActionResult Problem(List<Error> errors)

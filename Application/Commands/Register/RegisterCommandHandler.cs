@@ -31,8 +31,9 @@ namespace Application.Commands.Register
                 return Errors.User.FailedRegister;
 
             var userDto = _mapper.Map<UserDto>(user);
+            var token = await _tokenService.CreateTokenAsync(userDto);
 
-            return new UserAuthResponseDto(user.UserName, _tokenService.CreateToken(userDto));
+            return new UserAuthResponseDto(user.UserName, token);
         }
     }
 }
