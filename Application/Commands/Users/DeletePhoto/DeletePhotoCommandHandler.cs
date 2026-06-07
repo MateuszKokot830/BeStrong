@@ -1,31 +1,33 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Domain.Errors;
+using ErrorOr;
 using MediatR;
 
 namespace Application.Commands.Users.DeletePhoto
 {
-    public class DeletePhotoCommandHandler(IUserRepository userRepository, IPhotoService photoService) : IRequestHandler<DeletePhotoCommand, Unit>
+    public class DeletePhotoCommandHandler(IUserRepository userRepository, IPhotoService photoService) : IRequestHandler<DeletePhotoCommand, ErrorOr<Unit>>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPhotoService _photoService = photoService;
 
-        public async Task<Unit> Handle(DeletePhotoCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Unit>> Handle(DeletePhotoCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(request.UserId);
-
+            var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
             if (user is null || user.Photos is null)
-                return Unit.Value;
+                return Errors.User.NotFound;
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == request.PhotoId);
+            if (photo is null)
+                return Errors.Photo.NotFound;
 
-            if (photo != null && !photo.IsProfilePhoto)
-            {
-                if (photo.PublicId != null)
-                    await _photoService.DeletePhotoAsync(photo.PublicId);
+            if (photo.IsProfilePhoto)
+                return Errors.Photo.IsProfilePhoto;
 
-                await _userRepository.DeletePhoto(photo);
-            }
+            if (photo.PublicId != null)
+                await _photoService.DeletePhotoAsync(photo.PublicId);
 
+            await _userRepository.DeletePhoto(photo, cancellationToken);
             return Unit.Value;
         }
     }

@@ -7,6 +7,7 @@ using Application.Dto.Post;
 using Application.Queries.Posts.GetFollowedUsersPosts;
 using Application.Queries.Posts.GetPosts;
 using Application.Queries.Posts.GetUserPosts;
+using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -19,60 +20,81 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Creates a new post")]
         [HttpPost]
-        public async Task<ActionResult> CreatePost(PostCreateDto postCreateDto)
+        public async Task<IActionResult> CreatePost(PostCreateDto postCreateDto)
         {
-            await _mediator.Send(new CreatePostCommand(postCreateDto));
-            return NoContent();
+            ErrorOr<PostDto> result = await _mediator.Send(new CreatePostCommand(postCreateDto));
+            
+            return result.Match(
+                post => Ok(post),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts")]
         [HttpGet]
-        public async Task<ActionResult> GetPosts()
+        public async Task<IActionResult> GetPosts()
         {
-            var posts = await _mediator.Send(new GetPostsQuery());
-            return Ok(posts.ToList());
+            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetPostsQuery());
+            
+            return result.Match(
+                posts => Ok(posts),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts from a specific user")]
         [HttpGet("users/{userId}")]
-        public async Task<ActionResult> GetUserPosts(int userId)
+        public async Task<IActionResult> GetUserPosts(int userId)
         {
-            var posts = await _mediator.Send(new GetUserPostsQuery(userId));
-            return Ok(posts.ToList());
+            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetUserPostsQuery(userId));
+            
+            return result.Match(
+                posts => Ok(posts),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts from specific followers by given ids")]
         [HttpGet("users/followers")]
-        public async Task<ActionResult> GetUserPosts([FromQuery] List<int> ids)
+        public async Task<IActionResult> GetFollowedUsersPosts([FromQuery] List<int> ids)
         {
-            var posts = await _mediator.Send(new GetFollowedUsersPostsQuery(ids));
-            return Ok(posts.ToList());
+            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetFollowedUsersPostsQuery(ids));
+            
+            return result.Match(
+                posts => Ok(posts),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Creates a comment to post")]
         [HttpPost("comments")]
-        public async Task<ActionResult> CreateComment(CommentCreateDto commentCreateDto)
+        public async Task<IActionResult> CreateComment(CommentCreateDto commentCreateDto)
         {
-            await _mediator.Send(new CreateCommentCommand(commentCreateDto));
-            return NoContent();
+            ErrorOr<CommentDto> result = await _mediator.Send(new CreateCommentCommand(commentCreateDto));
+            
+            return result.Match(
+                comment => Ok(comment),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Deletes a post by id")]
         [HttpDelete("{postId}")]
-        public async Task<ActionResult> DeletePost(int postId)
+        public async Task<IActionResult> DeletePost(int postId)
         {
             var userId = GetCurrentUserId();
-            await _mediator.Send(new DeletePostCommand(postId, userId));
-            return NoContent();
+            ErrorOr<Unit> result = await _mediator.Send(new DeletePostCommand(postId, userId));
+            
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Deletes a comment by id")]
         [HttpDelete("comments/{commentId}")]
-        public async Task<ActionResult> DeleteComment(int commentId)
+        public async Task<IActionResult> DeleteComment(int commentId)
         {
             var userId = GetCurrentUserId();
-            await _mediator.Send(new DeleteCommentCommand(commentId, userId));
-            return NoContent();
+            ErrorOr<Unit> result = await _mediator.Send(new DeleteCommentCommand(commentId, userId));
+            
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
         }
     }
 }

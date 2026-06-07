@@ -1,74 +1,86 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MediatR;
-using Application.Queries.Workouts.GetUserWorkouts;
-using Application.Commands.Workouts.CreateWorkout;
-using Application.Queries.Workouts.GetExercises;
-using Application.Commands.Workouts.CreateExercise;
-using Application.Queries.Workouts.GetWorkoutStatistics;
-using Application.Interfaces.Services;
-using Application.Dto.Workout;
+using ErrorOr;
 using Application.Dto.Exercise;
+using Application.Dto.Statistics;
+using Application.Dto.Workout;
+using Application.Commands.Workouts.CreateExercise;
+using Application.Commands.Workouts.CreateWorkout;
+using Application.Interfaces.Services;
+using Application.Queries.Workouts.GetExercises;
+using Application.Queries.Workouts.GetUserWorkouts;
+using Application.Queries.Workouts.GetWorkoutStatistics;
 
 namespace WebAPI.Controllers
 {
-    public class WorkoutsController : BaseApiController
+    public class WorkoutsController(IMediator mediator, ICalculatorService calculator) : BaseApiController
     {
-        private readonly IMediator _mediator;
-        private readonly ICalculatorService _calculator;
-
-        public WorkoutsController(IMediator mediator, ICalculatorService calculator)
-        {
-            _mediator = mediator;
-            _calculator = calculator;
-        }
+        private readonly IMediator _mediator = mediator;
+        private readonly ICalculatorService _calculator = calculator;
 
         [SwaggerOperation(Summary = "Creates a new workout")]
         [HttpPost]
-        public async Task<ActionResult> CreateWorkout(WorkoutDto workoutDto)
+        public async Task<IActionResult> CreateWorkout(WorkoutDto workoutDto)
         {
-            await _mediator.Send(new CreateWorkoutCommand(workoutDto));
-            return NoContent();
+            ErrorOr<WorkoutDto> result = await _mediator.Send(new CreateWorkoutCommand(workoutDto));
+            
+            return result.Match(
+                workout => Ok(workout),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves all workouts from specific user")]
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetUserWorkouts(int id)
+        public async Task<IActionResult> GetUserWorkouts(int id)
         {
-            var workouts = await _mediator.Send(new GetUserWorkoutsQuery(id));
-            return Ok(workouts.ToList());
+            ErrorOr<IEnumerable<WorkoutDto>> result = await _mediator.Send(new GetUserWorkoutsQuery(id));
+            
+            return result.Match(
+                workouts => Ok(workouts),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves workout statistics from specific user")]
         [HttpGet("statistics/{id}")]
-        public async Task<ActionResult> GetWorkoutStatistics(int id)
+        public async Task<IActionResult> GetWorkoutStatistics(int id)
         {
-            var statistics = await _mediator.Send(new GetWorkoutStatisticsQuery(id));
-            return Ok(statistics);
+            ErrorOr<StatisticsDto> result = await _mediator.Send(new GetWorkoutStatisticsQuery(id));
+            
+            return result.Match(
+                statistics => Ok(statistics),
+                errors => Problem(errors));
         }
-        
+
         [SwaggerOperation(Summary = "Calculate One Rep Max value")]
         [HttpGet("weight/{weight}/reps/{reps}")]
-        public async Task<ActionResult> CalculateOneRepMax(int weight, int reps)
+        public IActionResult CalculateOneRepMax(int weight, int reps)
         {
             var value = _calculator.CalculateOneRepMax(weight, reps);
+            
             return Ok(value);
         }
 
         [SwaggerOperation(Summary = "Creates a new exercise")]
         [HttpPost("exercises")]
-        public async Task<ActionResult> CreateExercise(ExerciseDto exerciseDto)
+        public async Task<IActionResult> CreateExercise(ExerciseDto exerciseDto)
         {
-            await _mediator.Send(new CreateExerciseCommand(exerciseDto));
-            return NoContent();
+            ErrorOr<ExerciseDto> result = await _mediator.Send(new CreateExerciseCommand(exerciseDto));
+            
+            return result.Match(
+                exercise => Ok(exercise),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Retrieves all exercises")]
         [HttpGet("exercises")]
-        public async Task<ActionResult> GetExercises()
+        public async Task<IActionResult> GetExercises()
         {
-            var exercises = await _mediator.Send(new GetExercisesQuery());
-            return Ok(exercises.ToList());
+            ErrorOr<IEnumerable<ExerciseDto>> result = await _mediator.Send(new GetExercisesQuery());
+            
+            return result.Match(
+                exercises => Ok(exercises),
+                errors => Problem(errors));
         }
     }
 }

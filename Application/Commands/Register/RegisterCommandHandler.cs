@@ -20,18 +20,18 @@ namespace Application.Commands.Register
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetByUsernameAsync(request.UserRegisterRequestDto.UserName) != null)
+            if (await _userRepository.GetByUsernameAsync(request.UserRegisterRequestDto.UserName, cancellationToken) != null)
                 return Errors.User.DuplicateUsername;
 
             var user = _mapper.Map<User>(request.UserRegisterRequestDto);
 
-            var result = await _userRepository.RegisterUserAsync(user, request.UserRegisterRequestDto.Password);
+            var result = await _userRepository.RegisterUserAsync(user, request.UserRegisterRequestDto.Password, cancellationToken);
 
             if (!result.Succeeded)
                 return Errors.User.FailedRegister;
 
             var userDto = _mapper.Map<UserDto>(user);
-            var token = await _tokenService.CreateTokenAsync(userDto);
+            var token = await _tokenService.CreateTokenAsync(userDto, cancellationToken);
 
             return new UserAuthResponseDto(user.UserName, token);
         }

@@ -8,11 +8,11 @@ namespace Domain.Errors
         {
             public static Error InvalidUsername => Error.Failure(
                 code: "Auth.InvalidUsername",
-                description: "Invalid username");
+                description: "Invalid username provided");
 
             public static Error InvalidPassword => Error.Failure(
                 code: "Auth.InvalidPassword",
-                description: "Invalid password");
+                description: "Invalid password provided");
         }
     }
 }

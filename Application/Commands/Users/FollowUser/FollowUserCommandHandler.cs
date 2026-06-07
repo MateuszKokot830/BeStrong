@@ -1,26 +1,31 @@
 using MediatR;
 using Domain.Entities;
+using Domain.Errors;
+using ErrorOr;
 using Application.Interfaces.Repositories;
 
 namespace Application.Commands.Users.FollowUser
 {
-    public class FollowUserCommandHandler(IUserRepository userRepository) : IRequestHandler<FollowUserCommand>
+    public class FollowUserCommandHandler(IUserRepository userRepository) : IRequestHandler<FollowUserCommand, ErrorOr<Unit>>
     {
         private readonly IUserRepository _userRepository = userRepository;
 
-        public async Task<Unit> Handle(FollowUserCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Unit>> Handle(FollowUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(request.UserId);
-            var followUser = await _userRepository.GetByIdAsync(request.FollowUserId);
+            var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
+            var followUser = await _userRepository.GetByIdAsync(request.FollowUserId, cancellationToken);
 
-            if (user == null || followUser == null || user.FollowedUsers == null)
+            if (user is null || followUser is null)
+                return Errors.User.NotFound;
+
+            if (user.FollowedUsers is null)
                 return Unit.Value;
 
             var isFollowed = user.FollowedUsers.FirstOrDefault(x => x.FollowedUserId == followUser.Id);
 
             if (isFollowed != null)
             {
-                await _userRepository.DeleteFollowerAsync(isFollowed);
+                await _userRepository.DeleteFollowerAsync(isFollowed, cancellationToken);
             }
             else
             {
@@ -31,7 +36,7 @@ namespace Application.Commands.Users.FollowUser
                     FollowedUserId = followUser.Id,
                     FollowedUser = followUser
                 };
-                await _userRepository.AddFollowerAsync(follower);
+                await _userRepository.AddFollowerAsync(follower, cancellationToken);
             }
 
             return Unit.Value;

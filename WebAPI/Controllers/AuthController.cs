@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Register(UserRegisterRequestDto userRegisterRequestDto)
         {
             ErrorOr<UserAuthResponseDto> authResult = await _mediator.Send(new RegisterCommand(userRegisterRequestDto));
-
+            
             return authResult.Match(
                 authResult => Ok(authResult),
                 errors => Problem(errors));
@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Login(UserLoginRequestDto userLoginRequestDto)
         {
             ErrorOr<UserAuthResponseDto> authResult = await _mediator.Send(new LoginQuery(userLoginRequestDto));
-
+            
             return authResult.Match(
                 authResult => Ok(authResult),
                 errors => Problem(errors));

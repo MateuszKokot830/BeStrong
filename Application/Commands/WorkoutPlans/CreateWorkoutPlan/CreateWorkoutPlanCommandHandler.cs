@@ -1,21 +1,30 @@
 using AutoMapper;
 using MediatR;
 using Domain.Aggregates;
+using Domain.Errors;
+using ErrorOr;
+using Application.Dto.WorkoutPlan;
 using Application.Interfaces.Repositories;
 
 namespace Application.Commands.WorkoutPlans.CreateWorkoutPlan
 {
-    public class CreateWorkoutPlanCommandHandler(IWorkoutPlanRepository workoutPlanRepository, IMapper mapper) : IRequestHandler<CreateWorkoutPlanCommand>
+    public class CreateWorkoutPlanCommandHandler(IWorkoutPlanRepository workoutPlanRepository, IMapper mapper) : IRequestHandler<CreateWorkoutPlanCommand, ErrorOr<WorkoutPlanDto>>
     {
         private readonly IWorkoutPlanRepository _workoutPlanRepository = workoutPlanRepository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<Unit> Handle(CreateWorkoutPlanCommand request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<WorkoutPlanDto>> Handle(CreateWorkoutPlanCommand request, CancellationToken cancellationToken)
         {
-            var plan = _mapper.Map<WorkoutPlan>(request.WorkoutPlanCreateDto);
-            await _workoutPlanRepository.AddAsync(plan);
-
-            return Unit.Value;
+            try
+            {
+                var plan = _mapper.Map<WorkoutPlan>(request.WorkoutPlanCreateDto);
+                await _workoutPlanRepository.AddAsync(plan, cancellationToken);
+                return _mapper.Map<WorkoutPlanDto>(plan);
+            }
+            catch (Exception)
+            {
+                return Errors.WorkoutPlan.CreationFailed;
+            }
         }
     }
 }

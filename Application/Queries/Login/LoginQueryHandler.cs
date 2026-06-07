@@ -19,18 +19,18 @@ namespace Application.Queries.Login
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByUsernameAsync(request.UserLoginRequestDto.UserName);
+            var user = await _userRepository.GetByUsernameAsync(request.UserLoginRequestDto.UserName, cancellationToken);
 
-            if (user == null) 
+            if (user == null)
                 return Errors.Auth.InvalidUsername;
 
-            var result = _userRepository.CheckPasswordAsync(user, request.UserLoginRequestDto.Password);
+            var result = await _userRepository.CheckPasswordAsync(user, request.UserLoginRequestDto.Password, cancellationToken);
 
-            if (!result.Result) 
+            if (!result)
                 return Errors.Auth.InvalidPassword;
 
             var userDto = _mapper.Map<UserDto>(user);
-            var token = await _tokenService.CreateTokenAsync(userDto);
+            var token = await _tokenService.CreateTokenAsync(userDto, cancellationToken);
 
             return new UserAuthResponseDto(user.UserName, token);
         }

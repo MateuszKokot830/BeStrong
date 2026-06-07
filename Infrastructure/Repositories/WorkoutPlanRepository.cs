@@ -7,7 +7,7 @@ namespace Infrastructure.Repositories
 {
     public class WorkoutPlanRepository(DataContext context) : BaseRepository<WorkoutPlan>(context), IWorkoutPlanRepository
     {
-        public override async Task AddAsync(WorkoutPlan workoutPlan)
+        public override async Task AddAsync(WorkoutPlan workoutPlan, CancellationToken cancellationToken = default)
         {
             if (workoutPlan.Workouts != null && workoutPlan.Workouts.Any())
             {
@@ -22,25 +22,24 @@ namespace Infrastructure.Repositories
                 _context.WorkoutPlans.Add(workoutPlan);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public override async Task<IReadOnlyList<WorkoutPlan>> GetAllAsync()
+        public override async Task<IReadOnlyList<WorkoutPlan>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.WorkoutPlans
                 .Include(w => w.Workouts).ThenInclude(w => w.WorkoutExercises)
                 .Include(u => u.UsedBy)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<WorkoutPlan?> GetUserCurrentWorkoutPlanAsync(int id)
+        public async Task<WorkoutPlan?> GetUserCurrentWorkoutPlanAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.WorkoutPlans
                 .Include(w => w.Workouts).ThenInclude(w => w.WorkoutExercises)
                 .Include(u => u.UsedBy)
                 .Where(w => w.Id == id)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken);
         }
-
     }
 }

@@ -1,21 +1,28 @@
 using Application.Dto.Post;
 using Application.Interfaces.Repositories;
 using AutoMapper;
+using Domain.Errors;
+using ErrorOr;
 using MediatR;
 
 namespace Application.Queries.Posts.GetUserPosts
 {
-    public class GetUserPostsQueryHandler(IPostRepository postRepository, IMapper mapper) : IRequestHandler<GetUserPostsQuery, IEnumerable<PostDto>>
+    public class GetUserPostsQueryHandler(IPostRepository postRepository, IMapper mapper) : IRequestHandler<GetUserPostsQuery, ErrorOr<IEnumerable<PostDto>>>
     {
         private readonly IPostRepository _postRepository = postRepository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<IEnumerable<PostDto>> Handle(GetUserPostsQuery request, CancellationToken cancellationToken)
+        public async Task<ErrorOr<IEnumerable<PostDto>>> Handle(GetUserPostsQuery request, CancellationToken cancellationToken)
         {
-            var posts = await _postRepository.GetAllUserPostsAsync(request.UserId);
-            posts?.OrderBy(a => a.CreatedDate);
-
-            return _mapper.Map<IEnumerable<PostDto>>(posts);
+            try
+            {
+                var posts = await _postRepository.GetAllUserPostsAsync(request.UserId, cancellationToken);
+                return _mapper.Map<IEnumerable<PostDto>>(posts).OrderBy(a => a.CreatedDate).ToList();
+            }
+            catch (Exception)
+            {
+                return Errors.Post.NotFound;
+            }
         }
     }
 }
