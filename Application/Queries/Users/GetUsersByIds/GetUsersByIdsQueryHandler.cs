@@ -16,9 +16,8 @@ namespace Application.Queries.Users.GetUsersByIds
         {
             try
             {
-                var users = await _userRepository.GetAllAsync(cancellationToken);
-                var selectedUsers = users.Where(u => request.UserIds.Contains(u.Id));
-                return _mapper.Map<IEnumerable<UserDto>>(selectedUsers).ToList();
+                var users = await _userRepository.GetByIdsAsync(request.UserIds, cancellationToken);
+                return _mapper.Map<IEnumerable<UserDto>>(users).ToList();
             }
             catch (Exception)
             {

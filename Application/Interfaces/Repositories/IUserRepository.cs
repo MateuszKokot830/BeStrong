@@ -9,6 +9,7 @@ namespace Application.Interfaces.Repositories
     public interface IUserRepository : IAsyncRepository<User>
     {
         Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<User>> GetByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default);
         Task<IdentityResult> RegisterUserAsync(User user, string? password, CancellationToken cancellationToken = default);
         Task<bool> CheckPasswordAsync(User user, string? password, CancellationToken cancellationToken = default);
         Task AddFollowerAsync(Follower follower, CancellationToken cancellationToken = default);

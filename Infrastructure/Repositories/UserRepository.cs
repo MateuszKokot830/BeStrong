@@ -36,6 +36,17 @@ namespace Infrastructure.Repositories
             .ToListAsync(cancellationToken);
         }
 
+        public async Task<IReadOnlyList<User>> GetByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default)
+        {
+            return await _userManager.Users
+            .Include(u => u.Photos)
+            .Include(u => u.Measurements)
+            .Include(u => u.FollowedUsers)
+            .Include(u => u.Followers)
+            .Where(u => ids.Contains(u.Id))
+            .ToListAsync(cancellationToken);
+        }
+
         public async Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default)
         {
             var usernameLower = username?.ToLower() ?? string.Empty;

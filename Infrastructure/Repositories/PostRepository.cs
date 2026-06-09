@@ -30,6 +30,19 @@ namespace Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<Post?> GetPostByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Posts
+                .Include(p => p.Comments)
+                .SingleOrDefaultAsync(p => p.Id == postId, cancellationToken);
+        }
+
+        public async Task<Comment?> GetCommentByIdAsync(int commentId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Comments
+                .SingleOrDefaultAsync(c => c.Id == commentId, cancellationToken);
+        }
+
         public async Task CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             comment.CreatedDate = DateTime.Now;

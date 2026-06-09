@@ -11,13 +11,15 @@ namespace Application.Commands.Posts.DeletePost
 
         public async Task<ErrorOr<Unit>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
         {
-            var userPosts = await _postRepository.GetAllUserPostsAsync(request.UserId, cancellationToken);
-            var postToDelete = userPosts.FirstOrDefault(x => x.Id == request.PostId);
+            var post = await _postRepository.GetPostByIdAsync(request.PostId, cancellationToken);
 
-            if (postToDelete is null)
+            if (post is null)
                 return Errors.Post.NotFound;
 
-            await _postRepository.DeleteAsync(postToDelete, cancellationToken);
+            if (post.UserId != request.UserId)
+                return Errors.Post.Unauthorized;
+
+            await _postRepository.DeleteAsync(post, cancellationToken);
 
             return Unit.Value;
         }

@@ -11,14 +11,15 @@ namespace Application.Commands.Posts.DeleteComment
 
         public async Task<ErrorOr<Unit>> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
-            var userPosts = await _postRepository.GetAllUserPostsAsync(request.UserId, cancellationToken);
-            var commentToDelete = userPosts.SelectMany(x => x.Comments)
-                .FirstOrDefault(x => x.Id == request.CommentId);
+            var comment = await _postRepository.GetCommentByIdAsync(request.CommentId, cancellationToken);
 
-            if (commentToDelete is null)
-                return Errors.Post.NotFound;
+            if (comment is null)
+                return Errors.Comment.NotFound;
 
-            await _postRepository.DeleteCommentAsync(commentToDelete, cancellationToken);
+            if (comment.UserId != request.UserId)
+                return Errors.Comment.Unauthorized;
+
+            await _postRepository.DeleteCommentAsync(comment, cancellationToken);
 
             return Unit.Value;
         }
