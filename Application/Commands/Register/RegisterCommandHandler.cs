@@ -1,18 +1,19 @@
+using Application.Dto.Auth;
+using Application.Dto.User;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using AutoMapper;
-using MediatR;
 using Domain.Aggregates;
 using Domain.Errors;
 using ErrorOr;
-using Application.Interfaces.Repositories;
-using Application.Interfaces.Services;
-using Application.Dto.Auth;
-using Application.Dto.User;
+using MediatR;
 
 namespace Application.Commands.Register
 {
-    public class RegisterCommandHandler(IUserRepository userRepository,
-                                IMapper mapper,
-                                ITokenService tokenService) : IRequestHandler<RegisterCommand, ErrorOr<UserAuthResponseDto>>
+    public class RegisterCommandHandler(
+        IUserRepository userRepository,
+        IMapper mapper,
+        ITokenService tokenService) : IRequestHandler<RegisterCommand, ErrorOr<UserAuthResponseDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
@@ -20,7 +21,8 @@ namespace Application.Commands.Register
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            if (await _userRepository.GetByUsernameAsync(request.UserRegisterRequestDto.UserName, cancellationToken) != null)
+            var existing = await _userRepository.GetByUsernameAsync(request.UserRegisterRequestDto.UserName, cancellationToken);
+            if (existing is not null)
                 return Errors.User.DuplicateUsername;
 
             var user = _mapper.Map<User>(request.UserRegisterRequestDto);

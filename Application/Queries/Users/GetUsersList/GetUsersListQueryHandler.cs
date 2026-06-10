@@ -1,7 +1,6 @@
 using Application.Dto.User;
 using Application.Helpers;
 using Application.Interfaces.Repositories;
-using Domain.Errors;
 using ErrorOr;
 using MediatR;
 
@@ -14,21 +13,14 @@ namespace Application.Queries.Users.GetUsersList
 
         public async Task<ErrorOr<PaginationList<UserDto>>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var paginationParams = request.PaginationParams;
+            var p = request.PaginationParams;
 
-                return await _userRepository.GetPagedAsync(
-                    UserDto.Selector,
-                    u => u.UserName != paginationParams.Username,
-                    paginationParams.PageNumber,
-                    paginationParams.PageSize,
-                    cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                return Error.Unexpected(description: ex.Message);
-            }
+            return await _userRepository.GetPagedAsync(
+                UserDto.Selector,
+                u => u.UserName != p.Username,
+                p.PageNumber,
+                p.PageSize,
+                cancellationToken);
         }
     }
 }

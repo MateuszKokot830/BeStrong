@@ -6,13 +6,9 @@ namespace Domain.Errors
     {
         public static class Auth
         {
-            public static Error InvalidUsername => Error.Failure(
-                code: "Auth.InvalidUsername",
-                description: "Invalid username provided");
-
-            public static Error InvalidPassword => Error.Failure(
-                code: "Auth.InvalidPassword",
-                description: "Invalid password provided");
+            public static Error InvalidCredentials => Error.Unauthorized(
+                code: "Auth.InvalidCredentials",
+                description: "The provided credentials are incorrect.");
         }
     }
 }

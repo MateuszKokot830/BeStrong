@@ -1,6 +1,5 @@
 using Application.Dto.User;
 using Application.Interfaces.Repositories;
-using Domain.Errors;
 using ErrorOr;
 using MediatR;
 
@@ -13,15 +12,8 @@ namespace Application.Queries.Users.GetUsers
 
         public async Task<ErrorOr<IEnumerable<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var users = await _userRepository.ProjectAsync(UserDto.Selector, cancellationToken);
-                return users.OrderBy(u => u.UserName).ToList();
-            }
-            catch (Exception ex)
-            {
-                return Error.Unexpected(description: ex.Message);
-            }
+            var users = await _userRepository.ProjectAsync(UserDto.Selector, cancellationToken);
+            return users.OrderBy(u => u.UserName).ToList();
         }
     }
 }

@@ -8,18 +8,15 @@ public static partial class Errors
     {
         public static Error NotFound => Error.NotFound(
             code: "Photo.NotFound",
-            description: "Photo was not found");
+            description: "Photo was not found.");
 
-        public static Error IsProfilePhoto => Error.Validation(
+        public static Error IsProfilePhoto => Error.Conflict(
             code: "Photo.IsProfilePhoto",
-            description: "Cannot delete the profile photo");
+            description: "Cannot delete the profile photo.");
 
+        // Returned as a real domain result when Cloudinary rejects or fails the upload.
         public static Error UploadFailed => Error.Failure(
             code: "Photo.UploadFailed",
-            description: "Failed to upload photo");
-
-        public static Error DeletionFailed => Error.Failure(
-            code: "Photo.DeletionFailed",
-            description: "Failed to delete photo");
+            description: "Failed to upload the photo. Please try again.");
     }
 }

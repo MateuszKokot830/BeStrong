@@ -7,7 +7,8 @@ using MediatR;
 
 namespace Application.Commands.Users.UpdateUser
 {
-    public class UpdateUserCommandHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<UpdateUserCommand, ErrorOr<UserDto>>
+    public class UpdateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+        : IRequestHandler<UpdateUserCommand, ErrorOr<UserDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
@@ -20,15 +21,8 @@ namespace Application.Commands.Users.UpdateUser
 
             _mapper.Map(request.UserUpdateDto, user);
 
-            try
-            {
-                await _userRepository.UpdateAsync(user, cancellationToken);
-                return _mapper.Map<UserDto>(user);
-            }
-            catch (Exception)
-            {
-                return Errors.User.UpdateFailed;
-            }
+            await _userRepository.UpdateAsync(user, cancellationToken);
+            return _mapper.Map<UserDto>(user);
         }
     }
 }
