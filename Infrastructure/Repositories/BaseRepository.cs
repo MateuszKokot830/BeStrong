@@ -25,22 +25,22 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 
-        public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<IReadOnlyList<TResult>> ProjectAsync<TResult>(

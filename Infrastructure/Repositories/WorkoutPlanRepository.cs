@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories
             .Include(w => w.Workouts).ThenInclude(w => w.WorkoutExercises)
             .Include(u => u.UsedBy);
 
-        public override async Task AddAsync(WorkoutPlan workoutPlan, CancellationToken cancellationToken = default)
+        public override Task AddAsync(WorkoutPlan workoutPlan, CancellationToken cancellationToken = default)
         {
             if (workoutPlan.Workouts != null && workoutPlan.Workouts.Any())
             {
@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
                 _context.WorkoutPlans.Add(workoutPlan);
             }
 
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<WorkoutPlan?> GetUserCurrentWorkoutPlanAsync(int id, CancellationToken cancellationToken = default)

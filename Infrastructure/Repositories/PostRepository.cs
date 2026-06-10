@@ -11,11 +11,11 @@ namespace Infrastructure.Repositories
         protected override IQueryable<Post> GetQueryable() =>
             _context.Posts.Include(p => p.Comments);
 
-        public override async Task AddAsync(Post post, CancellationToken cancellationToken = default)
+        public override Task AddAsync(Post post, CancellationToken cancellationToken = default)
         {
             post.CreatedDate = DateTime.Now;
             _context.Posts.Add(post);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int userId, CancellationToken cancellationToken = default)
@@ -39,17 +39,17 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(c => c.Id == commentId, cancellationToken);
         }
 
-        public async Task CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
+        public Task CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             comment.CreatedDate = DateTime.Now;
             _context.Comments.Add(comment);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteCommentAsync(Comment comment, CancellationToken cancellationToken = default)
+        public Task DeleteCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
     }
 }

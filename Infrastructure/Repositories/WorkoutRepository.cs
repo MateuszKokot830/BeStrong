@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories
         protected override IQueryable<Workout> GetQueryable() =>
             _context.Workouts.Include(w => w.WorkoutExercises);
 
-        public override async Task AddAsync(Workout workout, CancellationToken cancellationToken = default)
+        public override Task AddAsync(Workout workout, CancellationToken cancellationToken = default)
         {
             var wEx = workout.WorkoutExercises.ToList();
             if (wEx != null && wEx.Any())
@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             }
             workout.Date = DateTime.Now;
             _context.Workouts.Add(workout);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<IReadOnlyList<Workout>> GetUserWorkoutsAsync(int id, CancellationToken cancellationToken = default)
@@ -36,10 +36,10 @@ namespace Infrastructure.Repositories
             return await _context.Excercises.ToListAsync(cancellationToken);
         }
 
-        public async Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken = default)
+        public Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken = default)
         {
             _context.Add<Exercise>(exercise);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
     }
 }

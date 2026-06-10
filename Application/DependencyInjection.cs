@@ -1,6 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
+using Application.Common.Behaviors;
 using Application.Mappings;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Application
@@ -11,6 +12,7 @@ namespace Application
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
             return services;
         }

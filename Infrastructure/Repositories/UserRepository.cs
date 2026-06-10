@@ -37,28 +37,28 @@ namespace Infrastructure.Repositories
             return await _userManager.CheckPasswordAsync(user, pw);
         }
 
-        public async Task AddFollowerAsync(Follower follower, CancellationToken cancellationToken = default)
+        public Task AddFollowerAsync(Follower follower, CancellationToken cancellationToken = default)
         {
             _context.Followers.Add(follower);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteFollowerAsync(Follower follower, CancellationToken cancellationToken = default)
+        public Task DeleteFollowerAsync(Follower follower, CancellationToken cancellationToken = default)
         {
             _context.Followers.Remove(follower);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task AddPhoto(Photo photo, CancellationToken cancellationToken = default)
+        public Task AddPhoto(Photo photo, CancellationToken cancellationToken = default)
         {
             _context.Photos.Add(photo);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task DeletePhoto(Photo photo, CancellationToken cancellationToken = default)
+        public Task DeletePhoto(Photo photo, CancellationToken cancellationToken = default)
         {
             _context.Photos.Remove(photo);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,3 +1,4 @@
+using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Infrastructure.Data;
@@ -15,6 +16,7 @@ namespace Infrastructure
         {
             services.AddDbContext<DataContext>();
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPostRepository, PostRepository>();

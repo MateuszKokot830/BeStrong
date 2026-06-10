@@ -455,3 +455,5 @@ $RECYCLE.BIN/
 
 appsettings.json
 BeStrong.db
+BeStrong.db-shm
+BeStrong.db-wal
