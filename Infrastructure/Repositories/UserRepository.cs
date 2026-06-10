@@ -3,59 +3,26 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
-using Application.Helpers;
-using AutoMapper.QueryableExtensions;
-using AutoMapper;
-using Application.Dto.User;
 using Application.Interfaces.Repositories;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository(DataContext context, UserManager<User> userManager, IMapper mapper) : BaseRepository<User>(context), IUserRepository
+    public class UserRepository(DataContext context, UserManager<User> userManager)
+        : BaseRepository<User>(context), IUserRepository
     {
         private readonly UserManager<User> _userManager = userManager;
-        private readonly IMapper _mapper = mapper;
 
-        public override async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await _userManager.Users
+        protected override IQueryable<User> GetQueryable() => _userManager.Users
             .Include(u => u.Photos)
             .Include(u => u.Measurements)
             .Include(u => u.FollowedUsers)
-            .Include(u => u.Followers)
-            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
-        }
-
-        public override async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            return await _userManager.Users
-            .Include(u => u.Photos)
-            .Include(u => u.Measurements)
-            .Include(u => u.FollowedUsers)
-            .Include(u => u.Followers)
-            .ToListAsync(cancellationToken);
-        }
-
-        public async Task<IReadOnlyList<User>> GetByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default)
-        {
-            return await _userManager.Users
-            .Include(u => u.Photos)
-            .Include(u => u.Measurements)
-            .Include(u => u.FollowedUsers)
-            .Include(u => u.Followers)
-            .Where(u => ids.Contains(u.Id))
-            .ToListAsync(cancellationToken);
-        }
+            .Include(u => u.Followers);
 
         public async Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default)
         {
             var usernameLower = username?.ToLower() ?? string.Empty;
-            return await _userManager.Users
-            .Include(u => u.Photos)
-            .Include(u => u.Measurements)
-            .Include(u => u.FollowedUsers)
-            .Include(u => u.Followers)
-            .SingleOrDefaultAsync(x => x.UserName == usernameLower, cancellationToken);
+            return await GetQueryable()
+                .SingleOrDefaultAsync(x => x.UserName == usernameLower, cancellationToken);
         }
 
         public async Task<IdentityResult> RegisterUserAsync(User user, string? password, CancellationToken cancellationToken = default)
@@ -92,16 +59,6 @@ namespace Infrastructure.Repositories
         {
             _context.Photos.Remove(photo);
             await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task<PaginationList<UserDto>> GetUsersAsync(PaginationParams paginationParams, CancellationToken cancellationToken = default)
-        {
-            var query = _userManager.Users.AsQueryable();
-            query = query.Where(x => x.UserName != paginationParams.Username);
-
-            return await PaginationList<UserDto>.CreateAsync(
-                query.ProjectTo<UserDto>(_mapper.ConfigurationProvider).AsNoTracking(),
-                paginationParams.PageNumber, paginationParams.PageSize);
         }
     }
 }

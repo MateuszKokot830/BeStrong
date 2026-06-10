@@ -8,6 +8,9 @@ namespace Infrastructure.Repositories
 {
     public class WorkoutRepository(DataContext context) : BaseRepository<Workout>(context), IWorkoutRepository
     {
+        protected override IQueryable<Workout> GetQueryable() =>
+            _context.Workouts.Include(w => w.WorkoutExercises);
+
         public override async Task AddAsync(Workout workout, CancellationToken cancellationToken = default)
         {
             var wEx = workout.WorkoutExercises.ToList();
@@ -22,7 +25,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Workout>> GetUserWorkoutsAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _context.Workouts.Include(w => w.WorkoutExercises)
+            return await GetQueryable()
                 .Where(w => w.UserId == id)
                 .OrderByDescending(w => w.Date)
                 .ToListAsync(cancellationToken);

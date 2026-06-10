@@ -8,6 +8,9 @@ namespace Infrastructure.Repositories
 {
     public class PostRepository(DataContext context) : BaseRepository<Post>(context), IPostRepository
     {
+        protected override IQueryable<Post> GetQueryable() =>
+            _context.Posts.Include(p => p.Comments);
+
         public override async Task AddAsync(Post post, CancellationToken cancellationToken = default)
         {
             post.CreatedDate = DateTime.Now;
@@ -17,24 +20,17 @@ namespace Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Post>> GetAllUserPostsAsync(int userId, CancellationToken cancellationToken = default)
         {
-            return await _context.Posts.Include(c => c.Comments)
-                .Where(c => c.UserId == userId)
+            return await GetQueryable()
+                .Where(p => p.UserId == userId)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<Post>> GetAllFollowedUsersPostsAsync(List<int> userIds, CancellationToken cancellationToken = default)
         {
-            return await _context.Posts.Include(c => c.Comments)
-                .OrderByDescending(c => c.CreatedDate)
-                .Where(c => userIds.Contains(c.UserId))
+            return await GetQueryable()
+                .Where(p => userIds.Contains(p.UserId))
+                .OrderByDescending(p => p.CreatedDate)
                 .ToListAsync(cancellationToken);
-        }
-
-        public async Task<Post?> GetPostByIdAsync(int postId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Posts
-                .Include(p => p.Comments)
-                .SingleOrDefaultAsync(p => p.Id == postId, cancellationToken);
         }
 
         public async Task<Comment?> GetCommentByIdAsync(int commentId, CancellationToken cancellationToken = default)

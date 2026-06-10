@@ -11,7 +11,7 @@ namespace Application.Commands.Posts.DeletePost
 
         public async Task<ErrorOr<Unit>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
         {
-            var post = await _postRepository.GetPostByIdAsync(request.PostId, cancellationToken);
+            var post = await _postRepository.GetByIdAsync(request.PostId, cancellationToken);
 
             if (post is null)
                 return Errors.Post.NotFound;

@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using Domain.Common.Extensions;
 using Domain.Common;
+using Domain.Models;
 
 namespace Domain.Aggregates
 {
     [Table("Users")]
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<int>, IEntity<int>
     {
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfWorkoutStart { get; set; }

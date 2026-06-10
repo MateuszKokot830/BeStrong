@@ -7,7 +7,8 @@ using MediatR;
 
 namespace Application.Queries.Users.GetUsersList
 {
-    public class GetUsersListQueryHandler(IUserRepository userRepository) : IRequestHandler<GetUsersListQuery, ErrorOr<PaginationList<UserDto>>>
+    public class GetUsersListQueryHandler(IUserRepository userRepository)
+        : IRequestHandler<GetUsersListQuery, ErrorOr<PaginationList<UserDto>>>
     {
         private readonly IUserRepository _userRepository = userRepository;
 
@@ -15,7 +16,14 @@ namespace Application.Queries.Users.GetUsersList
         {
             try
             {
-                return await _userRepository.GetUsersAsync(request.PaginationParams, cancellationToken);
+                var paginationParams = request.PaginationParams;
+
+                return await _userRepository.GetPagedAsync(
+                    UserDto.Selector,
+                    u => u.UserName != paginationParams.Username,
+                    paginationParams.PageNumber,
+                    paginationParams.PageSize,
+                    cancellationToken);
             }
             catch (Exception)
             {
