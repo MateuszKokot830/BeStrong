@@ -16,6 +16,9 @@ namespace WebAPI.Extensions
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequiredLength = 4;
             })
                 .AddRoles<Role>()
                 .AddRoleManager<RoleManager<Role>>()

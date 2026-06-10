@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Application.Dto.User;
 using Application.Interfaces.Services;
+using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure.Services;
 
 public class TokenService(
-    UserManager<IdentityUser> userManager,
+    UserManager<User> userManager,
     IConfiguration configuration) : ITokenService
 {
     public async Task<string?> CreateTokenAsync(UserDto user, CancellationToken cancellationToken = default)
@@ -18,9 +19,7 @@ public class TokenService(
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.GivenName, user.Name!),
-            new(ClaimTypes.Surname, user.Surname!)
+            new(ClaimTypes.Name, user.UserName)
         };
 
         if (userManager != null)

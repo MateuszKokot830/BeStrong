@@ -22,9 +22,9 @@ namespace Application.Queries.Users.GetUsersByIds
 
                 return users.ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Errors.User.NotFound;
+                return Error.Unexpected(description: ex.Message);
             }
         }
     }

@@ -19,8 +19,26 @@ public class MappingProfile : Profile
         public MappingProfile()
     {
         CreateMap<User, UserDto>()
-            .ForMember(x => x.ProfilePhotoUrl, opt => opt.MapFrom((src, dest) =>
-                src.Photos?.FirstOrDefault(y => y.IsProfilePhoto)?.Url))
+            .ConstructUsing((src, ctx) => new UserDto(
+                src.Id,
+                src.UserName ?? string.Empty,
+                src.DateOfBirth,
+                src.DateOfWorkoutStart,
+                src.Name,
+                src.Surname,
+                src.Gender,
+                src.City,
+                src.Country,
+                src.Description,
+                src.Photos?.FirstOrDefault(p => p.IsProfilePhoto)?.Url,
+                src.Age,
+                src.WorkoutSince,
+                ctx.Mapper.Map<MeasurementsDto>(src.Measurements),
+                ctx.Mapper.Map<IReadOnlyCollection<PhotoDto>>(src.Photos),
+                ctx.Mapper.Map<IReadOnlyCollection<PostDto>>(src.Posts),
+                ctx.Mapper.Map<IReadOnlyCollection<FollowerDto>>(src.FollowedUsers),
+                ctx.Mapper.Map<IReadOnlyCollection<FollowerDto>>(src.Followers)
+            ))
             .ReverseMap();
 
         CreateMap<UserUpdateDto, User>().ReverseMap();

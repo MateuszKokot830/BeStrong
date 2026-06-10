@@ -28,7 +28,9 @@ namespace Application.Commands.Register
             var result = await _userRepository.RegisterUserAsync(user, request.UserRegisterRequestDto.Password, cancellationToken);
 
             if (!result.Succeeded)
-                return Errors.User.FailedRegister;
+                return result.Errors
+                    .Select(e => Error.Failure(code: e.Code, description: e.Description))
+                    .ToList();
 
             var userDto = _mapper.Map<UserDto>(user);
             var token = await _tokenService.CreateTokenAsync(userDto, cancellationToken);

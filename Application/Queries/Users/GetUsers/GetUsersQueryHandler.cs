@@ -18,9 +18,9 @@ namespace Application.Queries.Users.GetUsers
                 var users = await _userRepository.ProjectAsync(UserDto.Selector, cancellationToken);
                 return users.OrderBy(u => u.UserName).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Errors.User.NotFound;
+                return Error.Unexpected(description: ex.Message);
             }
         }
     }

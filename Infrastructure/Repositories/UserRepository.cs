@@ -20,9 +20,9 @@ namespace Infrastructure.Repositories
 
         public async Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default)
         {
-            var usernameLower = username?.ToLower() ?? string.Empty;
+            var usernameNormalized = username?.ToUpperInvariant() ?? string.Empty;
             return await GetQueryable()
-                .SingleOrDefaultAsync(x => x.UserName == usernameLower, cancellationToken);
+                .SingleOrDefaultAsync(x => x.NormalizedUserName == usernameNormalized, cancellationToken);
         }
 
         public async Task<IdentityResult> RegisterUserAsync(User user, string? password, CancellationToken cancellationToken = default)

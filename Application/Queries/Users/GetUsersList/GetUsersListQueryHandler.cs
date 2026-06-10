@@ -25,9 +25,9 @@ namespace Application.Queries.Users.GetUsersList
                     paginationParams.PageSize,
                     cancellationToken);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Errors.User.NotFound;
+                return Error.Unexpected(description: ex.Message);
             }
         }
     }
