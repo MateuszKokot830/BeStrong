@@ -23,6 +23,9 @@ namespace Infrastructure
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             services.AddScoped<IWorkoutPlanRepository, WorkoutPlanRepository>();
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<INLoggerService, NLoggerService>();
             services.AddScoped<IPhotoService, PhotoService>();

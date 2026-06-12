@@ -1,17 +1,24 @@
-using MediatR;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Errors;
 using ErrorOr;
-using Application.Interfaces.Repositories;
+using MediatR;
 
 namespace Application.Commands.Users.FollowUser
 {
-    public class FollowUserCommandHandler(IUserRepository userRepository) : IRequestHandler<FollowUserCommand, ErrorOr<Unit>>
+    public class FollowUserCommandHandler(
+        IUserRepository userRepository,
+        ICurrentUserService currentUserService) : IRequestHandler<FollowUserCommand, ErrorOr<Unit>>
     {
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<ErrorOr<Unit>> Handle(FollowUserCommand request, CancellationToken cancellationToken)
         {
+            if (!_currentUserService.IsOwnerOrAdmin(request.UserId))
+                return Errors.User.Unauthorized;
+
             var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
             var followUser = await _userRepository.GetByIdAsync(request.FollowUserId, cancellationToken);
 
@@ -21,11 +28,11 @@ namespace Application.Commands.Users.FollowUser
             if (user.FollowedUsers is null)
                 return Unit.Value;
 
-            var isFollowed = user.FollowedUsers.FirstOrDefault(x => x.FollowedUserId == followUser.Id);
+            var existing = user.FollowedUsers.FirstOrDefault(x => x.FollowedUserId == followUser.Id);
 
-            if (isFollowed != null)
+            if (existing is not null)
             {
-                await _userRepository.DeleteFollowerAsync(isFollowed, cancellationToken);
+                await _userRepository.DeleteFollowerAsync(existing, cancellationToken);
             }
             else
             {
