@@ -33,7 +33,10 @@ namespace WebAPI.Controllers
                 _ => StatusCodes.Status500InternalServerError,
             };
 
-            return Problem(statusCode: statusCode, title: error.Description);
+            return ValidationProblem(new ValidationProblemDetails(
+                errors.GroupBy(e => e.Code)
+                    .ToDictionary(g => g.Key, g => g.Select(e => e.Description).ToArray())
+));
         }
     }
 }
