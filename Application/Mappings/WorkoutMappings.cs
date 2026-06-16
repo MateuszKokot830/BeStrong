@@ -18,6 +18,7 @@ namespace Application.Mappings
         {
             Id = dto.Id,
             UserId = dto.UserId,
+            Date = DateTime.UtcNow,
             Name = dto.Name,
             WorkoutExercises = dto.WorkoutExercises?.Select(we => we.ToEntity()).ToList() ?? []
         };

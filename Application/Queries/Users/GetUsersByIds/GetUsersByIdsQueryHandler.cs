@@ -1,5 +1,6 @@
 using Application.Dto.User;
 using Application.Interfaces.Repositories;
+using Application.Mappings;
 using ErrorOr;
 using MediatR;
 
@@ -13,7 +14,7 @@ namespace Application.Queries.Users.GetUsersByIds
         public async Task<ErrorOr<IEnumerable<UserDto>>> Handle(GetUsersByIdsQuery request, CancellationToken cancellationToken)
         {
             var users = await _userRepository.ProjectAsync(
-                UserDto.Selector,
+                UserMappings.Selector,
                 u => request.UserIds.Contains(u.Id),
                 cancellationToken);
 

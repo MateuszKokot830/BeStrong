@@ -13,12 +13,6 @@ namespace Infrastructure.Repositories
 
         public override Task AddAsync(Workout workout, CancellationToken cancellationToken = default)
         {
-            var wEx = workout.WorkoutExercises.ToList();
-            if (wEx != null && wEx.Any())
-            {
-                _context.WorkoutExercises.AddRange(wEx);
-            }
-            workout.Date = DateTime.Now;
             _context.Workouts.Add(workout);
             return Task.CompletedTask;
         }

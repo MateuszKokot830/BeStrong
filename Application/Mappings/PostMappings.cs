@@ -20,6 +20,7 @@ namespace Application.Mappings
         {
             UserId = dto.UserId,
             Description = dto.Description,
+            CreatedDate = DateTime.UtcNow,
             WorkoutId = dto.WorkoutId,
             WorkoutPlanId = dto.WorkoutPlan
         };

@@ -1,6 +1,7 @@
 using Application.Dto.User;
 using Application.Helpers;
 using Application.Interfaces.Repositories;
+using Application.Mappings;
 using ErrorOr;
 using MediatR;
 
@@ -16,7 +17,7 @@ namespace Application.Queries.Users.GetUsersList
             var p = request.PaginationParams;
 
             return await _userRepository.GetPagedAsync(
-                UserDto.Selector,
+                UserMappings.Selector,
                 u => u.UserName != p.Username,
                 p.PageNumber,
                 p.PageSize,

@@ -4,11 +4,48 @@ using Application.Dto.Post;
 using Application.Dto.User;
 using Domain.Aggregates;
 using Domain.ValueObjects;
+using System.Linq.Expressions;
 
 namespace Application.Mappings
 {
     public static class UserMappings
     {
+        public static Expression<Func<User, UserDto>> Selector => user => new UserDto(
+            user.Id,
+            user.UserName ?? string.Empty,
+            user.DateOfBirth,
+            user.DateOfWorkoutStart,
+            user.Name,
+            user.Surname,
+            user.Gender,
+            user.City,
+            user.Country,
+            user.Description,
+            user.Photos.Where(p => p.IsProfilePhoto).Select(p => p.Url).FirstOrDefault(),
+            DateTime.Now.Year - user.DateOfBirth.Year,
+            null,
+            new MeasurementsDto(
+                user.Measurements.Height,
+                user.Measurements.Weight,
+                user.Measurements.Chest,
+                user.Measurements.Shoulders,
+                user.Measurements.Arms,
+                user.Measurements.Waist,
+                user.Measurements.Hips,
+                user.Measurements.Thights),
+            user.Photos
+                .Select(p => new PhotoDto(p.Id, p.PublicId, p.Url, p.IsProfilePhoto))
+                .ToList(),
+            Array.Empty<PostDto>(),
+            user.FollowedUsers
+                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId))
+                .ToList(),
+            user.Followers
+                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId))
+                .ToList()
+        );
+
+
         public static UserDto ToDto(this User user) => new(
             user.Id,
             user.UserName ?? string.Empty,

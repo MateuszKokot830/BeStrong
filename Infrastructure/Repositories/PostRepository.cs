@@ -13,7 +13,6 @@ namespace Infrastructure.Repositories
 
         public override Task AddAsync(Post post, CancellationToken cancellationToken = default)
         {
-            post.CreatedDate = DateTime.Now;
             _context.Posts.Add(post);
             return Task.CompletedTask;
         }
@@ -41,7 +40,6 @@ namespace Infrastructure.Repositories
 
         public Task CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
-            comment.CreatedDate = DateTime.Now;
             _context.Comments.Add(comment);
             return Task.CompletedTask;
         }

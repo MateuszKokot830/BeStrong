@@ -1,8 +1,8 @@
 using Application.Dto.Statistics;
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Services;
 using Application.Mappings;
 using Domain.Errors;
+using Domain.Services;
 using ErrorOr;
 using MediatR;
 
@@ -10,12 +10,10 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
 {
     public class GetWorkoutStatisticsQueryHandler(
         IWorkoutRepository workoutRepository,
-        IUserRepository userRepository,
-        IStatisticsService statisticsService) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
+        IUserRepository userRepository) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
     {
         private readonly IWorkoutRepository _workoutRepository = workoutRepository;
         private readonly IUserRepository _userRepository = userRepository;
-        private readonly IStatisticsService _statisticsService = statisticsService;
 
         public async Task<ErrorOr<StatisticsDto>> Handle(GetWorkoutStatisticsQuery request, CancellationToken cancellationToken)
         {
@@ -26,10 +24,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             var workouts = await _workoutRepository.GetUserWorkoutsAsync(request.UserId, cancellationToken);
             var exercises = await _workoutRepository.GetExercisesAsync(cancellationToken);
 
-            var workoutDtos = workouts.Select(w => w.ToDto()).ToList();
-            var exerciseDtos = exercises.Select(e => e.ToDto()).ToList();
-
-            return _statisticsService.Calculate(workoutDtos, user.DateOfWorkoutStart, exerciseDtos);
+            return StatisticsCalculator.Calculate(workouts, user.DateOfWorkoutStart, exercises).ToDto();
         }
     }
 }

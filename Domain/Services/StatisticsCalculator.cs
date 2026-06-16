@@ -1,23 +1,22 @@
-using Application.Dto.Exercise;
-using Application.Dto.Statistics;
-using Application.Dto.Workout;
-using Application.Interfaces.Services;
+using Domain.Aggregates;
+using Domain.Entities;
+using Domain.ValueObjects;
 
-namespace Infrastructure.Services
+namespace Domain.Services
 {
-    public class StatisticsService : IStatisticsService
+    public static class StatisticsCalculator
     {
-        public StatisticsDto Calculate(
-            IReadOnlyList<WorkoutDto> workouts,
+        public static Statistics Calculate(
+            IReadOnlyList<Workout> workouts,
             DateTime workoutStartDate,
-            IReadOnlyList<ExerciseDto> exercises)
+            IReadOnlyList<Exercise> exercises)
         {
             var totalWorkouts = workouts.Count;
-            var workoutExercises = workouts.SelectMany(x => x.WorkoutExercises).ToList();
+            var workoutExercises = workouts.SelectMany(w => w.WorkoutExercises).ToList();
             var totalExercises = workoutExercises.Count;
-            var totalSets = workoutExercises.Sum(x => x.Sets);
+            var totalSets = workoutExercises.Sum(we => we.Sets);
 
-            var totalWeeks = (DateTime.Now - workoutStartDate).TotalDays / 7.0;
+            var totalWeeks = (DateTime.UtcNow - workoutStartDate).TotalDays / 7.0;
             var avgWorkoutsPerWeek = totalWeeks > 0
                 ? Math.Round((decimal)(totalWorkouts / totalWeeks), 2)
                 : 0m;
@@ -29,16 +28,16 @@ namespace Infrastructure.Services
                 : 0m;
 
             var favouriteExerciseId = workoutExercises
-                .GroupBy(x => x.ExerciseId)
+                .GroupBy(we => we.ExerciseId)
                 .OrderByDescending(g => g.Count())
                 .Select(g => (int?)g.Key)
                 .FirstOrDefault();
 
             var favouriteExercise = exercises
-                .FirstOrDefault(x => x.Id == favouriteExerciseId)
+                .FirstOrDefault(e => e.Id == favouriteExerciseId)
                 ?.Name;
 
-            return new StatisticsDto(
+            return new Statistics(
                 totalWorkouts,
                 totalExercises,
                 totalSets,
