@@ -7,17 +7,16 @@ using Application.Dto.Statistics;
 using Application.Dto.Workout;
 using Application.Commands.Workouts.CreateExercise;
 using Application.Commands.Workouts.CreateWorkout;
-using Application.Interfaces.Services;
 using Application.Queries.Workouts.GetExercises;
+using Application.Queries.Workouts.GetOneRepMax;
 using Application.Queries.Workouts.GetUserWorkouts;
 using Application.Queries.Workouts.GetWorkoutStatistics;
 
 namespace WebAPI.Controllers
 {
-    public class WorkoutsController(IMediator mediator, ICalculatorService calculator) : BaseApiController
+    public class WorkoutsController(IMediator mediator) : BaseApiController
     {
         private readonly IMediator _mediator = mediator;
-        private readonly ICalculatorService _calculator = calculator;
 
         [SwaggerOperation(Summary = "Creates a new workout")]
         [HttpPost]
@@ -54,11 +53,13 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Calculate One Rep Max value")]
         [HttpGet("weight/{weight}/reps/{reps}")]
-        public IActionResult CalculateOneRepMax(int weight, int reps)
+        public async Task<IActionResult> CalculateOneRepMax(int weight, int reps)
         {
-            var value = _calculator.CalculateOneRepMax(weight, reps);
-            
-            return Ok(value);
+            ErrorOr<int> result = await _mediator.Send(new GetOneRepMaxQuery(weight, reps));
+
+            return result.Match(
+                value => Ok(value),
+                errors => Problem(errors));
         }
 
         [SwaggerOperation(Summary = "Creates a new exercise")]

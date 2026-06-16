@@ -25,27 +25,19 @@ namespace Application.Commands.Users.FollowUser
             if (user is null || followUser is null)
                 return Errors.User.NotFound;
 
-            if (user.FollowedUsers is null)
+            var alreadyFollowing = user.FollowedUsers.Any(x => x.FollowedUserId == followUser.Id);
+            if (alreadyFollowing)
                 return Unit.Value;
 
-            var existing = user.FollowedUsers.FirstOrDefault(x => x.FollowedUserId == followUser.Id);
-
-            if (existing is not null)
+            var follower = new Follower
             {
-                await _userRepository.DeleteFollowerAsync(existing, cancellationToken);
-            }
-            else
-            {
-                var follower = new Follower
-                {
-                    UserId = user.Id,
-                    User = user,
-                    FollowedUserId = followUser.Id,
-                    FollowedUser = followUser
-                };
-                await _userRepository.AddFollowerAsync(follower, cancellationToken);
-            }
+                UserId = user.Id,
+                User = user,
+                FollowedUserId = followUser.Id,
+                FollowedUser = followUser
+            };
 
+            await _userRepository.AddFollowerAsync(follower, cancellationToken);
             return Unit.Value;
         }
     }

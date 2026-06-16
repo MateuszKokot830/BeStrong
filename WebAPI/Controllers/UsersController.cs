@@ -8,6 +8,7 @@ using Application.Helpers;
 using Application.Commands.Users.AddPhoto;
 using Application.Commands.Users.DeletePhoto;
 using Application.Commands.Users.FollowUser;
+using Application.Commands.Users.UnfollowUser;
 using Application.Commands.Users.SetMainPhoto;
 using Application.Commands.Users.UpdateUser;
 using Application.Queries.Users.GetUserByUsername;
@@ -84,12 +85,23 @@ namespace WebAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [SwaggerOperation(Summary = "Follows or unfollows a specific user")]
-        [HttpPut("{userId}/followers/{id}")]
-        public async Task<IActionResult> FollowUser(int userId, int id)
+        [SwaggerOperation(Summary = "Follows a specific user")]
+        [HttpPost("{userId}/follow")]
+        public async Task<IActionResult> FollowUser(int userId, [FromQuery] int followUserId)
         {
-            ErrorOr<Unit> result = await _mediator.Send(new FollowUserCommand(userId, id));
-            
+            ErrorOr<Unit> result = await _mediator.Send(new FollowUserCommand(userId, followUserId));
+
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Unfollows a specific user")]
+        [HttpDelete("{userId}/follow")]
+        public async Task<IActionResult> UnfollowUser(int userId, [FromQuery] int unfollowUserId)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new UnfollowUserCommand(userId, unfollowUserId));
+
             return result.Match(
                 _ => NoContent(),
                 errors => Problem(errors));

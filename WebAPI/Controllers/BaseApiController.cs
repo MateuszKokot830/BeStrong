@@ -20,9 +20,9 @@ namespace WebAPI.Controllers
 
         protected IActionResult Problem(List<Error> errors)
         {
-            var error = errors[0];
+            var firstError = errors[0];
 
-            var statusCode = error.Type switch
+            var statusCode = firstError.Type switch
             {
                 ErrorType.Validation => StatusCodes.Status400BadRequest,
                 ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
@@ -33,10 +33,19 @@ namespace WebAPI.Controllers
                 _ => StatusCodes.Status500InternalServerError,
             };
 
-            return ValidationProblem(new ValidationProblemDetails(
-                errors.GroupBy(e => e.Code)
-                    .ToDictionary(g => g.Key, g => g.Select(e => e.Description).ToArray())
-));
+            if (firstError.Type == ErrorType.Validation)
+            {
+                var validationErrors = errors
+                    .GroupBy(e => e.Code)
+                    .ToDictionary(g => g.Key, g => g.Select(e => e.Description).ToArray());
+
+                return ValidationProblem(new ValidationProblemDetails(validationErrors)
+                {
+                    Status = statusCode
+                });
+            }
+
+            return Problem(statusCode: statusCode, title: firstError.Code, detail: firstError.Description);
         }
     }
 }
