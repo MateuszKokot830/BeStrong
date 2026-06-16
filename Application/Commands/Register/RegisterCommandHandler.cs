@@ -1,9 +1,7 @@
 using Application.Dto.Auth;
-using Application.Dto.User;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using AutoMapper;
-using Domain.Aggregates;
+using Application.Mappings;
 using Domain.Errors;
 using ErrorOr;
 using MediatR;
@@ -12,11 +10,9 @@ namespace Application.Commands.Register
 {
     public class RegisterCommandHandler(
         IUserRepository userRepository,
-        IMapper mapper,
         ITokenService tokenService) : IRequestHandler<RegisterCommand, ErrorOr<UserAuthResponseDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
-        private readonly IMapper _mapper = mapper;
         private readonly ITokenService _tokenService = tokenService;
 
         public async Task<ErrorOr<UserAuthResponseDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -25,7 +21,7 @@ namespace Application.Commands.Register
             if (existing is not null)
                 return Errors.User.DuplicateUsername;
 
-            var user = _mapper.Map<User>(request.UserRegisterRequestDto);
+            var user = request.UserRegisterRequestDto.ToEntity();
 
             var result = await _userRepository.RegisterUserAsync(user, request.UserRegisterRequestDto.Password, cancellationToken);
 
@@ -34,8 +30,7 @@ namespace Application.Commands.Register
                     .Select(e => Error.Failure(code: e.Code, description: e.Description))
                     .ToList();
 
-            var userDto = _mapper.Map<UserDto>(user);
-            var token = await _tokenService.CreateTokenAsync(userDto, cancellationToken);
+            var token = await _tokenService.CreateTokenAsync(user.ToDto(), cancellationToken);
 
             return new UserAuthResponseDto(user.UserName, token);
         }

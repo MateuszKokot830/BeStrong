@@ -1,7 +1,7 @@
 using Application.Dto.Photo;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using AutoMapper;
+using Application.Mappings;
 using CloudinaryDotNet.Actions;
 using Domain.Entities;
 using Domain.Errors;
@@ -13,13 +13,11 @@ namespace Application.Commands.Users.AddPhoto
     public class AddPhotoCommandHandler(
         IUserRepository userRepository,
         IPhotoService photoService,
-        ICurrentUserService currentUserService,
-        IMapper mapper) : IRequestHandler<AddPhotoCommand, ErrorOr<PhotoDto>>
+        ICurrentUserService currentUserService) : IRequestHandler<AddPhotoCommand, ErrorOr<PhotoDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPhotoService _photoService = photoService;
         private readonly ICurrentUserService _currentUserService = currentUserService;
-        private readonly IMapper _mapper = mapper;
 
         public async Task<ErrorOr<PhotoDto>> Handle(AddPhotoCommand request, CancellationToken cancellationToken)
         {
@@ -52,7 +50,7 @@ namespace Application.Commands.Users.AddPhoto
             };
 
             await _userRepository.AddPhoto(photo, cancellationToken);
-            return _mapper.Map<PhotoDto>(photo);
+            return photo.ToDto();
         }
     }
 }

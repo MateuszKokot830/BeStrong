@@ -1,16 +1,16 @@
-using AutoMapper;
-using MediatR;
-using Application.Interfaces.Repositories;
 using Application.Dto.User;
+using Application.Interfaces.Repositories;
+using Application.Mappings;
 using Domain.Errors;
 using ErrorOr;
+using MediatR;
 
 namespace Application.Queries.Users.GetUserByUsername
 {
-    public class GetUserByUsernameQueryHandler(IUserRepository userRepository, IMapper mapper) : IRequestHandler<GetUserByUsernameQuery, ErrorOr<UserDto>>
+    public class GetUserByUsernameQueryHandler(IUserRepository userRepository)
+        : IRequestHandler<GetUserByUsernameQuery, ErrorOr<UserDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
-        private readonly IMapper _mapper = mapper;
 
         public async Task<ErrorOr<UserDto>> Handle(GetUserByUsernameQuery request, CancellationToken cancellationToken)
         {
@@ -18,7 +18,7 @@ namespace Application.Queries.Users.GetUserByUsername
             if (user is null)
                 return Errors.User.NotFound;
 
-            return _mapper.Map<UserDto>(user);
+            return user.ToDto();
         }
     }
 }

@@ -1,23 +1,21 @@
 using Application.Dto.Exercise;
 using Application.Interfaces.Repositories;
-using AutoMapper;
-using Domain.Entities;
+using Application.Mappings;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Commands.Workouts.CreateExercise
 {
-    public class CreateExerciseCommandHandler(IWorkoutRepository workoutRepository, IMapper mapper)
+    public class CreateExerciseCommandHandler(IWorkoutRepository workoutRepository)
         : IRequestHandler<CreateExerciseCommand, ErrorOr<ExerciseDto>>
     {
         private readonly IWorkoutRepository _workoutRepository = workoutRepository;
-        private readonly IMapper _mapper = mapper;
 
         public async Task<ErrorOr<ExerciseDto>> Handle(CreateExerciseCommand request, CancellationToken cancellationToken)
         {
-            var exercise = _mapper.Map<Exercise>(request.ExerciseDto);
+            var exercise = request.ExerciseDto.ToEntity();
             await _workoutRepository.CreateExerciseAsync(exercise, cancellationToken);
-            return _mapper.Map<ExerciseDto>(exercise);
+            return exercise.ToDto();
         }
     }
 }

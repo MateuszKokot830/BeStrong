@@ -1,23 +1,21 @@
 using Application.Dto.Post;
 using Application.Interfaces.Repositories;
-using AutoMapper;
-using Domain.Aggregates;
+using Application.Mappings;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Commands.Posts.CreatePost
 {
-    public class CreatePostCommandHandler(IPostRepository postRepository, IMapper mapper)
+    public class CreatePostCommandHandler(IPostRepository postRepository)
         : IRequestHandler<CreatePostCommand, ErrorOr<PostDto>>
     {
         private readonly IPostRepository _postRepository = postRepository;
-        private readonly IMapper _mapper = mapper;
 
         public async Task<ErrorOr<PostDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            var post = _mapper.Map<Post>(request.PostCreateDto);
+            var post = request.PostCreateDto.ToEntity();
             await _postRepository.AddAsync(post, cancellationToken);
-            return _mapper.Map<PostDto>(post);
+            return post.ToDto();
         }
     }
 }
