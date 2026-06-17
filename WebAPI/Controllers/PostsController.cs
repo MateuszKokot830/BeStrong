@@ -77,9 +77,8 @@ namespace WebAPI.Controllers
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(int postId)
         {
-            var userId = GetCurrentUserId();
-            ErrorOr<Unit> result = await _mediator.Send(new DeletePostCommand(postId, userId));
-            
+            ErrorOr<Unit> result = await _mediator.Send(new DeletePostCommand(postId));
+
             return result.Match(
                 _ => NoContent(),
                 errors => Problem(errors));
@@ -89,9 +88,8 @@ namespace WebAPI.Controllers
         [HttpDelete("comments/{commentId}")]
         public async Task<IActionResult> DeleteComment(int commentId)
         {
-            var userId = GetCurrentUserId();
-            ErrorOr<Unit> result = await _mediator.Send(new DeleteCommentCommand(commentId, userId));
-            
+            ErrorOr<Unit> result = await _mediator.Send(new DeleteCommentCommand(commentId));
+
             return result.Match(
                 _ => NoContent(),
                 errors => Problem(errors));

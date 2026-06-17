@@ -9,9 +9,6 @@ namespace Application.Validators.Commands
         {
             RuleFor(x => x.CommentId)
                 .GreaterThan(0).WithMessage("CommentId must be a valid positive integer.");
-
-            RuleFor(x => x.UserId)
-                .GreaterThan(0).WithMessage("UserId must be a valid positive integer.");
         }
     }
 }

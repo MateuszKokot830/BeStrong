@@ -1,6 +1,5 @@
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -8,30 +7,20 @@ namespace WebAPI.Controllers
     [ApiController]
     public class BaseApiController : ControllerBase
     {
-        protected int GetCurrentUserId()
+        private static readonly Dictionary<ErrorType, int> _statusCodes = new()
         {
-            return User.GetUserId();
-        }
-
-        protected string GetCurrentUsername()
-        {
-            return User.GetUsername();
-        }
+            [ErrorType.Validation]   = StatusCodes.Status400BadRequest,
+            [ErrorType.Unauthorized] = StatusCodes.Status401Unauthorized,
+            [ErrorType.NotFound]     = StatusCodes.Status404NotFound,
+            [ErrorType.Conflict]     = StatusCodes.Status409Conflict,
+            [ErrorType.Failure]      = StatusCodes.Status422UnprocessableEntity,
+            [ErrorType.Unexpected]   = StatusCodes.Status500InternalServerError,
+        };
 
         protected IActionResult Problem(List<Error> errors)
         {
             var firstError = errors[0];
-
-            var statusCode = firstError.Type switch
-            {
-                ErrorType.Validation => StatusCodes.Status400BadRequest,
-                ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
-                ErrorType.NotFound => StatusCodes.Status404NotFound,
-                ErrorType.Conflict => StatusCodes.Status409Conflict,
-                ErrorType.Failure => StatusCodes.Status422UnprocessableEntity,
-                ErrorType.Unexpected => StatusCodes.Status500InternalServerError,
-                _ => StatusCodes.Status500InternalServerError,
-            };
+            var statusCode = _statusCodes.GetValueOrDefault(firstError.Type, StatusCodes.Status500InternalServerError);
 
             if (firstError.Type == ErrorType.Validation)
             {
