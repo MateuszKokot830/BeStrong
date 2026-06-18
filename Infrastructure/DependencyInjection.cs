@@ -5,8 +5,10 @@ using Infrastructure.Data;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure
 {
@@ -14,7 +16,12 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<DataContext>();
+            services.AddDbContext<DataContext>((sp, options) =>
+            {
+                options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+                options.UseLoggerFactory(sp.GetRequiredService<ILoggerFactory>());
+                options.EnableSensitiveDataLogging();
+            });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
@@ -27,7 +34,6 @@ namespace Infrastructure
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<INLoggerService, NLoggerService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
