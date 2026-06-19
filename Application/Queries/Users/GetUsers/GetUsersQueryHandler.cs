@@ -1,20 +1,19 @@
 using Application.Dto.User;
-using Application.Interfaces.Repositories;
-using Application.Mappings;
+using Application.Interfaces.Searchers;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Queries.Users.GetUsers
 {
-    public class GetUsersQueryHandler(IUserRepository userRepository)
+    public class GetUsersQueryHandler(IUserSearcher userSearcher)
         : IRequestHandler<GetUsersQuery, ErrorOr<IEnumerable<UserDto>>>
     {
-        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IUserSearcher _userSearcher = userSearcher;
 
         public async Task<ErrorOr<IEnumerable<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.ProjectAsync(UserMappings.Selector, cancellationToken);
-            return users.OrderBy(u => u.UserName).ToList();
+            var users = await _userSearcher.GetAllAsync(cancellationToken);
+            return users.ToList();
         }
     }
 }

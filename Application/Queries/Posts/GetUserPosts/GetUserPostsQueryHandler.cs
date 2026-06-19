@@ -1,20 +1,19 @@
 using Application.Dto.Post;
-using Application.Interfaces.Repositories;
-using Application.Mappings;
+using Application.Interfaces.Searchers;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Queries.Posts.GetUserPosts
 {
-    public class GetUserPostsQueryHandler(IPostRepository postRepository)
+    public class GetUserPostsQueryHandler(IPostSearcher postSearcher)
         : IRequestHandler<GetUserPostsQuery, ErrorOr<IEnumerable<PostDto>>>
     {
-        private readonly IPostRepository _postRepository = postRepository;
+        private readonly IPostSearcher _postSearcher = postSearcher;
 
         public async Task<ErrorOr<IEnumerable<PostDto>>> Handle(GetUserPostsQuery request, CancellationToken cancellationToken)
         {
-            var posts = await _postRepository.GetAllUserPostsAsync(request.UserId, cancellationToken);
-            return posts.Select(p => p.ToDto()).OrderBy(p => p.CreatedDate).ToList();
+            var posts = await _postSearcher.FindByUserIdAsync(request.UserId, cancellationToken);
+            return posts.ToList();
         }
     }
 }

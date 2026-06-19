@@ -34,7 +34,7 @@ namespace Application.Commands.Users.DeletePhoto
             if (photo.PublicId != null)
                 await _photoService.DeletePhotoAsync(photo.PublicId);
 
-            await _userRepository.DeletePhoto(photo, cancellationToken);
+            await _userRepository.DeletePhotoAsync(photo, cancellationToken);
             return Unit.Value;
         }
     }

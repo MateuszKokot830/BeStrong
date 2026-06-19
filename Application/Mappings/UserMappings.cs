@@ -25,7 +25,7 @@ namespace Application.Mappings
             DateTime.Now.Year - user.DateOfBirth.Year,
             null,
             new MeasurementsDto(
-                user.Measurements.Height,
+                user.Measurements!.Height,
                 user.Measurements.Weight,
                 user.Measurements.Chest,
                 user.Measurements.Shoulders,

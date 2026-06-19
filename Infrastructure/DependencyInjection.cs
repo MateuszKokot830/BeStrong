@@ -1,9 +1,11 @@
 using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Searchers;
 using Application.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories;
+using Infrastructure.Searchers;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,16 +25,23 @@ namespace Infrastructure
                 options.EnableSensitiveDataLogging();
             });
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
+            // Repositories (write side)
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
+            services.AddScoped<IExerciseRepository, ExerciseRepository>();
             services.AddScoped<IWorkoutPlanRepository, WorkoutPlanRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Searchers (read side)
+            services.AddScoped<IUserSearcher, UserSearcher>();
+            services.AddScoped<IPostSearcher, PostSearcher>();
+            services.AddScoped<IWorkoutSearcher, WorkoutSearcher>();
+            services.AddScoped<IExerciseSearcher, ExerciseSearcher>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));

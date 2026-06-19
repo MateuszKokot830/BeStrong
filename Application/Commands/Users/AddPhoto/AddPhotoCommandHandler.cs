@@ -49,7 +49,7 @@ namespace Application.Commands.Users.AddPhoto
                 IsProfilePhoto = user.Photos.Count == 0
             };
 
-            await _userRepository.AddPhoto(photo, cancellationToken);
+            await _userRepository.AddPhotoAsync(photo, cancellationToken);
             return photo.ToDto();
         }
     }

@@ -1,9 +1,9 @@
-using Domain.Aggregates;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Domain.Entities;
 using Application.Interfaces.Repositories;
+using Domain.Aggregates;
+using Domain.Entities;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -20,22 +20,16 @@ namespace Infrastructure.Repositories
 
         public async Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default)
         {
-            var usernameNormalized = username?.ToUpperInvariant() ?? string.Empty;
+            var normalized = username?.ToUpperInvariant() ?? string.Empty;
             return await GetQueryable()
-                .SingleOrDefaultAsync(x => x.NormalizedUserName == usernameNormalized, cancellationToken);
+                .SingleOrDefaultAsync(u => u.NormalizedUserName == normalized, cancellationToken);
         }
 
-        public async Task<IdentityResult> RegisterUserAsync(User user, string? password, CancellationToken cancellationToken = default)
-        {
-            var pw = password ?? string.Empty;
-            return await _userManager.CreateAsync(user, pw);
-        }
+        public Task<IdentityResult> RegisterUserAsync(User user, string? password, CancellationToken cancellationToken = default) =>
+            _userManager.CreateAsync(user, password ?? string.Empty);
 
-        public async Task<bool> CheckPasswordAsync(User user, string? password, CancellationToken cancellationToken = default)
-        {
-            var pw = password ?? string.Empty;
-            return await _userManager.CheckPasswordAsync(user, pw);
-        }
+        public Task<bool> CheckPasswordAsync(User user, string? password, CancellationToken cancellationToken = default) =>
+            _userManager.CheckPasswordAsync(user, password ?? string.Empty);
 
         public Task AddFollowerAsync(Follower follower, CancellationToken cancellationToken = default)
         {
@@ -49,13 +43,13 @@ namespace Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public Task AddPhoto(Photo photo, CancellationToken cancellationToken = default)
+        public Task AddPhotoAsync(Photo photo, CancellationToken cancellationToken = default)
         {
             _context.Photos.Add(photo);
             return Task.CompletedTask;
         }
 
-        public Task DeletePhoto(Photo photo, CancellationToken cancellationToken = default)
+        public Task DeletePhotoAsync(Photo photo, CancellationToken cancellationToken = default)
         {
             _context.Photos.Remove(photo);
             return Task.CompletedTask;

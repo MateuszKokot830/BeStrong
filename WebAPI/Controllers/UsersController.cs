@@ -5,6 +5,7 @@ using ErrorOr;
 using Application.Dto.Photo;
 using Application.Dto.User;
 using Application.Helpers;
+using Application.Helpers.Criteria;
 using Application.Commands.Users.AddPhoto;
 using Application.Commands.Users.DeletePhoto;
 using Application.Commands.Users.FollowUser;
@@ -36,9 +37,9 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Retrieves all users as pagination list")]
         [HttpGet("list")]
-        public async Task<IActionResult> GetUsersList([FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> GetUsersList([FromQuery] UserSearchCriteria criteria)
         {
-            ErrorOr<PaginationList<UserDto>> result = await _mediator.Send(new GetUsersListQuery(paginationParams));
+            ErrorOr<PaginationList<UserDto>> result = await _mediator.Send(new GetUsersListQuery(criteria));
             
             if (result.IsError)
                 return Problem(result.Errors);

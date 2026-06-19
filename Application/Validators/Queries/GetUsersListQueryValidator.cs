@@ -7,16 +7,16 @@ namespace Application.Validators.Queries
     {
         public GetUsersListQueryValidator()
         {
-            RuleFor(x => x.PaginationParams.PageNumber)
+            RuleFor(x => x.Criteria.PageNumber)
                 .GreaterThan(0).WithMessage("Page number must be greater than 0.");
 
-            RuleFor(x => x.PaginationParams.PageSize)
+            RuleFor(x => x.Criteria.PageSize)
                 .GreaterThan(0).WithMessage("Page size must be greater than 0.")
                 .LessThanOrEqualTo(50).WithMessage("Page size cannot exceed 50.");
 
-            RuleFor(x => x.PaginationParams.Username)
+            RuleFor(x => x.Criteria.Username)
                 .MaximumLength(50).WithMessage("Username filter cannot exceed 50 characters.")
-                .When(x => x.PaginationParams.Username is not null);
+                .When(x => x.Criteria.Username is not null);
         }
     }
 }

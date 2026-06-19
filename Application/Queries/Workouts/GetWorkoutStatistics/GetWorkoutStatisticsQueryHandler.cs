@@ -1,5 +1,5 @@
 using Application.Dto.Statistics;
-using Application.Interfaces.Repositories;
+using Application.Interfaces.Searchers;
 using Application.Mappings;
 using Domain.Errors;
 using Domain.Services;
@@ -9,22 +9,36 @@ using MediatR;
 namespace Application.Queries.Workouts.GetWorkoutStatistics
 {
     public class GetWorkoutStatisticsQueryHandler(
-        IWorkoutRepository workoutRepository,
-        IUserRepository userRepository) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
+        IWorkoutSearcher workoutSearcher,
+        IExerciseSearcher exerciseSearcher,
+        IUserSearcher userSearcher) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
     {
-        private readonly IWorkoutRepository _workoutRepository = workoutRepository;
-        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IWorkoutSearcher _workoutSearcher = workoutSearcher;
+        private readonly IExerciseSearcher _exerciseSearcher = exerciseSearcher;
+        private readonly IUserSearcher _userSearcher = userSearcher;
 
         public async Task<ErrorOr<StatisticsDto>> Handle(GetWorkoutStatisticsQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
-            if (user is null)
+            var workoutStartDate = await _userSearcher.GetWorkoutStartDateAsync(request.UserId, cancellationToken);
+            if (workoutStartDate is null)
                 return Errors.User.NotFound;
 
-            var workouts = await _workoutRepository.GetUserWorkoutsAsync(request.UserId, cancellationToken);
-            var exercises = await _workoutRepository.GetExercisesAsync(cancellationToken);
+            var workouts = await _workoutSearcher.FindByUserIdAsync(request.UserId, cancellationToken);
+            var exercises = await _exerciseSearcher.GetAllAsync(cancellationToken);
 
-            return StatisticsCalculator.Calculate(workouts, user.DateOfWorkoutStart, exercises).ToDto();
+            var workoutExerciseEntries = workouts
+                .SelectMany(w => w.WorkoutExercises.Select(we => new WorkoutExerciseEntry(we.Sets, we.ExerciseId)))
+                .ToList();
+
+            var exerciseEntries = exercises
+                .Select(e => new ExerciseEntry(e.Id, e.Name))
+                .ToList();
+
+            return StatisticsCalculator.Calculate(
+                workouts.Count,
+                workoutExerciseEntries,
+                workoutStartDate.Value,
+                exerciseEntries).ToDto();
         }
     }
 }
