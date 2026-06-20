@@ -11,9 +11,9 @@ namespace Application.Mappings
             exercise.Description
         );
 
-        public static Exercise ToEntity(this ExerciseDto dto) => new()
+        public static Exercise ToEntity(this CreateExerciseDto dto) => new()
         {
-            Name = dto.Name ?? string.Empty,
+            Name = dto.Name,
             Description = dto.Description
         };
     }

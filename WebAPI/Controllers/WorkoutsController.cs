@@ -1,16 +1,13 @@
+using Application.Commands.Workouts.CreateWorkout;
+using Application.Dto.Workout;
+using Application.Dto.Statistics;
+using Application.Queries.Workouts.GetUserWorkouts;
+using Application.Queries.Workouts.GetOneRepMax;
+using Application.Queries.Workouts.GetWorkoutStatistics;
+using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using MediatR;
-using ErrorOr;
-using Application.Dto.Exercise;
-using Application.Dto.Statistics;
-using Application.Dto.Workout;
-using Application.Commands.Workouts.CreateExercise;
-using Application.Commands.Workouts.CreateWorkout;
-using Application.Queries.Workouts.GetExercises;
-using Application.Queries.Workouts.GetOneRepMax;
-using Application.Queries.Workouts.GetUserWorkouts;
-using Application.Queries.Workouts.GetWorkoutStatistics;
 
 namespace WebAPI.Controllers
 {
@@ -20,10 +17,10 @@ namespace WebAPI.Controllers
 
         [SwaggerOperation(Summary = "Creates a new workout")]
         [HttpPost]
-        public async Task<IActionResult> CreateWorkout(WorkoutDto workoutDto)
+        public async Task<IActionResult> CreateWorkout(CreateWorkoutDto workoutDto)
         {
             ErrorOr<WorkoutDto> result = await _mediator.Send(new CreateWorkoutCommand(workoutDto));
-            
+
             return result.Match(
                 workout => Ok(workout),
                 errors => Problem(errors));
@@ -34,7 +31,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetUserWorkouts(int id)
         {
             ErrorOr<IEnumerable<WorkoutDto>> result = await _mediator.Send(new GetUserWorkoutsQuery(id));
-            
+
             return result.Match(
                 workouts => Ok(workouts),
                 errors => Problem(errors));
@@ -45,7 +42,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetWorkoutStatistics(int id)
         {
             ErrorOr<StatisticsDto> result = await _mediator.Send(new GetWorkoutStatisticsQuery(id));
-            
+
             return result.Match(
                 statistics => Ok(statistics),
                 errors => Problem(errors));
@@ -59,28 +56,6 @@ namespace WebAPI.Controllers
 
             return result.Match(
                 value => Ok(value),
-                errors => Problem(errors));
-        }
-
-        [SwaggerOperation(Summary = "Creates a new exercise")]
-        [HttpPost("exercises")]
-        public async Task<IActionResult> CreateExercise(ExerciseDto exerciseDto)
-        {
-            ErrorOr<ExerciseDto> result = await _mediator.Send(new CreateExerciseCommand(exerciseDto));
-            
-            return result.Match(
-                exercise => Ok(exercise),
-                errors => Problem(errors));
-        }
-
-        [SwaggerOperation(Summary = "Retrieves all exercises")]
-        [HttpGet("exercises")]
-        public async Task<IActionResult> GetExercises()
-        {
-            ErrorOr<IEnumerable<ExerciseDto>> result = await _mediator.Send(new GetExercisesQuery());
-            
-            return result.Match(
-                exercises => Ok(exercises),
                 errors => Problem(errors));
         }
     }

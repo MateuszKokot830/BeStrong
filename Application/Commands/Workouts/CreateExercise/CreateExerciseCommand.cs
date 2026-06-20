@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Commands.Workouts.CreateExercise
 {
-    public record CreateExerciseCommand(ExerciseDto ExerciseDto) : IRequest<ErrorOr<ExerciseDto>>;
+    public record CreateExerciseCommand(CreateExerciseDto ExerciseDto) : IRequest<ErrorOr<ExerciseDto>>;
 }

@@ -1,6 +1,7 @@
 using Application.Dto.Post;
 using Application.Interfaces.Repositories;
 using Application.Mappings;
+using Domain.Factories;
 using ErrorOr;
 using MediatR;
 
@@ -13,7 +14,8 @@ namespace Application.Commands.Posts.CreatePost
 
         public async Task<ErrorOr<PostDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            var post = request.PostCreateDto.ToEntity();
+            var dto = request.PostCreateDto;
+            var post = PostFactory.Create(dto.UserId, dto.Description, dto.WorkoutId, dto.WorkoutPlan);
             await _postRepository.AddAsync(post, cancellationToken);
             return post.ToDto();
         }

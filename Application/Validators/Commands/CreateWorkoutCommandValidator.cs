@@ -8,18 +8,14 @@ namespace Application.Validators.Commands
     {
         public CreateWorkoutCommandValidator()
         {
-            RuleFor(x => x.WorkoutDto.UserId)
-                .GreaterThan(0).WithMessage("UserId must be a valid positive integer.")
-                .When(x => x.WorkoutDto.UserId.HasValue);
-
             RuleFor(x => x.WorkoutDto.Name)
                 .NotEmpty().WithMessage("Workout name is required.")
                 .MaximumLength(100).WithMessage("Workout name cannot exceed 100 characters.");
 
-            RuleFor(x => x.WorkoutDto.WorkoutExercises)
+            RuleFor(x => x.WorkoutDto.Exercises)
                 .NotEmpty().WithMessage("A workout must contain at least one exercise.");
 
-            RuleForEach(x => x.WorkoutDto.WorkoutExercises)
+            RuleForEach(x => x.WorkoutDto.Exercises)
                 .SetValidator(new WorkoutExerciseDtoValidator());
         }
     }

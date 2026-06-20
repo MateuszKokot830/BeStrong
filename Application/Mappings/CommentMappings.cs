@@ -18,7 +18,6 @@ namespace Application.Mappings
         {
             UserId = dto.UserId,
             Description = dto.Description,
-            CreatedDate = DateTime.UtcNow,
             PostId = dto.PostId
         };
     }
