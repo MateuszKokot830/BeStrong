@@ -7,9 +7,6 @@ namespace Application.Validators.Commands
     {
         public CreateCommentCommandValidator()
         {
-            RuleFor(x => x.CommentCreateDto.UserId)
-                .GreaterThan(0).WithMessage("UserId must be a valid positive integer.");
-
             RuleFor(x => x.CommentCreateDto.PostId)
                 .GreaterThan(0).WithMessage("PostId must be a valid positive integer.");
 

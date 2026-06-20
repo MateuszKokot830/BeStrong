@@ -1,8 +1,10 @@
 using Application.Commands.Workouts.CreateExercise;
 using Application.Dto.Exercise;
 using Application.Queries.Workouts.GetExercises;
+using Domain.Common;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -13,6 +15,7 @@ namespace WebAPI.Controllers
         private readonly IMediator _mediator = mediator;
 
         [SwaggerOperation(Summary = "Creates a new exercise")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> CreateExercise(CreateExerciseDto exerciseDto)
         {

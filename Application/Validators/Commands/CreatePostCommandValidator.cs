@@ -7,9 +7,6 @@ namespace Application.Validators.Commands
     {
         public CreatePostCommandValidator()
         {
-            RuleFor(x => x.PostCreateDto.UserId)
-                .GreaterThan(0).WithMessage("UserId must be a valid positive integer.");
-
             RuleFor(x => x.PostCreateDto.Description)
                 .MaximumLength(2000).WithMessage("Post description cannot exceed 2000 characters.")
                 .When(x => x.PostCreateDto.Description is not null);

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Domain.Aggregates;
+using Domain.Common;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,26 @@ namespace Infrastructure.SeedData
             }
 
             await context.SaveChangesAsync();
+        }
+
+        public static async Task SeedRolesAsync(RoleManager<Role> roleManager, UserManager<User> userManager)
+        {
+            foreach (var roleName in new[] { Roles.Admin, Roles.Member })
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                    await roleManager.CreateAsync(new Role { Name = roleName });
+            }
+
+            var users = userManager.Users.ToList();
+            foreach (var user in users)
+            {
+                if (!await userManager.IsInRoleAsync(user, Roles.Member))
+                    await userManager.AddToRoleAsync(user, Roles.Member);
+            }
+
+            var firstUser = users.FirstOrDefault();
+            if (firstUser != null && !await userManager.IsInRoleAsync(firstUser, Roles.Admin))
+                await userManager.AddToRoleAsync(firstUser, Roles.Admin);
         }
 
         public static async Task SeedExerciseData(DataContext context)

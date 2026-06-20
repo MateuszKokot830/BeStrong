@@ -1,5 +1,6 @@
 using Application.Dto.Statistics;
 using Application.Interfaces.Searchers;
+using Application.Interfaces.Services;
 using Application.Mappings;
 using Domain.Errors;
 using Domain.Services;
@@ -11,14 +12,19 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
     public class GetWorkoutStatisticsQueryHandler(
         IWorkoutSearcher workoutSearcher,
         IExerciseSearcher exerciseSearcher,
-        IUserSearcher userSearcher) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
+        IUserSearcher userSearcher,
+        ICurrentUserService currentUserService) : IRequestHandler<GetWorkoutStatisticsQuery, ErrorOr<StatisticsDto>>
     {
         private readonly IWorkoutSearcher _workoutSearcher = workoutSearcher;
         private readonly IExerciseSearcher _exerciseSearcher = exerciseSearcher;
         private readonly IUserSearcher _userSearcher = userSearcher;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<ErrorOr<StatisticsDto>> Handle(GetWorkoutStatisticsQuery request, CancellationToken cancellationToken)
         {
+            if (!_currentUserService.IsOwnerOrAdmin(request.UserId))
+                return Errors.User.Unauthorized;
+
             var workoutStartDate = await _userSearcher.GetWorkoutStartDateAsync(request.UserId, cancellationToken);
             if (workoutStartDate is null)
                 return Errors.User.NotFound;

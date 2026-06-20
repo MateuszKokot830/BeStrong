@@ -7,6 +7,8 @@ using Application.Dto.User;
 using Application.Helpers;
 using Application.Helpers.Criteria;
 using Application.Commands.Users.AddPhoto;
+using Domain.Common;
+using Microsoft.AspNetCore.Authorization;
 using Application.Commands.Users.DeletePhoto;
 using Application.Commands.Users.FollowUser;
 using Application.Commands.Users.UnfollowUser;
@@ -25,6 +27,7 @@ namespace WebAPI.Controllers
         private readonly IMediator _mediator = mediator;
 
         [SwaggerOperation(Summary = "Retrieves all users")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -36,6 +39,7 @@ namespace WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = "Retrieves all users as pagination list")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("list")]
         public async Task<IActionResult> GetUsersList([FromQuery] UserSearchCriteria criteria)
         {

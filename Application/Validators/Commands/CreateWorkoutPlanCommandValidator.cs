@@ -8,9 +8,6 @@ namespace Application.Validators.Commands
     {
         public CreateWorkoutPlanCommandValidator()
         {
-            RuleFor(x => x.WorkoutPlanCreateDto.CreatedById)
-                .GreaterThan(0).WithMessage("CreatedById must be a valid positive integer.");
-
             RuleFor(x => x.WorkoutPlanCreateDto.Name)
                 .NotEmpty().WithMessage("Workout plan name is required.")
                 .MaximumLength(100).WithMessage("Workout plan name cannot exceed 100 characters.");

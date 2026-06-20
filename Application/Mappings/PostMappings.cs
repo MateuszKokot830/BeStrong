@@ -16,12 +16,5 @@ namespace Application.Mappings
             post.Comments?.Select(c => c.ToDto()).ToList() ?? []
         );
 
-        public static Post ToEntity(this PostCreateDto dto) => new()
-        {
-            UserId = dto.UserId,
-            Description = dto.Description,
-            WorkoutId = dto.WorkoutId,
-            WorkoutPlanId = dto.WorkoutPlan
-        };
     }
 }

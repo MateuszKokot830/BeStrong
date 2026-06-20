@@ -13,9 +13,9 @@ namespace Application.Mappings
             plan.Workouts?.Select(w => w.ToDto()).ToList() ?? []
         );
 
-        public static WorkoutPlan ToEntity(this WorkoutPlanCreateDto dto) => new()
+        public static WorkoutPlan ToEntity(this WorkoutPlanCreateDto dto, int createdById) => new()
         {
-            CreatedById = dto.CreatedById,
+            CreatedById = createdById,
             Name = dto.Name,
             Description = dto.Description,
             Workouts = dto.Workouts?.Select(w => w.ToEntity()).ToList() ?? []

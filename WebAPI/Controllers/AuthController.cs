@@ -1,13 +1,15 @@
+using Application.Commands.Register;
+using Application.Dto.Auth;
+using Application.Queries.Login;
+using ErrorOr;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using MediatR;
-using ErrorOr;
-using Application.Commands.Register;
-using Application.Queries.Login;
-using Application.Dto.Auth;
 
 namespace WebAPI.Controllers
 {
+    [AllowAnonymous]
     public class AuthController(IMediator mediator) : BaseApiController
     {
         private readonly IMediator _mediator = mediator;

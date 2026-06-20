@@ -1,7 +1,10 @@
 using Application;
+using Domain.Aggregates;
+using DomainEntities = Domain.Entities;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.SeedData;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
@@ -49,6 +52,9 @@ try
     await context.Database.MigrateAsync();
     await SeedData.SeedUserData(context);
     await SeedData.SeedExerciseData(context);
+    await SeedData.SeedRolesAsync(
+        services.GetRequiredService<RoleManager<DomainEntities.Role>>(),
+        services.GetRequiredService<UserManager<User>>());
 
     app.Run();
 }

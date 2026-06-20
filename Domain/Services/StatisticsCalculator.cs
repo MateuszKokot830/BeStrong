@@ -2,6 +2,9 @@ using Domain.ValueObjects;
 
 namespace Domain.Services
 {
+    public record WorkoutExerciseEntry(int Sets, int ExerciseId);
+    public record ExerciseEntry(int Id, string? Name);
+
     public static class StatisticsCalculator
     {
         public static Statistics Calculate(
