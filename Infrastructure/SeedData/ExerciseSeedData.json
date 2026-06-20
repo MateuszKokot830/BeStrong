@@ -1,90 +1,55 @@
 [
-    {
-      "Name": "Bench Press",
-      "Description": "Working muscles: Chest, Front Deltoid"
-    },
-    {
-        "Name": "Dumbbell Pullovers",
-        "Description": "Working muscles: Chest"
-    },
-    {
-        "Name": "Push-up",
-        "Description": "Working muscles: Chest, Front Deltoid, Triceps"
-    },
-    {
-        "Name": "Bar Dip",
-        "Description": "Working muscles: Chest, Front Deltoid, Triceps"
-    },
-    {
-        "Name": "Dumbbell Front Raises",
-        "Description": "Working muscles: Front Deltoid"
-    },
-    {
-        "Name": "Face Pull",
-        "Description": "Working muscles: Rear Deltoid Rotator Cuff"
-    },
-    {
-        "Name": "Overhead Press",
-        "Description": "Working muscles: Front Deltoid"
-    },
-    {
-        "Name": "Barbell Curl",
-        "Description": "Working muscles: Biceps"
-    },
-    {
-        "Name": "Dumbbell Curl",
-        "Description": "Working muscles: Biceps"
-    },
-    {
-        "Name": "Hammer Curl",
-        "Description": "Working muscles: Biceps"
-    },
-    {
-        "Name": "Bench Dip",
-        "Description": "Working muscles: Triceps"
-    },
-    {
-        "Name": "Tricep Pushdown",
-        "Description": "Working muscles: Triceps"
-    },
-    {
-        "Name": "Squat",
-        "Description": "Working muscles: Quads, Adductors, Glutes"
-    },
-    {
-        "Name": "Chin-Up",
-        "Description": "Working muscles: Lats"
-    },
-    {
-        "Name": "Pull-Up",
-        "Description": "Working muscles: Lats"
-    },
-    {
-        "Name": "Dumbbell Row",
-        "Description": "Working muscles: Lats, Trapezius, Rear Deltoids"
-    },
-    {
-        "Name": "Inverted Row",
-        "Description": "Working muscles: Lats, Trapezius, Rear Deltoids"
-    },
-    {
-        "Name": "Deadlift",
-        "Description": "Working muscles: Glutes, Lower Back"
-    },
-    {
-        "Name": "Hip Thrusts",
-        "Description": "Working muscles: Glutes"
-    },
-    {
-        "Name": "Plank",
-        "Description": "Working muscles: Abs"
-    },
-    {
-        "Name": "Hanging Leg Raise",
-        "Description": "Working muscles: Abs"
-    },
-    {
-        "Name": "Ab Wheel Roll-Outs",
-        "Description": "Working muscles: Abs"
-    }
+  { "Name": "Barbell Bench Press",                  "Description": "Compound push. Primary: chest, assisted by front deltoids and triceps.",        "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Barbell-Bench-Press.webp" },
+  { "Name": "Barbell Bulgarian Split Squat",         "Description": "Unilateral compound. Primary: quads, with strong glute involvement.",            "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Barbell-Bulgarian-Split-Squat.webp" },
+  { "Name": "Barbell Curl",                          "Description": "Isolation. Classic biceps builder with a barbell.",                              "MuscleSubgroup": 3,  "ImageUrl": "assets/photos/Barbell-Curl.webp" },
+  { "Name": "Barbell Deadlift",                      "Description": "Compound hinge. Primary: lower back and glutes, full posterior chain.",          "MuscleSubgroup": 7,  "ImageUrl": "assets/photos/Barbell-Deadlift.webp" },
+  { "Name": "Barbell Declined Bench Press",          "Description": "Compound push on a decline. Emphasises lower chest fibers.",                     "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Barbell-Declined-Bench-Press.webp" },
+  { "Name": "Barbell Hip Thrust",                    "Description": "Hip extension compound. Best glute activator with heavy load.",                  "MuscleSubgroup": 11, "ImageUrl": "assets/photos/Barbell-Hip-Thrust.webp" },
+  { "Name": "Barbell Preacher Curl",                 "Description": "Isolation. Strict biceps curl with the arm braced against a pad.",               "MuscleSubgroup": 3,  "ImageUrl": "assets/photos/Barbell-Preacher-Curl.webp" },
+  { "Name": "Barbell Row",                           "Description": "Compound pull. Primary: lats, with trapezius and rear deltoid assistance.",       "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Barbell-Row.webp" },
+  { "Name": "Barbell Sumo Deadlift",                 "Description": "Wide-stance hinge. Greater glute and adductor involvement than conventional.",    "MuscleSubgroup": 11, "ImageUrl": "assets/photos/Barbell-Sumo-Deadlift.webp" },
+  { "Name": "Bent Over Lateral Raise",                "Description": "Isolation. Targets rear deltoid through horizontal abduction.",                 "MuscleSubgroup": 2,  "ImageUrl": "assets/photos/Bent-Over-Lateral-Raise.webp" },
+  { "Name": "Cable Crossover",                       "Description": "Isolation. Constant-tension chest fly using cables.",                            "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Cable-Crossover.webp" },
+  { "Name": "Cable Rope Pushdown",                   "Description": "Isolation. Triceps extension with a rope attachment for full contraction.",      "MuscleSubgroup": 4,  "ImageUrl": "assets/photos/Cable-Rope-Pushdown.webp" },
+  { "Name": "Chest Press Machine",                   "Description": "Machine-guided compound push. Beginner-friendly chest builder.",                  "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Chest-Press-Machine.webp" },
+  { "Name": "Close Grip Bench Press",                "Description": "Compound push with a narrow grip. Shifts emphasis to triceps.",                  "MuscleSubgroup": 4,  "ImageUrl": "assets/photos/Close-Grip-Bench-Press.webp" },
+  { "Name": "Close Grip Pulldown",                   "Description": "Compound pull with a narrow grip. Strong lat engagement.",                        "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Close-Grip-Pulldown.webp" },
+  { "Name": "Crunch Machine",                        "Description": "Machine-guided abs isolation with adjustable resistance.",                        "MuscleSubgroup": 8,  "ImageUrl": "assets/photos/Crunch-Machine.webp" },
+  { "Name": "Crunch",                                "Description": "Bodyweight abs isolation through spinal flexion.",                                "MuscleSubgroup": 8,  "ImageUrl": "assets/photos/Crunch.webp" },
+  { "Name": "Dumbbell Bench Press",                  "Description": "Compound push with dumbbells for a deeper stretch and unilateral control.",       "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Dumbbell-Bench-Press.webp" },
+  { "Name": "Dumbbell Bent Over Row (Single Arm)",   "Description": "Unilateral compound pull. Primary: lats, with core stabilisation demand.",         "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Dumbbell-Bent-Over-Row-Single-Arm.webp" },
+  { "Name": "Dumbbell Curl",                         "Description": "Isolation. Allows supination for full biceps contraction.",                       "MuscleSubgroup": 3,  "ImageUrl": "assets/photos/Dumbbell-Curl.webp" },
+  { "Name": "Dumbbell Fly",                          "Description": "Isolation. Wide arc stretches the chest under load.",                             "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Dumbbell-Fly.webp" },
+  { "Name": "Dumbbell Front Raise",                  "Description": "Isolation. Targets front deltoid through shoulder flexion.",                      "MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Dumbbell-Front-Raise.webp" },
+  { "Name": "Dumbbell Lateral Raise",                "Description": "Isolation. Builds shoulder width through abduction.",                             "MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Dumbbell-Lateral-Raise.webp" },
+  { "Name": "Dumbbell Overhead Triceps Extension",   "Description": "Isolation. Stretches and loads the long head of the triceps.",                    "MuscleSubgroup": 4,  "ImageUrl": "assets/photos/Dumbbell-Overhead-Triceps-Extension.webp" },
+  { "Name": "Dumbbell Shoulder Press",               "Description": "Compound press overhead. Primary mover: front deltoid.",                          "MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Dumbbell-Shoulder-Press.webp" },
+  { "Name": "Dumbbell Shrugs",                       "Description": "Isolation. Elevates the shoulder girdle to target the trapezius.",                "MuscleSubgroup": 6,  "ImageUrl": "assets/photos/Dumbbell-Shrugs.webp" },
+  { "Name": "Front Squat",                           "Description": "Compound lower-body push with a front-loaded bar. Strong quad emphasis.",         "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Front-Squat.webp" },
+  { "Name": "Hack Squat",                            "Description": "Machine-guided squat pattern. Isolates quads with back support.",                 "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Hack-Squat.webp" },
+  { "Name": "Hammer Curl",                           "Description": "Neutral-grip curl. Hits brachialis and brachioradialis alongside biceps.",        "MuscleSubgroup": 3,  "ImageUrl": "assets/photos/Hammer-Curl.webp" },
+  { "Name": "Hanging Leg Raise",                     "Description": "Dynamic abs exercise performed hanging from a bar. Lower abs emphasis.",          "MuscleSubgroup": 8,  "ImageUrl": "assets/photos/Hanging-Leg-Raise.webp" },
+  { "Name": "Incline Barbell Bench Press",           "Description": "Compound push on an incline. Emphasises upper chest fibers.",                     "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Incline-Barbell-Bench-Press.webp" },
+  { "Name": "Incline Dumbbell Bench Press",          "Description": "Compound push on an incline with dumbbells. Upper chest focus with free range.",  "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Incline-Dumbbell-Bench-Press.webp" },
+  { "Name": "Incline Dumbbell Curl",                 "Description": "Isolation on an incline bench. Increases stretch on the biceps.",                 "MuscleSubgroup": 3,  "ImageUrl": "assets/photos/Incline-Dumbbell-Curl.webp" },
+  { "Name": "Leg Extension",                         "Description": "Machine isolation. Pure quad activation through knee extension.",                 "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Leg-Extension.webp" },
+  { "Name": "Leg Press",                             "Description": "Machine-guided compound push. Primary: quads, with glute assistance.",             "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Leg-Press.webp" },
+  { "Name": "Lunge",                                 "Description": "Unilateral compound movement. Primary: quads, with glute and balance demand.",     "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Lunge.webp" },
+  { "Name": "Lying Leg Curl",                        "Description": "Machine isolation lying prone. Pure hamstring activation through knee flexion.",   "MuscleSubgroup": 10, "ImageUrl": "assets/photos/Lying-Leg-Curl.webp" },
+  { "Name": "Lying Triceps Extension",               "Description": "Isolation lying on a bench. Loads the triceps through elbow extension.",          "MuscleSubgroup": 4,  "ImageUrl": "assets/photos/Lying-Triceps-Extension.webp" },
+  { "Name": "Peck Deck",                             "Description": "Machine isolation. Constant-tension chest fly with fixed motion path.",            "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Peck-Deck.webp" },
+  { "Name": "Plank",                                 "Description": "Isometric core hold. Targets abs and stabilisers.",                               "MuscleSubgroup": 8,  "ImageUrl": "assets/photos/Plank.webp" },
+  { "Name": "Pull-Up",                               "Description": "Bodyweight pull. Primary mover: lats, with biceps assistance.",                    "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Pull-Up.webp" },
+  { "Name": "Push-Up",                               "Description": "Bodyweight compound push. Works chest, front deltoids and triceps.",               "MuscleSubgroup": 0,  "ImageUrl": "assets/photos/Push-Ups.webp" },
+  { "Name": "Rope Ab Pulldown",                      "Description": "Cable isolation kneeling. Loads the abs through spinal flexion.",                 "MuscleSubgroup": 8,  "ImageUrl": "assets/photos/Rope-Ab-Pulldown.webp" },
+  { "Name": "Seated Barbell Shoulder Press",         "Description": "Compound press overhead while seated. Primary mover: front deltoid.",             "MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Seated-Barbell-Shoulder-Press.webp" },
+  { "Name": "Seated Cable Row",                      "Description": "Compound pull seated. Primary: lats, with trapezius and rear deltoid assistance.", "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Seated-Cable-Row.webp" },
+  { "Name": "Seated Calf Raise",                     "Description": "Isolation seated with bent knee. Targets the soleus within the calves.",           "MuscleSubgroup": 13, "ImageUrl": "assets/photos/Seated-Calf-Raise.webp" },
+  { "Name": "Seated Leg Curl",                       "Description": "Machine isolation seated. Pure hamstring activation through knee flexion.",         "MuscleSubgroup": 10, "ImageUrl": "assets/photos/Seated-Leg-Curl.webp" },
+  { "Name": "Smith Machine Shoulder Press",          "Description": "Guided-bar compound press overhead. Primary mover: front deltoid.",                "MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Smith-Machine-Shoulder-Press.webp" },
+  { "Name": "Squat",                                 "Description": "Compound lower-body push. Primary: quads, assisted by glutes and adductors.",      "MuscleSubgroup": 9,  "ImageUrl": "assets/photos/Squat.webp" },
+  { "Name": "Standing Barbell Shoulder Press",       "Description": "Standing compound press overhead. Primary mover: front deltoid, with core demand.","MuscleSubgroup": 1,  "ImageUrl": "assets/photos/Standing-Barbell-Shoulder-Press.webp" },
+  { "Name": "Standing Calf Raise",                   "Description": "Isolation standing with straight knee. Targets the gastrocnemius within the calves.", "MuscleSubgroup": 13, "ImageUrl": "assets/photos/Standing-Calf-Raise.webp" },
+  { "Name": "Triceps Pressdown",                     "Description": "Cable isolation. Constant tension through full triceps extension.",                "MuscleSubgroup": 4,  "ImageUrl": "assets/photos/Triceps-Pressdown.webp" },
+  { "Name": "Wide Grip Pulldown",                    "Description": "Compound pull with a wide grip. Maximises lat width activation.",                  "MuscleSubgroup": 5,  "ImageUrl": "assets/photos/Wide-Grip-Pulldown.webp" }
 ]

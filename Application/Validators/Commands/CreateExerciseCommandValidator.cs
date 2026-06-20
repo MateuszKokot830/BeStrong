@@ -14,6 +14,10 @@ namespace Application.Validators.Commands
             RuleFor(x => x.ExerciseDto.Description)
                 .MaximumLength(500).WithMessage("Exercise description cannot exceed 500 characters.")
                 .When(x => x.ExerciseDto.Description is not null);
+
+            RuleFor(x => x.ExerciseDto.ImageUrl)
+                .MaximumLength(500).WithMessage("Image URL cannot exceed 500 characters.")
+                .When(x => x.ExerciseDto.ImageUrl is not null);
         }
     }
 }
