@@ -6,6 +6,15 @@ namespace Application.Mappings
 {
     public static class WorkoutMappings
     {
+        public static Workout ToEntity(this WorkoutDto dto) => new()
+        {
+            Id = dto.Id,
+            UserId = dto.UserId,
+            Date = dto.Date,
+            Name = dto.Name,
+            WorkoutExercises = dto.WorkoutExercises?.Select(we => we.ToEntity()).ToList() ?? []
+        };
+
         public static WorkoutDto ToDto(this Workout workout) => new(
             workout.Id,
             workout.UserId,
@@ -14,13 +23,5 @@ namespace Application.Mappings
             workout.WorkoutExercises?.Select(we => we.ToDto()).ToList() ?? []
         );
 
-        public static Workout ToEntity(this WorkoutDto dto) => new()
-        {
-            Id = dto.Id,
-            UserId = dto.UserId,
-            Date = DateTime.UtcNow,
-            Name = dto.Name,
-            WorkoutExercises = dto.WorkoutExercises?.Select(we => we.ToEntity()).ToList() ?? []
-        };
     }
 }

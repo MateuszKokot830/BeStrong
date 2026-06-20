@@ -6,8 +6,10 @@ using Infrastructure.Data;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories;
 using Infrastructure.Searchers;
+using Infrastructure.Searchers.Decorators;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,7 +40,12 @@ namespace Infrastructure
             services.AddScoped<IUserSearcher, UserSearcher>();
             services.AddScoped<IPostSearcher, PostSearcher>();
             services.AddScoped<IWorkoutSearcher, WorkoutSearcher>();
-            services.AddScoped<IExerciseSearcher, ExerciseSearcher>();
+            services.AddScoped<ExerciseSearcher>();
+            services.AddScoped<IExerciseSearcher>(sp =>
+                new CachedExerciseSearcher(
+                    sp.GetRequiredService<ExerciseSearcher>(),
+                    sp.GetRequiredService<IMemoryCache>()));
+            services.AddMemoryCache();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();

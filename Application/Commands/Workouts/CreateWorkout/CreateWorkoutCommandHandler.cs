@@ -3,6 +3,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappings;
 using Domain.Errors;
+using Domain.Factories;
 using ErrorOr;
 using MediatR;
 
@@ -21,7 +22,15 @@ namespace Application.Commands.Workouts.CreateWorkout
                 !_currentUserService.IsOwnerOrAdmin(request.WorkoutDto.UserId.Value))
                 return Errors.User.Unauthorized;
 
-            var workout = request.WorkoutDto.ToEntity();
+            var exercises = request.WorkoutDto.WorkoutExercises
+                .Select(we => we.ToEntity())
+                .ToList();
+
+            var workout = WorkoutFactory.Create(
+                request.WorkoutDto.UserId ?? _currentUserService.UserId,
+                request.WorkoutDto.Name,
+                exercises);
+
             await _workoutRepository.AddAsync(workout, cancellationToken);
             return workout.ToDto();
         }
