@@ -1,9 +1,9 @@
-using Application.Dto.User;
+using Application.Dto.Auth;
 
 namespace Application.Interfaces.Services
 {
     public interface ITokenService
     {
-        Task<string?> CreateTokenAsync(UserDto user, CancellationToken cancellationToken = default);
+        Task<string?> CreateTokenAsync(CreateTokenRequest request, CancellationToken cancellationToken = default);
     }
 }

@@ -1,7 +1,7 @@
 using Application.Dto.Auth;
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Services;
 using Application.Mappings;
+using Application.Interfaces.Services;
 using Domain.Errors;
 using ErrorOr;
 using MediatR;
@@ -30,7 +30,7 @@ namespace Application.Commands.Register
                     .Select(e => Error.Failure(code: e.Code, description: e.Description))
                     .ToList();
 
-            var token = await _tokenService.CreateTokenAsync(user.ToDto(), cancellationToken);
+            var token = await _tokenService.CreateTokenAsync(new CreateTokenRequest(user.Id, user.UserName ?? string.Empty), cancellationToken);
 
             return new UserAuthResponseDto(user.UserName, token);
         }

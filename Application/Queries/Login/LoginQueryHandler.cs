@@ -1,7 +1,6 @@
 using Application.Dto.Auth;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Mappings;
 using Domain.Errors;
 using ErrorOr;
 using MediatR;
@@ -25,7 +24,7 @@ namespace Application.Queries.Login
             if (!passwordValid)
                 return Errors.Auth.InvalidCredentials;
 
-            var token = await _tokenService.CreateTokenAsync(user.ToDto(), cancellationToken);
+            var token = await _tokenService.CreateTokenAsync(new CreateTokenRequest(user.Id, user.UserName ?? string.Empty), cancellationToken);
 
             return new UserAuthResponseDto(user.UserName, token);
         }

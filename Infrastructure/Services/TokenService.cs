@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Dto.User;
+using Application.Dto.Auth;
 using Application.Interfaces.Services;
 using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
@@ -14,22 +14,19 @@ public class TokenService(
     UserManager<User> userManager,
     IConfiguration configuration) : ITokenService
 {
-    public async Task<string?> CreateTokenAsync(UserDto user, CancellationToken cancellationToken = default)
+    public async Task<string?> CreateTokenAsync(CreateTokenRequest request, CancellationToken cancellationToken = default)
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName)
+            new(ClaimTypes.NameIdentifier, request.UserId.ToString()),
+            new(ClaimTypes.Name, request.Username)
         };
 
-        if (userManager != null)
+        var identityUser = await userManager.FindByNameAsync(request.Username);
+        if (identityUser != null)
         {
-            var identityUser = await userManager.FindByNameAsync(user.UserName ?? string.Empty);
-            if (identityUser != null)
-            {
-                var roles = await userManager.GetRolesAsync(identityUser);
-                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            }
+            var roles = await userManager.GetRolesAsync(identityUser);
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
         }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"] ?? configuration["TokenKey"] ?? string.Empty));
@@ -43,7 +40,6 @@ public class TokenService(
             expires: expiresAt,
             signingCredentials: credentials);
 
-        var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
-        return accessToken;
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
