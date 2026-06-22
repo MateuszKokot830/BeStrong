@@ -7,7 +7,8 @@ namespace Application.Mappings
     {
         public static FollowerDto ToDto(this Follower follower) => new(
             follower.UserId,
-            follower.FollowedUserId
+            follower.FollowedUserId,
+            follower.FollowedAt
         );
     }
 }

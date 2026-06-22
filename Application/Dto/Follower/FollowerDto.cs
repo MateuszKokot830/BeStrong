@@ -2,6 +2,7 @@ namespace Application.Dto.Follower
 {
     public record FollowerDto(
         int UserId,
-        int FollowedUserId
+        int FollowedUserId,
+        DateTime FollowedAt
     );
 }

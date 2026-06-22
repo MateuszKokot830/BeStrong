@@ -10,12 +10,14 @@ namespace Domain.Services
         public static Statistics Calculate(
             int workoutCount,
             IReadOnlyList<WorkoutExerciseEntry> workoutExercises,
-            DateTime workoutStartDate,
+            DateTime? workoutStartDate,
             IReadOnlyList<ExerciseEntry> exercises)
         {
             var totalSets = workoutExercises.Sum(we => we.Sets);
 
-            var totalWeeks = (DateTime.UtcNow - workoutStartDate).TotalDays / 7.0;
+            var totalWeeks = workoutStartDate.HasValue
+                ? (DateTime.UtcNow - workoutStartDate.Value).TotalDays / 7.0
+                : 0;
             var avgWorkoutsPerWeek = totalWeeks > 0
                 ? Math.Round((decimal)(workoutCount / totalWeeks), 2)
                 : 0m;

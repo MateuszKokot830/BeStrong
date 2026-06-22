@@ -25,10 +25,10 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             if (!_currentUserService.IsOwnerOrAdmin(request.UserId))
                 return Errors.User.Unauthorized;
 
-            var workoutStartDate = await _userSearcher.GetWorkoutStartDateAsync(request.UserId, cancellationToken);
-            if (workoutStartDate is null)
+            if (!await _userSearcher.ExistsAsync(request.UserId, cancellationToken))
                 return Errors.User.NotFound;
 
+            var workoutStartDate = await _userSearcher.GetWorkoutStartDateAsync(request.UserId, cancellationToken);
             var workouts = await _workoutSearcher.FindByUserIdAsync(request.UserId, cancellationToken);
             var exercises = await _exerciseSearcher.GetAllAsync(cancellationToken);
 
@@ -43,7 +43,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             return StatisticsCalculator.Calculate(
                 workouts.Count,
                 workoutExerciseEntries,
-                workoutStartDate.Value,
+                workoutStartDate,
                 exerciseEntries).ToDto();
         }
     }

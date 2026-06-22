@@ -24,6 +24,7 @@ namespace Application.Mappings
             user.Photos.Where(p => p.IsProfilePhoto).Select(p => p.Url).FirstOrDefault(),
             DateTime.Now.Year - user.DateOfBirth.Year,
             null,
+            user.UpdatedDate,
             new MeasurementsDto(
                 user.Measurements!.Height,
                 user.Measurements.Weight,
@@ -38,10 +39,10 @@ namespace Application.Mappings
                 .ToList(),
             Array.Empty<PostDto>(),
             user.FollowedUsers
-                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId))
+                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId, f.FollowedAt))
                 .ToList(),
             user.Followers
-                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId))
+                .Select(f => new FollowerDto(f.UserId, f.FollowedUserId, f.FollowedAt))
                 .ToList()
         );
 
@@ -60,6 +61,7 @@ namespace Application.Mappings
             user.Photos?.FirstOrDefault(p => p.IsProfilePhoto)?.Url,
             user.Age,
             user.WorkoutSince,
+            user.UpdatedDate,
             user.Measurements?.ToDto(),
             user.Photos?.Select(p => p.ToDto()).ToList() ?? [],
             user.Posts?.Select(p => p.ToDto()).ToList() ?? [],

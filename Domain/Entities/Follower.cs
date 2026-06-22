@@ -13,5 +13,6 @@ namespace Domain.Entities
         public int FollowedUserId { get; set; }
         [ForeignKey("FollowedUserId")]
         public virtual User? FollowedUser { get; set; }
+        public DateTime FollowedAt { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Domain.Entities;
 using Domain.Errors;
+using Domain.Factories;
 using ErrorOr;
 using MediatR;
 
@@ -29,13 +29,7 @@ namespace Application.Commands.Users.FollowUser
             if (alreadyFollowing)
                 return Unit.Value;
 
-            var follower = new Follower
-            {
-                UserId = user.Id,
-                User = user,
-                FollowedUserId = followUser.Id,
-                FollowedUser = followUser
-            };
+            var follower = FollowerFactory.Create(user, followUser);
 
             await _userRepository.AddFollowerAsync(follower, cancellationToken);
             return Unit.Value;

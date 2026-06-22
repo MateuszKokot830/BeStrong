@@ -10,6 +10,7 @@ namespace Application.Interfaces.Searchers
         Task<UserDto?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<UserDto>> FindByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default);
         Task<PaginationList<UserDto>> GetPagedAsync(UserSearchCriteria criteria, CancellationToken cancellationToken = default);
+        Task<bool> ExistsAsync(int userId, CancellationToken cancellationToken = default);
         Task<DateTime?> GetWorkoutStartDateAsync(int userId, CancellationToken cancellationToken = default);
     }
 }

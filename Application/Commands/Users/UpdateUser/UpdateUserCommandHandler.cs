@@ -25,6 +25,7 @@ namespace Application.Commands.Users.UpdateUser
                 return Errors.User.Unauthorized;
 
             request.UserUpdateDto.ApplyTo(user);
+            user.UpdatedDate = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user, cancellationToken);
             return user.ToDto();
         }

@@ -15,9 +15,10 @@ namespace Application.Validators.Commands
                 .LessThan(DateTime.UtcNow).WithMessage("Date of birth must be in the past.")
                 .GreaterThan(DateTime.UtcNow.AddYears(-120)).WithMessage("Date of birth is not realistic.");
 
-            RuleFor(x => x.UserUpdateDto.DateOfWorkoutStart)
+            RuleFor(x => x.UserUpdateDto.DateOfWorkoutStart!.Value)
                 .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Workout start date cannot be in the future.")
-                .GreaterThan(DateTime.UtcNow.AddYears(-100)).WithMessage("Workout start date is not realistic.");
+                .GreaterThan(DateTime.UtcNow.AddYears(-100)).WithMessage("Workout start date is not realistic.")
+                .When(x => x.UserUpdateDto.DateOfWorkoutStart.HasValue);
 
             RuleFor(x => x.UserUpdateDto.Name)
                 .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.")

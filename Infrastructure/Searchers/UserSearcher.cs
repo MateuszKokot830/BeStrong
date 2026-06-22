@@ -44,11 +44,14 @@ namespace Infrastructure.Searchers
             return await PaginationList<UserDto>.CreateAsync(query, criteria.PageNumber, criteria.PageSize, cancellationToken);
         }
 
+        public async Task<bool> ExistsAsync(int userId, CancellationToken cancellationToken = default) =>
+            await _context.Users.AsNoTracking().AnyAsync(u => u.Id == userId, cancellationToken);
+
         public async Task<DateTime?> GetWorkoutStartDateAsync(int userId, CancellationToken cancellationToken = default) =>
             await _context.Users
                 .AsNoTracking()
                 .Where(u => u.Id == userId)
-                .Select(u => (DateTime?)u.DateOfWorkoutStart)
+                .Select(u => u.DateOfWorkoutStart)
                 .SingleOrDefaultAsync(cancellationToken);
     }
 }

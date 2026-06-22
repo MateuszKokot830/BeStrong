@@ -6,7 +6,7 @@ namespace Application.Dto.User
     public record UserUpdateDto(
         int Id,
         DateTime DateOfBirth,
-        DateTime DateOfWorkoutStart,
+        DateTime? DateOfWorkoutStart,
         string? Name,
         string? Surname,
         Gender Gender,
