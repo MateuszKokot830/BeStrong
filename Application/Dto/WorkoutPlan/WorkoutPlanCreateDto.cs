@@ -1,10 +1,12 @@
-using Application.Dto.Workout;
+using Domain.Common;
 
 namespace Application.Dto.WorkoutPlan
 {
     public record WorkoutPlanCreateDto(
         string? Name,
         string? Description,
-        IReadOnlyCollection<WorkoutDto> Workouts
+        WorkoutPlanCategory Category,
+        bool IsPublic,
+        IReadOnlyCollection<WorkoutTemplateDto> WorkoutTemplates
     );
 }

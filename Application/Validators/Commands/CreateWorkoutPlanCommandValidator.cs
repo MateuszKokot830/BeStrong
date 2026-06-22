@@ -16,11 +16,11 @@ namespace Application.Validators.Commands
                 .MaximumLength(1000).WithMessage("Workout plan description cannot exceed 1000 characters.")
                 .When(x => x.WorkoutPlanCreateDto.Description is not null);
 
-            RuleFor(x => x.WorkoutPlanCreateDto.Workouts)
-                .NotEmpty().WithMessage("A workout plan must contain at least one workout.");
+            RuleFor(x => x.WorkoutPlanCreateDto.WorkoutTemplates)
+                .NotEmpty().WithMessage("A workout plan must contain at least one workout template.");
 
-            RuleForEach(x => x.WorkoutPlanCreateDto.Workouts)
-                .SetValidator(new WorkoutDtoValidator());
+            RuleForEach(x => x.WorkoutPlanCreateDto.WorkoutTemplates)
+                .SetValidator(new WorkoutTemplateDtoValidator());
         }
     }
 }

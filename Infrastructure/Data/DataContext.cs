@@ -92,6 +92,27 @@ namespace Infrastructure.Data
                 .WithMany(x => x.CreatedWorkoutPlans)
                 .HasForeignKey(x => x.CreatedById)
                 .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasMany(x => x.WorkoutTemplates)
+                .WithOne(x => x.WorkoutPlan)
+                .HasForeignKey(x => x.WorkoutPlanId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<WorkoutTemplate>(entity =>
+            {
+                entity.HasMany(x => x.Exercises)
+                .WithOne(x => x.WorkoutTemplate)
+                .HasForeignKey(x => x.WorkoutTemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<WorkoutTemplateExercise>(entity =>
+            {
+                entity.HasOne(x => x.Exercise)
+                .WithMany()
+                .HasForeignKey(x => x.ExerciseId)
+                .OnDelete(DeleteBehavior.NoAction);
             });
 
             base.OnModelCreating(builder);
@@ -108,5 +129,7 @@ namespace Infrastructure.Data
         public DbSet<WorkoutSet> WorkoutSets { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
+        public DbSet<WorkoutTemplate> WorkoutTemplates { get; set; }
+        public DbSet<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; }
     }
 }

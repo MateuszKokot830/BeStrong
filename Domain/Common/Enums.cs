@@ -19,6 +19,15 @@ namespace Domain.Common
         WorkoutPublication
     }
 
+    public enum WorkoutPlanCategory
+    {
+        FullBody,
+        PushPullLegs,
+        PushPull,
+        UpperLower,
+        BodyPartSplit
+    }
+
     public enum MuscleGroup
     {
         Back,

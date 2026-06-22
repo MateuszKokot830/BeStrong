@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Aggregates;
+using Domain.Common;
+using Domain.Entities;
 using Domain.Models;
 
 namespace Domain.Aggregates
@@ -13,6 +14,8 @@ namespace Domain.Aggregates
         public virtual ICollection<User> UsedBy { get; set; } = [];
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public virtual ICollection<Workout> Workouts { get; set; } = [];
+        public WorkoutPlanCategory Category { get; set; }
+        public bool IsPublic { get; set; }
+        public virtual ICollection<WorkoutTemplate> WorkoutTemplates { get; set; } = [];
     }
 }
