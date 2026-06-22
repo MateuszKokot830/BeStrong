@@ -1,4 +1,5 @@
 using Application.Commands.Posts.CreatePost;
+using Domain.Common;
 using FluentValidation;
 
 namespace Application.Validators.Commands
@@ -11,9 +12,13 @@ namespace Application.Validators.Commands
                 .MaximumLength(2000).WithMessage("Post description cannot exceed 2000 characters.")
                 .When(x => x.PostCreateDto.Description is not null);
 
-            RuleFor(x => x.PostCreateDto)
-                .Must(dto => dto.Description is not null || dto.WorkoutId.HasValue || dto.WorkoutPlan.HasValue)
-                .WithMessage("A post must have a description, a linked workout, or a linked workout plan.");
+            RuleFor(x => x.PostCreateDto.WorkoutId)
+                .NotNull().WithMessage("A workout publication must reference a workout.")
+                .When(x => x.PostCreateDto.Type == PostType.WorkoutPublication);
+
+            RuleFor(x => x.PostCreateDto.Description)
+                .NotNull().WithMessage("A normal post must have a description.")
+                .When(x => x.PostCreateDto.Type == PostType.Normal);
         }
     }
 }

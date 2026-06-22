@@ -18,7 +18,7 @@ namespace Application.Commands.Posts.CreatePost
         public async Task<ErrorOr<PostDto>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             var dto = request.PostCreateDto;
-            var post = PostFactory.Create(_currentUserService.UserId, dto.Description, dto.WorkoutId, dto.WorkoutPlan);
+            var post = PostFactory.Create(_currentUserService.UserId, dto.Type, dto.Description, dto.WorkoutId, dto.WorkoutPlan);
             await _postRepository.AddAsync(post, cancellationToken);
             return post.ToDto();
         }

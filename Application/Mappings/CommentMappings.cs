@@ -10,9 +10,8 @@ namespace Application.Mappings
             comment.UserId,
             comment.Description,
             comment.CreatedDate,
-            comment.Likes,
+            comment.Likes?.Count ?? 0,
             comment.PostId
         );
-
     }
 }

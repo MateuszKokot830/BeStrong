@@ -13,6 +13,12 @@ namespace Domain.Common
         Female
     }
 
+    public enum PostType
+    {
+        Normal,
+        WorkoutPublication
+    }
+
     public enum MuscleGroup
     {
         Back,

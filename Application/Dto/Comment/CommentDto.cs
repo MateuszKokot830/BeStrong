@@ -5,7 +5,7 @@ namespace Application.Dto.Comment
         int UserId,
         string? Description,
         DateTime CreatedDate,
-        int Likes,
+        int LikesCount,
         int PostId
     );
 }

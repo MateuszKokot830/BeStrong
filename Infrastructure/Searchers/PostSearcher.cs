@@ -10,11 +10,15 @@ namespace Infrastructure.Searchers
     {
         private readonly DataContext _context = context;
 
+        private IQueryable<Domain.Aggregates.Post> GetQueryable() =>
+            _context.Posts
+                .AsNoTracking()
+                .Include(p => p.Likes)
+                .Include(p => p.Comments).ThenInclude(c => c.Likes);
+
         public async Task<IReadOnlyList<PostDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var posts = await _context.Posts
-                .AsNoTracking()
-                .Include(p => p.Comments)
+            var posts = await GetQueryable()
                 .OrderBy(p => p.CreatedDate)
                 .ToListAsync(cancellationToken);
 
@@ -23,9 +27,7 @@ namespace Infrastructure.Searchers
 
         public async Task<IReadOnlyList<PostDto>> FindByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var posts = await _context.Posts
-                .AsNoTracking()
-                .Include(p => p.Comments)
+            var posts = await GetQueryable()
                 .Where(p => p.UserId == userId)
                 .OrderBy(p => p.CreatedDate)
                 .ToListAsync(cancellationToken);
@@ -35,9 +37,7 @@ namespace Infrastructure.Searchers
 
         public async Task<IReadOnlyList<PostDto>> FindByUserIdsAsync(IReadOnlyCollection<int> userIds, CancellationToken cancellationToken = default)
         {
-            var posts = await _context.Posts
-                .AsNoTracking()
-                .Include(p => p.Comments)
+            var posts = await GetQueryable()
                 .Where(p => userIds.Contains(p.UserId))
                 .OrderByDescending(p => p.CreatedDate)
                 .ToListAsync(cancellationToken);

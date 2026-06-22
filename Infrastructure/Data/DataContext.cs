@@ -30,6 +30,32 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
+            builder.Entity<PostLike>(entity =>
+            {
+                entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Post)
+                .WithMany(x => x.Likes)
+                .HasForeignKey(x => x.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<CommentLike>(entity =>
+            {
+                entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Comment)
+                .WithMany(x => x.Likes)
+                .HasForeignKey(x => x.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
             builder.Entity<WorkoutExercise>(entity =>
             {
                 entity.HasOne(x => x.Workout)
@@ -71,5 +97,7 @@ namespace Infrastructure.Data
         public DbSet<Follower> Followers { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
+        public DbSet<CommentLike> CommentLikes { get; set; }
     }
 }

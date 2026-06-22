@@ -2,6 +2,10 @@ using Application.Commands.Posts.CreateComment;
 using Application.Commands.Posts.CreatePost;
 using Application.Commands.Posts.DeleteComment;
 using Application.Commands.Posts.DeletePost;
+using Application.Commands.Posts.LikeComment;
+using Application.Commands.Posts.LikePost;
+using Application.Commands.Posts.UnlikeComment;
+using Application.Commands.Posts.UnlikePost;
 using Application.Dto.Comment;
 using Application.Dto.Post;
 using Application.Queries.Posts.GetFollowedUsersPosts;
@@ -89,6 +93,50 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> DeleteComment(int commentId)
         {
             ErrorOr<Unit> result = await _mediator.Send(new DeleteCommentCommand(commentId));
+
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Likes a post")]
+        [HttpPost("{postId}/like")]
+        public async Task<IActionResult> LikePost(int postId)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new LikePostCommand(postId));
+
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Unlikes a post")]
+        [HttpDelete("{postId}/like")]
+        public async Task<IActionResult> UnlikePost(int postId)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new UnlikePostCommand(postId));
+
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Likes a comment")]
+        [HttpPost("comments/{commentId}/like")]
+        public async Task<IActionResult> LikeComment(int commentId)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new LikeCommentCommand(commentId));
+
+            return result.Match(
+                _ => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Unlikes a comment")]
+        [HttpDelete("comments/{commentId}/like")]
+        public async Task<IActionResult> UnlikeComment(int commentId)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new UnlikeCommentCommand(commentId));
 
             return result.Match(
                 _ => NoContent(),
