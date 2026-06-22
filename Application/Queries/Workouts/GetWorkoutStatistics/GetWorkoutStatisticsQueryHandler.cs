@@ -33,7 +33,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
             var exercises = await _exerciseSearcher.GetAllAsync(cancellationToken);
 
             var workoutExerciseEntries = workouts
-                .SelectMany(w => w.WorkoutExercises.Select(we => new WorkoutExerciseEntry(we.Sets, we.ExerciseId)))
+                .SelectMany(w => w.WorkoutExercises.Select(we => new WorkoutExerciseEntry(we.Sets.Count, we.ExerciseId)))
                 .ToList();
 
             var exerciseEntries = exercises

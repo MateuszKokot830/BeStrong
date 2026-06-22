@@ -15,6 +15,7 @@ namespace Infrastructure.Searchers
             var workouts = await _context.Workouts
                 .AsNoTracking()
                 .Include(w => w.WorkoutExercises)
+                .ThenInclude(we => we.Sets)
                 .Where(w => w.UserId == userId)
                 .OrderByDescending(w => w.Date)
                 .ToListAsync(cancellationToken);

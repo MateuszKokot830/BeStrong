@@ -69,6 +69,14 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);
             });
 
+            builder.Entity<WorkoutSet>(entity =>
+            {
+                entity.HasOne(x => x.WorkoutExercise)
+                .WithMany(x => x.Sets)
+                .HasForeignKey(x => x.WorkoutExerciseId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
             builder.Entity<User>(entity =>
             {
                 entity.OwnsOne(x => x.Measurements);
@@ -97,6 +105,7 @@ namespace Infrastructure.Data
         public DbSet<Follower> Followers { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
+        public DbSet<WorkoutSet> WorkoutSets { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
     }

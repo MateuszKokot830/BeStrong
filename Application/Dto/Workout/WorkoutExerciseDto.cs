@@ -1,10 +1,12 @@
 namespace Application.Dto.Workout
 {
     public record WorkoutExerciseDto(
-        int Sets,
-        int Reps,
-        decimal? Weight,
+        int Order,
+        string? Notes,
         int ExerciseId,
-        int WorkoutId
+        int WorkoutId,
+        decimal? MaxTotalWeight,
+        int? BestEstimatedOneRepMax,
+        IReadOnlyList<WorkoutSetDto> Sets
     );
 }
