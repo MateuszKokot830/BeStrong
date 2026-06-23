@@ -26,6 +26,13 @@ namespace Infrastructure.Searchers
                 .Select(UserMappings.Selector)
                 .SingleOrDefaultAsync(cancellationToken);
 
+        public async Task<UserDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default) =>
+            await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == id)
+                .Select(UserMappings.Selector)
+                .SingleOrDefaultAsync(cancellationToken);
+
         public async Task<IReadOnlyList<UserDto>> FindByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default) =>
             await _context.Users
                 .AsNoTracking()
@@ -43,6 +50,13 @@ namespace Infrastructure.Searchers
 
             return await PaginationList<UserDto>.CreateAsync(query, criteria.PageNumber, criteria.PageSize, cancellationToken);
         }
+
+        public async Task<IReadOnlyList<int>> GetFollowedUserIdsAsync(int userId, CancellationToken cancellationToken = default) =>
+            await _context.Followers
+                .AsNoTracking()
+                .Where(f => f.UserId == userId)
+                .Select(f => f.FollowedUserId)
+                .ToListAsync(cancellationToken);
 
         public async Task<bool> ExistsAsync(int userId, CancellationToken cancellationToken = default) =>
             await _context.Users.AsNoTracking().AnyAsync(u => u.Id == userId, cancellationToken);

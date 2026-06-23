@@ -20,6 +20,12 @@ namespace Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
+        public Task UpdateAsync(Comment comment, CancellationToken cancellationToken = default)
+        {
+            _context.Entry(comment).State = EntityState.Modified;
+            return Task.CompletedTask;
+        }
+
         public Task DeleteAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             _context.Comments.Remove(comment);

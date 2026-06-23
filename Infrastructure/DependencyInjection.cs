@@ -8,11 +8,13 @@ using Infrastructure.Repositories;
 using Infrastructure.Searchers;
 using Infrastructure.Searchers.Decorators;
 using Infrastructure.Services;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace Infrastructure
 {
@@ -20,6 +22,8 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddDbContext<DataContext>((sp, options) =>
             {
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"));
@@ -40,6 +44,7 @@ namespace Infrastructure
             services.AddScoped<IUserSearcher, UserSearcher>();
             services.AddScoped<IPostSearcher, PostSearcher>();
             services.AddScoped<IWorkoutSearcher, WorkoutSearcher>();
+            services.AddScoped<IWorkoutPlanSearcher, WorkoutPlanSearcher>();
             services.AddScoped<ExerciseSearcher>();
             services.AddScoped<IExerciseSearcher>(sp =>
                 new CachedExerciseSearcher(

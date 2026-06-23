@@ -14,10 +14,13 @@ using Application.Commands.Users.FollowUser;
 using Application.Commands.Users.UnfollowUser;
 using Application.Commands.Users.SetMainPhoto;
 using Application.Commands.Users.UpdateUser;
+using Application.Queries.Users.GetCurrentUser;
 using Application.Queries.Users.GetUserByUsername;
+using Application.Queries.Users.GetUserPostsByUsername;
 using Application.Queries.Users.GetUsers;
 using Application.Queries.Users.GetUsersByIds;
 using Application.Queries.Users.GetUsersList;
+using Application.Dto.Post;
 using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
@@ -68,14 +71,36 @@ namespace WebAPI.Controllers
                 errors => Problem(errors));
         }
 
+        [SwaggerOperation(Summary = "Retrieves the current logged in user's profile")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            ErrorOr<UserDto> result = await _mediator.Send(new GetCurrentUserQuery());
+
+            return result.Match(
+                user => Ok(user),
+                errors => Problem(errors));
+        }
+
         [SwaggerOperation(Summary = "Retrieves a specific user by username")]
         [HttpGet("{username}")]
         public async Task<IActionResult> GetUser(string username)
         {
             ErrorOr<UserDto> result = await _mediator.Send(new GetUserByUsernameQuery(username));
-            
+
             return result.Match(
                 user => Ok(user),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Retrieves all posts from a specific user by username")]
+        [HttpGet("{username}/posts")]
+        public async Task<IActionResult> GetUserPosts(string username)
+        {
+            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetUserPostsByUsernameQuery(username));
+
+            return result.Match(
+                posts => Ok(posts),
                 errors => Problem(errors));
         }
 

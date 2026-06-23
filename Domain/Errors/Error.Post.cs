@@ -21,5 +21,9 @@ public static partial class Errors
         public static Error WorkoutRequiredForPublication => Error.Validation(
             code: "Post.WorkoutRequiredForPublication",
             description: "A workout publication must reference a workout.");
+
+        public static Error DescriptionRequired => Error.Validation(
+            code: "Post.DescriptionRequired",
+            description: "A normal post must have a description.");
     }
 }

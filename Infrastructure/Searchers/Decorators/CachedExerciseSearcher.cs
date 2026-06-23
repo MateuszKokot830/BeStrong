@@ -6,7 +6,7 @@ namespace Infrastructure.Searchers.Decorators
 {
     public sealed class CachedExerciseSearcher(IExerciseSearcher inner, IMemoryCache cache) : IExerciseSearcher
     {
-        private const string CacheKey = "exercises:all";
+        public const string CacheKey = "exercises:all";
 
         public async Task<IReadOnlyList<ExerciseDto>> GetAllAsync(CancellationToken cancellationToken = default) =>
             await cache.GetOrCreateAsync(CacheKey, entry =>

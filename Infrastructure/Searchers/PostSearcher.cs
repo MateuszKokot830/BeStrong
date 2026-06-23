@@ -16,6 +16,14 @@ namespace Infrastructure.Searchers
                 .Include(p => p.Likes)
                 .Include(p => p.Comments).ThenInclude(c => c.Likes);
 
+        public async Task<PostDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var post = await GetQueryable()
+                .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+
+            return post?.ToDto();
+        }
+
         public async Task<IReadOnlyList<PostDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var posts = await GetQueryable()

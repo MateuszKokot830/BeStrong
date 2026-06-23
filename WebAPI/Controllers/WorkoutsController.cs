@@ -1,4 +1,6 @@
 using Application.Commands.Workouts.CreateWorkout;
+using Application.Commands.Workouts.DeleteWorkout;
+using Application.Commands.Workouts.UpdateWorkout;
 using Application.Dto.Workout;
 using Application.Dto.Statistics;
 using Application.Queries.Workouts.GetUserWorkouts;
@@ -56,6 +58,28 @@ namespace WebAPI.Controllers
 
             return result.Match(
                 value => Ok(value),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Updates a workout by id")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateWorkout(int id, CreateWorkoutDto workoutDto)
+        {
+            ErrorOr<WorkoutDto> result = await _mediator.Send(new UpdateWorkoutCommand(id, workoutDto));
+
+            return result.Match(
+                workout => Ok(workout),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Deletes a workout by id")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWorkout(int id)
+        {
+            ErrorOr<Unit> result = await _mediator.Send(new DeleteWorkoutCommand(id));
+
+            return result.Match(
+                _ => NoContent(),
                 errors => Problem(errors));
         }
     }

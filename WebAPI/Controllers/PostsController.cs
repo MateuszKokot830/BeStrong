@@ -6,11 +6,13 @@ using Application.Commands.Posts.LikeComment;
 using Application.Commands.Posts.LikePost;
 using Application.Commands.Posts.UnlikeComment;
 using Application.Commands.Posts.UnlikePost;
+using Application.Commands.Posts.UpdateComment;
+using Application.Commands.Posts.UpdatePost;
 using Application.Dto.Comment;
 using Application.Dto.Post;
 using Application.Queries.Posts.GetFollowedUsersPosts;
+using Application.Queries.Posts.GetPostById;
 using Application.Queries.Posts.GetPosts;
-using Application.Queries.Posts.GetUserPosts;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,25 +46,47 @@ namespace WebAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [SwaggerOperation(Summary = "Retrieves all posts from a specific user")]
-        [HttpGet("users/{userId}")]
-        public async Task<IActionResult> GetUserPosts(int userId)
+        [SwaggerOperation(Summary = "Retrieves posts from users the current user follows")]
+        [HttpGet("feed")]
+        public async Task<IActionResult> GetFollowedUsersPosts()
         {
-            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetUserPostsQuery(userId));
-            
+            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetFollowedUsersPostsQuery());
+
             return result.Match(
                 posts => Ok(posts),
                 errors => Problem(errors));
         }
 
-        [SwaggerOperation(Summary = "Retrieves all posts from specific followers by given ids")]
-        [HttpGet("users/followers")]
-        public async Task<IActionResult> GetFollowedUsersPosts([FromQuery] List<int> ids)
+        [SwaggerOperation(Summary = "Retrieves a single post by id")]
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> GetPostById(int postId)
         {
-            ErrorOr<IEnumerable<PostDto>> result = await _mediator.Send(new GetFollowedUsersPostsQuery(ids));
-            
+            ErrorOr<PostDto> result = await _mediator.Send(new GetPostByIdQuery(postId));
+
             return result.Match(
-                posts => Ok(posts),
+                post => Ok(post),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Updates a post by id")]
+        [HttpPut("{postId}")]
+        public async Task<IActionResult> UpdatePost(int postId, UpdatePostDto updatePostDto)
+        {
+            ErrorOr<PostDto> result = await _mediator.Send(new UpdatePostCommand(postId, updatePostDto));
+
+            return result.Match(
+                post => Ok(post),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Updates a comment by id")]
+        [HttpPut("comments/{commentId}")]
+        public async Task<IActionResult> UpdateComment(int commentId, UpdateCommentDto updateCommentDto)
+        {
+            ErrorOr<CommentDto> result = await _mediator.Send(new UpdateCommentCommand(commentId, updateCommentDto));
+
+            return result.Match(
+                comment => Ok(comment),
                 errors => Problem(errors));
         }
 

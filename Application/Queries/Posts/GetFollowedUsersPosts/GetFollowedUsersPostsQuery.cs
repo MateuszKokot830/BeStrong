@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Queries.Posts.GetFollowedUsersPosts
 {
-    public record GetFollowedUsersPostsQuery(IReadOnlyCollection<int> FollowersIds) : IRequest<ErrorOr<IEnumerable<PostDto>>>;
+    public record GetFollowedUsersPostsQuery : IRequest<ErrorOr<IEnumerable<PostDto>>>;
 }
