@@ -141,8 +141,10 @@ namespace WebAPI.Controllers
         [HttpPut("{userId}/photos")]
         public async Task<IActionResult> AddPhoto(IFormFile file, int userId)
         {
-            ErrorOr<PhotoDto> result = await _mediator.Send(new AddPhotoCommand(file, userId));
-            
+            await using var stream = file.OpenReadStream();
+            ErrorOr<PhotoDto> result = await _mediator.Send(
+                new AddPhotoCommand(stream, file.FileName, file.Length, userId));
+
             return result.Match(
                 photo => Ok(photo),
                 errors => Problem(errors));

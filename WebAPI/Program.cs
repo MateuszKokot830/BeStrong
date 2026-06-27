@@ -6,18 +6,22 @@ using Infrastructure.Data;
 using Infrastructure.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NLog;
-using NLog.Web;
+using Serilog;
 using WebAPI.Extensions;
 using WebAPI.Middleware;
 
-var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
 try
 {
-    logger.Debug("Program has been started");
-
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.UseNLog();
+
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext());
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
@@ -36,6 +40,7 @@ try
         app.UseSwaggerUI();
     }
 
+    app.UseSerilogRequestLogging();
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseHttpsRedirection();
     app.UseRouting();
@@ -56,14 +61,15 @@ try
         services.GetRequiredService<RoleManager<DomainEntities.Role>>(),
         services.GetRequiredService<UserManager<User>>());
 
+    Log.Information("Starting BeStrong API");
     app.Run();
 }
 catch (Exception ex)
 {
-    logger.Error(ex, "Program has stopped due to exception");
+    Log.Fatal(ex, "BeStrong API terminated unexpectedly");
     throw;
 }
 finally
 {
-    NLog.LogManager.Shutdown();
+    Log.CloseAndFlush();
 }

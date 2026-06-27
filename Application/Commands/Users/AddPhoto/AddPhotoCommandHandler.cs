@@ -2,7 +2,6 @@ using Application.Dto.Photo;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappings;
-using CloudinaryDotNet.Actions;
 using Domain.Entities;
 using Domain.Errors;
 using ErrorOr;
@@ -28,23 +27,20 @@ namespace Application.Commands.Users.AddPhoto
             if (!_currentUserService.IsOwnerOrAdmin(user.Id))
                 return Errors.User.Unauthorized;
 
-            ImageUploadResult result;
+            PhotoUploadResult upload;
             try
             {
-                result = await _photoService.AddPhotoAsync(request.File);
+                upload = await _photoService.UploadAsync(request.Content, request.FileName, cancellationToken);
             }
             catch (Exception)
             {
                 return Errors.Photo.UploadFailed;
             }
 
-            if (result.Error != null)
-                return Errors.Photo.UploadFailed;
-
             var photo = new Photo
             {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId,
+                Url = upload.Url,
+                PublicId = upload.PublicId,
                 UserId = user.Id,
                 IsProfilePhoto = user.Photos.Count == 0
             };

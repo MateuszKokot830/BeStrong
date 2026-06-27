@@ -32,7 +32,7 @@ namespace Application.Commands.Users.DeletePhoto
                 return Errors.Photo.IsProfilePhoto;
 
             if (photo.PublicId != null)
-                await _photoService.DeletePhotoAsync(photo.PublicId);
+                await _photoService.DeleteAsync(photo.PublicId, cancellationToken);
 
             await _userRepository.DeletePhotoAsync(photo, cancellationToken);
             return Unit.Value;

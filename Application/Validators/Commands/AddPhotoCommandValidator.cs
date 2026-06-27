@@ -13,19 +13,16 @@ namespace Application.Validators.Commands
             RuleFor(x => x.UserId)
                 .GreaterThan(0).WithMessage("UserId must be a valid positive integer.");
 
-            RuleFor(x => x.File)
+            RuleFor(x => x.Content)
                 .NotNull().WithMessage("Photo file is required.");
 
-            When(x => x.File is not null, () =>
-            {
-                RuleFor(x => x.File.Length)
-                    .GreaterThan(0).WithMessage("Photo file cannot be empty.")
-                    .LessThanOrEqualTo(MaxFileSizeBytes).WithMessage("Photo file cannot exceed 10 MB.");
+            RuleFor(x => x.Length)
+                .GreaterThan(0).WithMessage("Photo file cannot be empty.")
+                .LessThanOrEqualTo(MaxFileSizeBytes).WithMessage("Photo file cannot exceed 10 MB.");
 
-                RuleFor(x => Path.GetExtension(x.File.FileName).ToLowerInvariant())
-                    .Must(ext => AllowedExtensions.Contains(ext))
-                    .WithMessage("Only .jpg, .jpeg, .png, .gif and .webp files are allowed.");
-            });
+            RuleFor(x => Path.GetExtension(x.FileName).ToLowerInvariant())
+                .Must(ext => AllowedExtensions.Contains(ext))
+                .WithMessage("Only .jpg, .jpeg, .png, .gif and .webp files are allowed.");
         }
     }
 }
