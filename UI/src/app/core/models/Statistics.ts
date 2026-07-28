@@ -5,5 +5,5 @@ export interface Statistics {
   avgWorkoutsPerWeek: number;
   avgExercisesPerWorkout: number;
   avgSetsPerWorkout: number;
-  favouriteExercise: string;
+  favouriteExercise: string | null;
 }

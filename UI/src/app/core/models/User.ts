@@ -1,45 +1,51 @@
-import { Follower } from "./Follower";
-import { Photo } from "./Photo";
-
-export interface UserAuth {
-    username: string;
-    token: string;
-}
+import { Gender } from './Enums';
+import { Follower } from './Follower';
+import { Photo } from './Photo';
+import { Post } from './Post';
 
 export interface User {
-    id: number;
-    userName: string;
-    dateOfBirth: Date;
-    dateOfWorkoutStart: Date;
-    name: string;
-    surname: string;
-    gender: Gender;
-    city: string;
-    country: string;
-    description: string;
-    age: number;
-    workoutSince: string;
-    profilePhotoUrl: string;
-    measurements: Measurements;
-    photos: Photo[];
-    followedUsers: Follower[];
-    followers: Follower[]
+  id: number;
+  userName: string;
+  dateOfBirth: string;
+  dateOfWorkoutStart: string | null;
+  name: string | null;
+  surname: string | null;
+  gender: Gender;
+  city: string | null;
+  country: string | null;
+  description: string | null;
+  profilePhotoUrl: string | null;
+  age: number;
+  workoutSince: string | null;
+  updatedDate: string | null;
+  measurements: Measurements | null;
+  photos: Photo[];
+  posts: Post[];
+  followedUsers: Follower[];
+  followers: Follower[];
 }
 
 export interface Measurements {
-  Height: number;
-  Weight: number;
-  Chest: number;
-  Shoulders: number;
-  Arms: number;
-  Waist: number;
-  Hips: number;
-  Thights: number;
+  height: number | null;
+  weight: number | null;
+  chest: number | null;
+  shoulders: number | null;
+  arms: number | null;
+  waist: number | null;
+  hips: number | null;
+  thights: number | null;
 }
 
-export enum Gender {
-  male,
-  female
+export interface UserUpdate {
+  id: number;
+  dateOfBirth: string;
+  dateOfWorkoutStart: string | null;
+  name: string | null;
+  surname: string | null;
+  gender: Gender;
+  city: string | null;
+  country: string | null;
+  description: string | null;
+  measurements: Measurements | null;
+  photos: Photo[];
 }
-
-

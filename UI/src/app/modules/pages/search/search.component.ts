@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pagination } from 'src/app/core/models/Pagination';
-import { User, UserAuth } from 'src/app/core/models/User';
+import { User } from 'src/app/core/models/User';
 import { UserService } from 'src/app/core/services/user.service';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { AccountService } from 'src/app/core/services/account.service';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search',
@@ -12,36 +9,28 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  users: User[]= [];
-  pagination: Pagination | undefined;
+  users: User[] = [];
+  pagination: Pagination | null = null;
   pageNumber = 1;
   pageSize = 10;
-  currentUser: UserAuth | null = null;
 
-  constructor(private userService: UserService, private accountService: AccountService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: currentUser => this.currentUser = currentUser
-    });
-  }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
   loadUsers() {
-    this.userService.getUserList(this.pageNumber, this.pageSize).subscribe({
+    this.userService.getUserList({ pageNumber: this.pageNumber, pageSize: this.pageSize }).subscribe({
       next: response => {
-        if (response.result && response.pagination) {
-          this.users = response.result;
-          this.pagination = response.pagination;
-        }
+        this.users = response.result;
+        this.pagination = response.pagination;
       }
-    })
+    });
   }
 
-  pageChanged(event: any) {
+  pageChanged(event: { page: number }) {
     this.pageNumber = event.page;
     this.loadUsers();
   }
-
 }

@@ -1,79 +1,91 @@
-import { HttpClient, HttpHandler, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { PaginatedResult } from '../models/Pagination';
-import { User } from '../models/User';
+import { PaginatedResult, PaginationHeader, UserSearchCriteria } from '../models/Pagination';
+import { Post } from '../models/Post';
+import { User, UserUpdate } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   baseUrl = environment.baseUrl;
-  paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
 
   constructor(private http: HttpClient) { }
 
-  getUser(username: String) {
-    return this.http.get<User>(this.baseUrl + 'users/' + username);
+  getCurrentUser() {
+    return this.http.get<User>(this.baseUrl + 'users/me');
+  }
+
+  getUser(username: string) {
+    return this.http.get<User>(`${this.baseUrl}users/${username}`);
+  }
+
+  getUserPosts(username: string) {
+    return this.http.get<Post[]>(`${this.baseUrl}users/${username}/posts`);
   }
 
   getUsers() {
     return this.http.get<User[]>(this.baseUrl + 'users');
   }
 
-  updateUser(user: User) {
-    return this.http.put(this.baseUrl + 'users', user);
+  updateUser(user: UserUpdate) {
+    return this.http.put<User>(this.baseUrl + 'users', user);
   }
 
-  getFollowerUsers(ids: number[]) {
-    var httpRequest = "";
-    for(const id of ids) {
-      httpRequest = httpRequest.concat("ids=", id.toString(), "&");
-    };
-    httpRequest.slice(0, -1);
-    return this.http.get<User[]>(this.baseUrl + 'users/followers?' + httpRequest);
+  getUsersByIds(ids: number[]) {
+    const params = ids.reduce((acc, id) => acc.append('ids', id), new HttpParams());
+    return this.http.get<User[]>(this.baseUrl + 'users/followers', { params });
   }
 
-  followUser(userId: number, id: number) {
-    return this.http.put(this.baseUrl + 'users/followers/' + id + "?userId=" + userId,  {userId, id});
+  followUser(userId: number, followUserId: number) {
+    const params = new HttpParams().set('followUserId', followUserId);
+    return this.http.post(`${this.baseUrl}users/${userId}/follow`, null, { params });
   }
 
-  addPhoto(file: FormData, id: number) {
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', '*/*');
-    return this.http.put(this.baseUrl + "users/" + id + "/photos", file, {headers: headers});
+  unfollowUser(userId: number, unfollowUserId: number) {
+    const params = new HttpParams().set('unfollowUserId', unfollowUserId);
+    return this.http.delete(`${this.baseUrl}users/${userId}/follow`, { params });
   }
 
-  setMainPhoto(photoId: number, id: number)
-  {
-    return this.http.put(this.baseUrl + "users/" + id + "/photos/" + photoId, {photoId, id});
+  addPhoto(file: FormData, userId: number) {
+    return this.http.put(`${this.baseUrl}users/${userId}/photos`, file);
   }
 
-  deletePhoto(photoId: number, id: number)
-  {
-    return this.http.delete(this.baseUrl + "users/" + id + "/photos/" + photoId);
+  setMainPhoto(photoId: number, userId: number) {
+    return this.http.put(`${this.baseUrl}users/${userId}/photos/${photoId}`, null);
   }
 
-  getUserList(page?: number, itemsPerPage?: number) {
-    let params = new HttpParams();
+  deletePhoto(photoId: number, userId: number) {
+    return this.http.delete(`${this.baseUrl}users/${userId}/photos/${photoId}`);
+  }
 
-    if (page && itemsPerPage) {
-      params = params.append('pageNumber', page);
-      params = params.append('pageSize', itemsPerPage);
+  getUserList(criteria: UserSearchCriteria) {
+    let params = new HttpParams()
+      .set('pageNumber', criteria.pageNumber)
+      .set('pageSize', criteria.pageSize);
+
+    if (criteria.username) {
+      params = params.set('username', criteria.username);
     }
 
-    return this.http.get<User[]>(this.baseUrl + 'users/list', {observe: 'response', params}).pipe(
-      map(response => {
-        if (response.body) {
-          this.paginatedResult.result = response.body;
-        }
-        const pagination = response.headers.get('Pagination');
-        if (pagination) {
-          this.paginatedResult.pagination = JSON.parse(pagination);
-        }
-        return this.paginatedResult;
+    return this.http.get<User[]>(this.baseUrl + 'users/list', { observe: 'response', params }).pipe(
+      map((response): PaginatedResult<User[]> => {
+        const header = response.headers.get('Pagination');
+        const parsed: PaginationHeader = header ? JSON.parse(header) : null;
+
+        return {
+          result: response.body ?? [],
+          pagination: parsed
+            ? {
+                currentPage: parsed.currentPage,
+                itemsPerPage: parsed.itemsPerPage,
+                totalItems: parsed.totalItems,
+                totalPages: parsed.totalPages
+              }
+            : null
+        };
       })
     );
   }

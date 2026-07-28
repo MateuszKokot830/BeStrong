@@ -1,5 +1,6 @@
 export interface Photo {
   id: number;
-  url: string;
+  publicId: string | null;
+  url: string | null;
   isProfilePhoto: boolean;
 }

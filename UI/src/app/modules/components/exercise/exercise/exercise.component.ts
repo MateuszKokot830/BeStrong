@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Exercise } from 'src/app/core/models/Exercise';
+import { ExerciseCreate } from 'src/app/core/models/Exercise';
+import { MuscleSubgroup } from 'src/app/core/models/Enums';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
@@ -9,13 +10,20 @@ import { WorkoutService } from 'src/app/core/services/workout.service';
   templateUrl: './exercise.component.html',
   styleUrls: ['./exercise.component.css']
 })
-export class ExerciseComponent implements OnInit {
-  exercise = {} as Exercise;
+export class ExerciseComponent {
+  exercise: ExerciseCreate = {
+    name: '',
+    description: null,
+    muscleSubgroup: MuscleSubgroup.Chest,
+    imageUrl: null
+  };
 
-  constructor(public bsModalRef: BsModalRef, private workoutService: WorkoutService, private toastr: ToastrService) { }
+  muscleSubgroups = Object.keys(MuscleSubgroup)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({ value: MuscleSubgroup[key as keyof typeof MuscleSubgroup], label: key }));
 
-  ngOnInit(): void {
-  }
+  constructor(public bsModalRef: BsModalRef, private workoutService: WorkoutService,
+    private toastr: ToastrService) { }
 
   addExercise() {
     this.workoutService.addExercise(this.exercise).subscribe();

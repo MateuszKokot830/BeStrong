@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-4">
           <div><h2 class="text-center text-info mt-3">{{user.userName | titlecase}}</h2></div>
-          <img src="{{user.profilePhotoUrl || './assets/defaultPhoto.png'}}"
+          <img src="{{user.profilePhotoUrl || './assets/photos/defaultPhoto.jpg'}}"
             alt="{{user.userName}}" class="card-imp-top img-thumbnail">
           <table class="text-white mb-2" cellPadding="3">
             <tr>
@@ -61,8 +61,8 @@
             <button type="submit" (click)="saveChanges()" class="btn btn-success btn-sm">Save</button> &nbsp;
           </div>
           <div class="mt-2 mb-2" *ngIf="!isCurrentUser" style="position:absolute; left:640px;">
-            <button type="button" (click)="followUser()" *ngIf="!isFollowed" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
-            <button type="button" (click)="followUser()" *ngIf="isFollowed" class="btn btn-danger btn-sm bi-heart-fill"> Unfollow</button> &nbsp;
+            <button type="button" (click)="toggleFollow()" *ngIf="!isFollowed" class="btn btn-success btn-sm bi-heart-fill"> Follow</button> &nbsp;
+            <button type="button" (click)="toggleFollow()" *ngIf="isFollowed" class="btn btn-danger btn-sm bi-heart-fill"> Unfollow</button> &nbsp;
             <button type="button" class="btn btn-warning btn-sm bi-envelope"> Message</button>
           </div>
           <div class="mt-2">
@@ -87,51 +87,51 @@
                       <table class="mb-2 mt-2" cellPadding="0" cellspacing="0" style="margin:auto;">
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Height:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.height}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.height}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.height" name="height"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.height" name="height"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Weight:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.weight}} kg</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.weight}} kg</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.weight" name="weight"> kg</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.weight" name="weight"> kg</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Chest:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.chest}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.chest}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.chest" name="chest"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.chest" name="chest"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Shoulders:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.shoulders}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.shoulders}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.shoulders" name="shoulders"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.shoulders" name="shoulders"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Arms:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.arms}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.arms}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.arms" name="arms"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.arms" name="arms"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Waist:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.waist}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.waist}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.waist" name="waist"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.waist" name="waist"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Hips:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.hips}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.hips}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.hips" name="hips"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.hips" name="hips"> cm</td>
                         </tr>
                         <tr class="text-white">
                           <th scope="row" style="border: 3px solid grey; padding: 5px">Thights:</th>
-                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{user.measurements.thights}} cm</td>
+                          <td *ngIf="!isEditMode" style="border: 3px solid grey; padding: 5px" >{{measurements.thights}} cm</td>
                           <td *ngIf="isEditMode" style="border: 3px solid grey; padding: 5px">
-                            <input type="text input-sm" size="3" [(ngModel)]="user.measurements.thights" name="thights"> cm</td>
+                            <input type="text input-sm" size="3" [(ngModel)]="measurements.thights" name="thights"> cm</td>
                         </tr>
                       </table>
                     </div>
@@ -151,8 +151,8 @@
                         </thead>
                         <tr class="text-white" *ngFor="let exercise of lastWorkout.workoutExercises">
                           <td style="border: 3px solid grey; padding: 5px">{{getExerciseName(exercise.exerciseId)}}</td>
-                          <td style="border: 3px solid grey; padding: 5px">{{exercise.sets}}x{{exercise.reps}}</td>
-                          <td style="border: 3px solid grey; padding: 5px">{{exercise.weight}} kg</td>
+                          <td style="border: 3px solid grey; padding: 5px">{{formatReps(exercise)}}</td>
+                          <td style="border: 3px solid grey; padding: 5px">{{formatWeight(exercise)}}</td>
                         </tr>
                       </table>
                     </div>
@@ -176,8 +176,8 @@
                         </thead>
                         <tr class="text-white" *ngFor="let exercise of workout.workoutExercises">
                           <td style="border: 3px solid grey; padding: 2px">{{getExerciseName(exercise.exerciseId)}}</td>
-                          <td style="border: 3px solid grey; padding: 2px">{{exercise.sets}}x{{exercise.reps}}</td>
-                          <td style="border: 3px solid grey; padding: 2px">{{exercise.weight}} kg</td>
+                          <td style="border: 3px solid grey; padding: 2px">{{formatReps(exercise)}}</td>
+                          <td style="border: 3px solid grey; padding: 2px">{{formatWeight(exercise)}}</td>
                         </tr>
                       </table>
                     </div>

@@ -1,16 +1,30 @@
 export interface Workout {
   id: number;
-  userId: number;
-  date: Date;
-  name: string;
+  userId: number | null;
+  date: string;
+  name: string | null;
   workoutExercises: WorkoutExercise[];
 }
 
 export interface WorkoutExercise {
-  id: number;
-  sets: number;
-  reps: number;
-  weight: number;
+  order: number;
+  notes: string | null;
   exerciseId: number;
   workoutId: number;
+  maxTotalWeight: number | null;
+  bestEstimatedOneRepMax: number | null;
+  sets: WorkoutSet[];
+}
+
+export interface WorkoutSet {
+  setNumber: number;
+  reps: number;
+  weight: number | null;
+  totalWeight: number | null;
+  estimatedOneRepMax: number | null;
+}
+
+export interface WorkoutCreate {
+  name: string | null;
+  exercises: WorkoutExercise[];
 }

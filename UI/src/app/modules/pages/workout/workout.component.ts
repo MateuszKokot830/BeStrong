@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs/operators';
 import { Exercise } from 'src/app/core/models/Exercise';
-import { UserAuth } from 'src/app/core/models/User';
-import { Workout, WorkoutExercise } from 'src/app/core/models/Workout';
-import { AccountService } from 'src/app/core/services/account.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { WorkoutCreate, WorkoutExercise } from 'src/app/core/models/Workout';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 import { ExerciseComponent } from '../../components/exercise/exercise/exercise.component';
+
+interface ExerciseDraft {
+  exerciseId: number;
+  sets: number;
+  reps: number;
+  weight: number;
+}
 
 @Component({
   selector: 'app-workout',
@@ -16,45 +19,34 @@ import { ExerciseComponent } from '../../components/exercise/exercise/exercise.c
   styleUrls: ['./workout.component.css']
 })
 export class WorkoutComponent implements OnInit {
-  currentUser: UserAuth | null = null;
   exercises: Exercise[] = [];
-  workout = {} as Workout;
-  workoutExercise = {} as WorkoutExercise;
+  workoutName = '';
+  drafts: ExerciseDraft[] = [];
+  workoutExercise = {} as ExerciseDraft;
   exerciseCounter = 1;
-  bsModalRef: BsModalRef;
 
-  constructor(private workoutService: WorkoutService, private accountService: AccountService,
-    private userService: UserService, private toastr: ToastrService, private modalService: BsModalService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: currentUser => this.currentUser = currentUser
-    });
-  }
+  constructor(private workoutService: WorkoutService, private toastr: ToastrService,
+    private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.loadExercises();
-    this.startWorkout();
   }
 
   loadExercises() {
     this.workoutService.getExercises().subscribe({
       next: exercises => this.exercises = exercises
-    })
-  }
-
-  startWorkout() {
-    this.workout.workoutExercises = [];
-    this.userService.getUser(this.currentUser.username).subscribe({
-      next: user => this.workout.userId = user.id
     });
   }
 
   addNewExerciseToggle() {
-      this.bsModalRef = this.modalService.show(ExerciseComponent);
+    this.modalService.show(ExerciseComponent);
   }
 
   addExercise() {
-    var exerciseName = this.exercises.find(x => x.id == this.workoutExercise.exerciseId).name;
+    var exerciseName = this.exercises.find(x => x.id == this.workoutExercise.exerciseId)?.name;
     var div = document.getElementById('exercise');
+    if (!exerciseName || !div) return;
+
     var text = `<div class="card bg-dark mt-3">
       <div class="card-body">
         <h4 class="text-white text-center">Exercise ` + this.exerciseCounter.toString() + `
@@ -86,13 +78,37 @@ export class WorkoutComponent implements OnInit {
       </div>`;
     div.insertAdjacentHTML('beforeend', text);
     this.exerciseCounter += 1;
-    var currentExercise = { ...this.workoutExercise }
-    this.workout.workoutExercises.push(currentExercise);
+    this.drafts.push({ ...this.workoutExercise });
   }
 
   addWorkout() {
-    this.workoutService.addWorkout(this.workout).subscribe();
+    const workout: WorkoutCreate = {
+      name: this.workoutName,
+      exercises: this.drafts.map((draft, index) => this.toWorkoutExercise(draft, index))
+    };
+
+    this.workoutService.addWorkout(workout).subscribe();
     location.reload();
     this.toastr.success('Workout has been saved!');
+  }
+
+  private toWorkoutExercise(draft: ExerciseDraft, index: number): WorkoutExercise {
+    const setCount = Number(draft.sets) || 0;
+
+    return {
+      order: index + 1,
+      notes: null,
+      exerciseId: Number(draft.exerciseId),
+      workoutId: 0,
+      maxTotalWeight: null,
+      bestEstimatedOneRepMax: null,
+      sets: Array.from({ length: setCount }, (_, i) => ({
+        setNumber: i + 1,
+        reps: Number(draft.reps) || 0,
+        weight: Number(draft.weight) || 0,
+        totalWeight: null,
+        estimatedOneRepMax: null
+      }))
+    };
   }
 }

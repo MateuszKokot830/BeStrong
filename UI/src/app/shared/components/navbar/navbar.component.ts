@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { LoginRequest } from 'src/app/core/models/Auth';
 import { AccountService } from 'src/app/core/services/account.service';
 
 @Component({
@@ -8,26 +8,19 @@ import { AccountService } from 'src/app/core/services/account.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
-  model: any = {}
+export class NavbarComponent {
+  model: LoginRequest = { userName: '', password: '' };
 
-  constructor(public accountService: AccountService, private router: Router, 
-    private toastr: ToastrService) { }
+  constructor(public accountService: AccountService, private router: Router) { }
 
-  ngOnInit(): void {
-  }
-
-  login()
-  {
-    this.accountService.login(this.model).subscribe(respone => {
-      this.router.navigateByUrl('');
+  login() {
+    this.accountService.login(this.model).subscribe({
+      next: _ => this.router.navigateByUrl('')
     });
   }
 
-  logout()
-  {
+  logout() {
     this.accountService.logout();
     this.router.navigateByUrl('');
   }
-
 }

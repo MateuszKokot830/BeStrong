@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Exercise } from '../models/Exercise';
-import { User } from '../models/User';
-import { Workout } from '../models/Workout';
+import { Exercise, ExerciseCreate } from '../models/Exercise';
+import { Workout, WorkoutCreate } from '../models/Workout';
 import { Statistics } from '../models/Statistics';
 
 @Injectable({
@@ -14,27 +13,35 @@ export class WorkoutService {
 
   constructor(private http: HttpClient) { }
 
-  getExercises() {
-    return this.http.get<Exercise[]>(this.baseUrl + 'workouts/exercises');
+  getUserWorkouts(userId: number) {
+    return this.http.get<Workout[]>(`${this.baseUrl}workouts/${userId}`);
   }
 
-  addWorkout(workout: Workout) {
+  addWorkout(workout: WorkoutCreate) {
     return this.http.post<Workout>(this.baseUrl + 'workouts', workout);
   }
 
-  addExercise(exercise: Exercise) {
-    return this.http.post<Exercise>(this.baseUrl + 'workouts/exercises', exercise);
+  updateWorkout(workoutId: number, workout: WorkoutCreate) {
+    return this.http.put<Workout>(`${this.baseUrl}workouts/${workoutId}`, workout);
   }
 
-  getUserWorkouts(user: User) {
-    return this.http.get<Workout[]>(this.baseUrl + 'workouts/' + user.id);
+  deleteWorkout(workoutId: number) {
+    return this.http.delete(`${this.baseUrl}workouts/${workoutId}`);
   }
 
-  getStatistics(user: User) {
-    return this.http.get<Statistics>(this.baseUrl + 'workouts/statistics/' + user.id);
+  getStatistics(userId: number) {
+    return this.http.get<Statistics>(`${this.baseUrl}workouts/statistics/${userId}`);
   }
 
   calculate(weight: number, reps: number) {
-    return this.http.get<number>(this.baseUrl + 'workouts/weight/' + weight + '/reps/' + reps);
+    return this.http.get<number>(`${this.baseUrl}workouts/weight/${weight}/reps/${reps}`);
+  }
+
+  getExercises() {
+    return this.http.get<Exercise[]>(this.baseUrl + 'exercises');
+  }
+
+  addExercise(exercise: ExerciseCreate) {
+    return this.http.post<Exercise>(this.baseUrl + 'exercises', exercise);
   }
 }

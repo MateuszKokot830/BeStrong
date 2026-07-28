@@ -14,7 +14,7 @@
           [totalItems]="pagination.totalItems"
           [itemsPerPage]="pagination.itemsPerPage"
           [maxSize]="5"
-          [(page)]="pagination.currentPage"
+          [(ngModel)]="pageNumber"
           (pageChanged)="pageChanged($event)"
           ></pagination>
       </div>

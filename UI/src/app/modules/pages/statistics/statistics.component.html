@@ -6,7 +6,7 @@
           <div class="card-body">
             <h4 class="text-center text-info mt-1 mb-3">Statistics
             </h4>
-            <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
+            <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px" *ngIf="statistics">
               <tr>
                 <th scope="col" class="text-white">Total done workouts:</th>
                 <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
@@ -17,7 +17,7 @@
               </tr>
               <tr>
                 <th scope="col" class="text-white">Total done sets:</th>
-                <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
+                <th scope="col" class="text-white">{{statistics.totalSets}}</th>
               </tr>
               <tr>
                 <th scope="col" class="text-white">Avg. workouts per week:</th>

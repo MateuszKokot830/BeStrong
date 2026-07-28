@@ -8,7 +8,7 @@ import { User } from 'src/app/core/models/User';
   styleUrls: ['./user-card.component.css']
 })
 export class UserCardComponent implements OnInit {
-  @Input() user: User | undefined;
+  @Input() user!: User;
 
   constructor(private router: Router) { }
 

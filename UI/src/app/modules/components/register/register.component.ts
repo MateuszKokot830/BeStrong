@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
+import { RegisterRequest } from 'src/app/core/models/Auth';
 import { AccountService } from 'src/app/core/services/account.service';
 
 @Component({
@@ -8,21 +8,14 @@ import { AccountService } from 'src/app/core/services/account.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  model: any = {};
+export class RegisterComponent {
+  model: RegisterRequest = { userName: '', password: '' };
 
-  constructor(public bsModalRef: BsModalRef, private accountService: AccountService,
-    private toastr: ToastrService) {}
-
-  ngOnInit(): void { 
-
-  }
+  constructor(public bsModalRef: BsModalRef, private accountService: AccountService) {}
 
   register() {
-    this.accountService.register(this.model).subscribe(response => {
-      console.log(response);
-      this.bsModalRef.hide();
-    })
+    this.accountService.register(this.model).subscribe({
+      next: _ => this.bsModalRef.hide()
+    });
   }
-
 }

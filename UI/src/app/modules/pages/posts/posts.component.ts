@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { forkJoin, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { Post } from 'src/app/core/models/Post';
-import { User, UserAuth } from 'src/app/core/models/User';
-import { AccountService } from 'src/app/core/services/account.service';
+import { User } from 'src/app/core/models/User';
 import { PostService } from 'src/app/core/services/post.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AddCommentComponent } from '../../components/add-comment/add-comment.component';
@@ -16,81 +15,60 @@ import { AddPostComponent } from '../../components/add-post/add-post.component';
   styleUrls: ['./posts.component.css']
 })
 export class PostsComponent implements OnInit {
-  currentUser: UserAuth | null = null;
-  user: User;
-  followedUsers: User[] = [];
-  followerPosts: Post[] = [];
-  newPost = {} as Post;
-  newComment = {} as Comment;
-  bsModalRef: BsModalRef;
+  user: User | null = null;
+  posts: Post[] = [];
+  authors = new Map<number, User>();
 
-  constructor(private accountService: AccountService, private userService: UserService,
-    private toastr: ToastrService, private postService: PostService, private modalService: BsModalService) {
-      this.accountService.currentUser$.pipe(take(1)).subscribe({
-        next: currentUser => this.currentUser = currentUser
-      });
-    }
+  constructor(private userService: UserService, private postService: PostService,
+    private modalService: BsModalService) { }
 
   ngOnInit(): void {
-    this.loadPosts();
+    this.loadFeed();
   }
 
-  loadPosts() {
-    this.userService.getUser(this.currentUser.username).subscribe({
-      next: user => {
-        this.user = user;
-        var followedUsersIds = [];
-        this.user.followedUsers.forEach(x => {
-          followedUsersIds.push(x.followedUserId);
+  loadFeed() {
+    this.userService.getCurrentUser().pipe(
+      switchMap(user => {
+        const followedIds = user.followedUsers.map(f => f.followedUserId);
+
+        return forkJoin({
+          me: of(user),
+          followedUsers: followedIds.length ? this.userService.getUsersByIds(followedIds) : of<User[]>([]),
+          feed: this.postService.getFeed(),
+          ownPosts: this.userService.getUserPosts(user.userName)
         });
-        this.userService.getFollowerUsers(followedUsersIds).subscribe({
-          next: users => {
-            this.followedUsers = users;
-          }
-        })
-        followedUsersIds.push(this.user.id);
-        this.postService.getFollowerPosts(followedUsersIds).subscribe({
-          next: posts => {
-            this.followerPosts = posts;
-          }
-        })
+      })
+    ).subscribe({
+      next: ({ me, followedUsers, feed, ownPosts }) => {
+        this.user = me;
+        this.authors = new Map(followedUsers.map(u => [u.id, u]));
+        this.authors.set(me.id, me);
+
+        this.posts = [...feed, ...ownPosts].sort(
+          (a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+        );
       }
     });
   }
 
-  getUsername(id: number) {
-    if (this.user.id == id) {
-      return this.user.userName;
-    }
-    else
-    {
-      return this.followedUsers.find(x => x.id == id).userName;
-    }
+  getUsername(userId: number) {
+    return this.authors.get(userId)?.userName ?? 'Unknown user';
   }
 
-  getMainPhoto(id: number) {
-    if (this.user.id == id) {
-      return this.user.profilePhotoUrl;
-    }
-    else
-    {
-      return this.followedUsers.find(x => x.id == id).profilePhotoUrl;
-    }
+  getMainPhoto(userId: number) {
+    return this.authors.get(userId)?.profilePhotoUrl ?? 'assets/photos/defaultPhoto.jpg';
   }
 
   addNewPostToggle() {
-    const initialState = {
-      user: this.user
-    };
-    this.bsModalRef = this.modalService.show(AddPostComponent, {initialState});
+    this.modalService.show(AddPostComponent);
   }
 
   addNewCommentToggle(post: Post) {
-    const initialState = {
-      user: this.user,
-      post: post
-    };
-    this.bsModalRef = this.modalService.show(AddCommentComponent, {initialState});
-  }
+    if (!this.user)
+      return;
 
+    this.modalService.show(AddCommentComponent, {
+      initialState: { user: this.user, post }
+    });
+  }
 }
