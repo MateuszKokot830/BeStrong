@@ -55,11 +55,12 @@ try
 
     var context = services.GetRequiredService<DataContext>();
     await context.Database.MigrateAsync();
-    await SeedData.SeedUserData(context);
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    await SeedData.SeedUserData(userManager);
     await SeedData.SeedExerciseData(context);
     await SeedData.SeedRolesAsync(
         services.GetRequiredService<RoleManager<DomainEntities.Role>>(),
-        services.GetRequiredService<UserManager<User>>());
+        userManager);
 
     Log.Information("Starting BeStrong API");
     app.Run();

@@ -8,6 +8,7 @@ namespace Application.Common.Behaviors
         ILogger<ExceptionHandlingBehavior<TRequest, TResponse>> logger)
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr
     {
         private readonly ILogger<ExceptionHandlingBehavior<TRequest, TResponse>> _logger = logger;
 
@@ -22,10 +23,10 @@ namespace Application.Common.Behaviors
                 _logger.LogError(ex, "Unhandled exception for request {RequestName}", typeof(TRequest).Name);
 
                 var error = Error.Unexpected(
-                    code: "UnhandledException",
-                    description: "An unexpected error occurred. Please try again later.");
+                    code: "An unexpected error occurred. Please try again later.",
+                    description: ex.Message);
 
-                return (TResponse)(object)new List<Error> { error };
+                return (dynamic)new List<Error> { error };
             }
         }
     }

@@ -2,7 +2,6 @@ using Application.Interfaces.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Transactions;
 
 namespace Application.Common.Behaviors
 {
@@ -25,14 +24,14 @@ namespace Application.Common.Behaviors
 
             _logger.LogInformation("Beginning transaction for {RequestName}", requestName);
 
-            using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
             try
             {
                 var response = await next();
 
                 await _unitOfWork.CommitAsync(cancellationToken);
-                transactionScope.Complete();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
                 sw.Stop();
                 _logger.LogInformation("Committed transaction for {RequestName} in {ElapsedMs}ms", requestName, sw.ElapsedMilliseconds);
@@ -43,6 +42,7 @@ namespace Application.Common.Behaviors
             {
                 sw.Stop();
                 _logger.LogWarning(ex, "Rolling back transaction for {RequestName} after {ElapsedMs}ms", requestName, sw.ElapsedMilliseconds);
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
         }

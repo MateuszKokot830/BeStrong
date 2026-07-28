@@ -10,6 +10,7 @@ namespace Application.Common.Behaviors
         ILogger<ValidationBehavior<TRequest, TResponse>> logger)
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
         private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger = logger;
@@ -40,7 +41,7 @@ namespace Application.Common.Behaviors
                 .Select(f => Error.Validation(f.PropertyName, f.ErrorMessage))
                 .ToList();
 
-            return (TResponse)(object)errors;
+            return (dynamic)errors;
         }
     }
 }

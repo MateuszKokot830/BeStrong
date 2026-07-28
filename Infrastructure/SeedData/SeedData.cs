@@ -10,30 +10,31 @@ namespace Infrastructure.SeedData
 {
     public class SeedData
     {
-        public static async Task SeedUserData(DataContext context)
+        private const string SeedPassword = "Pa$$w0rd";
+
+        public static async Task SeedUserData(UserManager<User> userManager)
         {
-            if (await context.Users.AnyAsync()) return;
+            if (await userManager.Users.AnyAsync()) return;
 
             var userData = await File.ReadAllTextAsync("../Infrastructure/SeedData/UserSeedData.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var users = JsonSerializer.Deserialize<List<User>>(userData) ?? [];
+            var users = JsonSerializer.Deserialize<List<User>>(userData, options) ?? [];
 
             foreach (var user in users)
             {
                 if (user.UserName == null)
                     continue;
 
-                if (!context.Users.Any(u => u.UserName != null && u.UserName.Equals(user.UserName, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    var password = new PasswordHasher<User>();
-                    var hashed = password.HashPassword(user, "Password");
-                    user.PasswordHash = hashed;
-                    user.UserName = user.UserName.ToLower();
-                    context.Users.Add(user);
-                }
-            }
+                user.UserName = user.UserName.ToLower();
 
-            await context.SaveChangesAsync();
+                if (await userManager.FindByNameAsync(user.UserName) != null)
+                    continue;
+
+                var result = await userManager.CreateAsync(user, SeedPassword);
+                if (!result.Succeeded)
+                    throw new InvalidOperationException(
+                        $"Failed to seed user '{user.UserName}': {string.Join("; ", result.Errors.Select(e => e.Description))}");
+            }
         }
 
         public static async Task SeedRolesAsync(RoleManager<Role> roleManager, UserManager<User> userManager)
@@ -62,14 +63,14 @@ namespace Infrastructure.SeedData
 
             var exercisesData = await File.ReadAllTextAsync("../Infrastructure/SeedData/ExerciseSeedData.json");
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var exercises = JsonSerializer.Deserialize<List<Exercise>>(exercisesData) ?? [];
+            var exercises = JsonSerializer.Deserialize<List<Exercise>>(exercisesData, options) ?? [];
+
+            var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var exercise in exercises)
             {
-                if (!context.Excercises.Any(u => u.Name.Equals(exercise.Name, StringComparison.CurrentCultureIgnoreCase)))
-                {
+                if (seenNames.Add(exercise.Name))
                     context.Excercises.Add(exercise);
-                }
             }
 
             await context.SaveChangesAsync();
