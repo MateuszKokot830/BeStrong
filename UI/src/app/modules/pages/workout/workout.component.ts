@@ -20,10 +20,11 @@ interface ExerciseDraft {
 })
 export class WorkoutComponent implements OnInit {
   exercises: Exercise[] = [];
+  exerciseNames = new Map<number, string>();
   workoutName = '';
   drafts: ExerciseDraft[] = [];
-  workoutExercise = {} as ExerciseDraft;
-  exerciseCounter = 1;
+  workoutExercise = emptyDraft();
+  isSaving = false;
 
   constructor(private workoutService: WorkoutService, private toastr: ToastrService,
     private modalService: BsModalService) { }
@@ -34,64 +35,70 @@ export class WorkoutComponent implements OnInit {
 
   loadExercises() {
     this.workoutService.getExercises().subscribe({
-      next: exercises => this.exercises = exercises
+      next: exercises => {
+        this.exercises = exercises;
+        this.exerciseNames = new Map(exercises.map(e => [e.id, e.name ?? 'Unknown exercise']));
+      }
     });
   }
 
+  getExerciseName(exerciseId: number) {
+    return this.exerciseNames.get(exerciseId) ?? 'Unknown exercise';
+  }
+
   addNewExerciseToggle() {
-    this.modalService.show(ExerciseComponent);
+    const ref = this.modalService.show(ExerciseComponent);
+    ref.content?.saved.subscribe(() => this.loadExercises());
   }
 
   addExercise() {
-    var exerciseName = this.exercises.find(x => x.id == this.workoutExercise.exerciseId)?.name;
-    var div = document.getElementById('exercise');
-    if (!exerciseName || !div) return;
+    const draft = this.workoutExercise;
 
-    var text = `<div class="card bg-dark mt-3">
-      <div class="card-body">
-        <h4 class="text-white text-center">Exercise ` + this.exerciseCounter.toString() + `
-        </h4>
-        <div class="row">
-          <div class="col-4 mt-4">
-            <h4 class="text-center">` + exerciseName + `</h4>
-          </div>
-          <div class="col-8 mt-2">
-            <table cellPadding="0" id="setTable" cellspacing="0" style="margin:auto;">
-              <thead>
-                <tr class="text-white text-center">
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">SETS</th>
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">REPS / DURATION</th>
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">WEIGHT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-white text-center">
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">` + this.workoutExercise.sets + `</th>
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">` + this.workoutExercise.reps + `</th>
-                  <th scope="col" style="border: 3px solid grey; padding: 5px">` + this.workoutExercise.weight + ` kg</th>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      </div>`;
-    div.insertAdjacentHTML('beforeend', text);
-    this.exerciseCounter += 1;
-    this.drafts.push({ ...this.workoutExercise });
+    if (!draft.exerciseId) {
+      this.toastr.error('Pick an exercise first.');
+      return;
+    }
+    if (!draft.sets || !draft.reps) {
+      this.toastr.error('Sets and reps are required.');
+      return;
+    }
+
+    this.drafts.push({ ...draft });
+    this.workoutExercise = emptyDraft();
+  }
+
+  removeDraft(index: number) {
+    this.drafts.splice(index, 1);
   }
 
   addWorkout() {
+    if (!this.drafts.length) {
+      this.toastr.error('Add at least one exercise before saving.');
+      return;
+    }
+
+    // CreateWorkoutDto takes no userId -- the owner comes from the token.
     const workout: WorkoutCreate = {
       name: this.workoutName,
       exercises: this.drafts.map((draft, index) => this.toWorkoutExercise(draft, index))
     };
 
-    this.workoutService.addWorkout(workout).subscribe();
-    location.reload();
-    this.toastr.success('Workout has been saved!');
+    this.isSaving = true;
+    this.workoutService.addWorkout(workout).subscribe({
+      next: _ => {
+        this.isSaving = false;
+        this.drafts = [];
+        this.workoutName = '';
+        this.workoutExercise = emptyDraft();
+        this.toastr.success('Workout has been saved!');
+      },
+      // The interceptor toasts the reason; just release the button so the user
+      // can correct the input and retry instead of losing the whole workout.
+      error: _ => this.isSaving = false
+    });
   }
 
+  /** Expands "3 sets of 10 @ 80kg" into the three individual sets the API wants. */
   private toWorkoutExercise(draft: ExerciseDraft, index: number): WorkoutExercise {
     const setCount = Number(draft.sets) || 0;
 
@@ -99,6 +106,7 @@ export class WorkoutComponent implements OnInit {
       order: index + 1,
       notes: null,
       exerciseId: Number(draft.exerciseId),
+      // Assigned server-side on insert; the DTO requires the property to exist.
       workoutId: 0,
       maxTotalWeight: null,
       bestEstimatedOneRepMax: null,
@@ -111,4 +119,8 @@ export class WorkoutComponent implements OnInit {
       }))
     };
   }
+}
+
+function emptyDraft(): ExerciseDraft {
+  return { exerciseId: 0, sets: 0, reps: 0, weight: 0 };
 }

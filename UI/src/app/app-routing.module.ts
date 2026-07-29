@@ -1,32 +1,53 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './modules/pages/home/home.component';
-import { SearchComponent } from './modules/pages/search/search.component';
-import { PostsComponent } from './modules/pages/posts/posts.component';
-import { ProfileComponent } from './modules/pages/profile/profile.component';
-import { MessagesComponent } from './modules/pages/messages/messages.component';
-import { StatisticsComponent } from './modules/pages/statistics/statistics.component';
-import { WorkoutComponent } from './modules/pages/workout/workout.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { WorkoutPlanComponent } from './modules/pages/workout-plan/workout-plan.component';
+import { HomeComponent } from './modules/pages/home/home.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   {
-    path: '',
-    runGuardsAndResolvers: 'always',
+    path: 'search',
     canActivate: [AuthGuard],
-    children: [
-      {path: 'search', component: SearchComponent},
-      {path: 'posts', component: PostsComponent},
-      {path: 'profile/:username', component: ProfileComponent},
-      {path: 'messages', component: MessagesComponent},
-      {path: 'workout-plan', component: WorkoutPlanComponent},
-      {path: 'statistics', component: StatisticsComponent},
-      {path: 'workout', component: WorkoutComponent}
-    ]
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/search/search.module').then(m => m.SearchModule)
   },
-  {path: '**', component: HomeComponent, pathMatch: 'full'}
+  {
+    path: 'posts',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/posts/posts.module').then(m => m.PostsModule)
+  },
+  {
+    path: 'profile/:username',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
+    path: 'messages',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/messages/messages.module').then(m => m.MessagesModule)
+  },
+  {
+    path: 'workout-plan',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/workout-plan/workout-plan.module').then(m => m.WorkoutPlanModule)
+  },
+  {
+    path: 'statistics',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/statistics/statistics.module').then(m => m.StatisticsModule)
+  },
+  {
+    path: 'workout',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/workout/workout.module').then(m => m.WorkoutModule)
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

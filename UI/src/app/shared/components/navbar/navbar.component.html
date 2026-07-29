@@ -4,7 +4,7 @@
         <ul class="navbar-nav mr-auto">
           <ng-container *ngIf="accountService.currentUser$ | async">
             <li class="nav-item">
-              <a class="nav-link bi bi-house-fill" routerLink="/*" routerLinkActive="active"> Home</a>
+              <a class="nav-link bi bi-house-fill" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"> Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link bi bi-activity" routerLink="/posts" routerLinkActive="active"> Activity</a>

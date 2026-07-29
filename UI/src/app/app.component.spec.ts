@@ -1,35 +1,61 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { AccountService } from './core/services/account.service';
+import { UserAuth } from './core/models/Auth';
 
 describe('AppComponent', () => {
+  let accountService: AccountService;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      declarations: [AppComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
+
+    accountService = TestBed.inject(AccountService);
+    localStorage.removeItem('user');
   });
+
+  afterEach(() => localStorage.removeItem('user'));
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it(`should have as title 'Client'`, () => {
+  it(`should have as title 'BeStrong'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('Client');
+    expect(fixture.componentInstance.title).toEqual('BeStrong');
   });
 
-  it('should render title', () => {
+  it('restores a stored user into the account service', () => {
+    const stored: UserAuth = { username: 'mateusz', token: 'a.b.c' };
+    localStorage.setItem('user', JSON.stringify(stored));
+
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('Client app is running!');
+    fixture.componentInstance.ngOnInit();
+
+    let emitted: UserAuth | null | undefined;
+    accountService.currentUser$.subscribe(user => emitted = user);
+    expect(emitted).toEqual(stored);
+  });
+
+  it('emits null when nothing is stored, so guards do not hang', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.componentInstance.ngOnInit();
+
+    let emitted: UserAuth | null | undefined;
+    let didEmit = false;
+    accountService.currentUser$.subscribe(user => {
+      emitted = user;
+      didEmit = true;
+    });
+
+    expect(didEmit).toBeTrue();
+    expect(emitted).toBeNull();
   });
 });

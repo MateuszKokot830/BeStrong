@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Statistics } from 'src/app/core/models/Statistics';
-import { UserService } from 'src/app/core/services/user.service';
+import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
@@ -14,18 +14,25 @@ export class StatisticsComponent implements OnInit {
   calculatorWeight = 0;
   calculatorReps = 0;
   calculatorResult = 0;
+  isLoading = false;
 
-  constructor(private workoutService: WorkoutService, private userService: UserService) { }
+  constructor(private workoutService: WorkoutService, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.loadStatistics();
   }
 
   loadStatistics() {
-    this.userService.getCurrentUser().pipe(
+    this.isLoading = true;
+
+    this.accountService.currentProfile().pipe(
       switchMap(user => this.workoutService.getStatistics(user.id))
     ).subscribe({
-      next: statistics => this.statistics = statistics
+      next: statistics => {
+        this.isLoading = false;
+        this.statistics = statistics;
+      },
+      error: _ => this.isLoading = false
     });
   }
 

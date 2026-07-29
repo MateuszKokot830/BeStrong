@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { PostCreate } from 'src/app/core/models/Post';
+import { Post, PostCreate } from 'src/app/core/models/Post';
 import { PostType } from 'src/app/core/models/Enums';
 import { PostService } from 'src/app/core/services/post.service';
 
@@ -11,6 +11,9 @@ import { PostService } from 'src/app/core/services/post.service';
   styleUrls: ['./add-post.component.css']
 })
 export class AddPostComponent {
+  saved = new EventEmitter<Post>();
+  isSaving = false;
+
   post: PostCreate = {
     type: PostType.Normal,
     description: null,
@@ -22,11 +25,15 @@ export class AddPostComponent {
     private toastr: ToastrService) { }
 
   addNewPost() {
+    this.isSaving = true;
     this.postService.createPost(this.post).subscribe({
-      next: _ => {
-        location.reload();
+      next: post => {
+        this.isSaving = false;
         this.toastr.success('Post has been added!');
-      }
+        this.saved.emit(post);
+        this.bsModalRef.hide();
+      },
+      error: _ => this.isSaving = false
     });
   }
 }

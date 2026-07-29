@@ -4,6 +4,7 @@ import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Post } from 'src/app/core/models/Post';
 import { User } from 'src/app/core/models/User';
+import { AccountService } from 'src/app/core/services/account.service';
 import { PostService } from 'src/app/core/services/post.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AddCommentComponent } from '../../components/add-comment/add-comment.component';
@@ -18,16 +19,19 @@ export class PostsComponent implements OnInit {
   user: User | null = null;
   posts: Post[] = [];
   authors = new Map<number, User>();
+  isLoading = false;
 
-  constructor(private userService: UserService, private postService: PostService,
-    private modalService: BsModalService) { }
+  constructor(private accountService: AccountService, private userService: UserService,
+    private postService: PostService, private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.loadFeed();
   }
 
   loadFeed() {
-    this.userService.getCurrentUser().pipe(
+    this.isLoading = true;
+
+    this.accountService.currentProfile().pipe(
       switchMap(user => {
         const followedIds = user.followedUsers.map(f => f.followedUserId);
 
@@ -40,6 +44,7 @@ export class PostsComponent implements OnInit {
       })
     ).subscribe({
       next: ({ me, followedUsers, feed, ownPosts }) => {
+        this.isLoading = false;
         this.user = me;
         this.authors = new Map(followedUsers.map(u => [u.id, u]));
         this.authors.set(me.id, me);
@@ -47,7 +52,8 @@ export class PostsComponent implements OnInit {
         this.posts = [...feed, ...ownPosts].sort(
           (a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
         );
-      }
+      },
+      error: _ => this.isLoading = false
     });
   }
 
@@ -60,15 +66,17 @@ export class PostsComponent implements OnInit {
   }
 
   addNewPostToggle() {
-    this.modalService.show(AddPostComponent);
+    const ref = this.modalService.show(AddPostComponent);
+    ref.content?.saved.subscribe(() => this.loadFeed());
   }
 
   addNewCommentToggle(post: Post) {
     if (!this.user)
       return;
 
-    this.modalService.show(AddCommentComponent, {
+    const ref = this.modalService.show(AddCommentComponent, {
       initialState: { user: this.user, post }
     });
+    ref.content?.saved.subscribe(() => this.loadFeed());
   }
 }

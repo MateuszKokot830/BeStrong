@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
-import { ReplaySubject } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
 import { LoginRequest, RegisterRequest, UserAuth } from '../models/Auth';
+import { User } from '../models/User';
 import { environment } from 'src/environments/environment';
 
 const STORAGE_KEY = 'user';
@@ -14,6 +15,7 @@ export class AccountService {
   baseUrl = environment.baseUrl;
   private currentUserSource = new ReplaySubject<UserAuth | null>(1);
   currentUser$ = this.currentUserSource.asObservable();
+  private profileRequest?: Observable<User>;
 
   constructor(private http: HttpClient) { }
 
@@ -32,10 +34,29 @@ export class AccountService {
   logout() {
     localStorage.removeItem(STORAGE_KEY);
     this.currentUserSource.next(null);
+    this.invalidateProfile();
   }
 
   setCurrentUser(user: UserAuth | null) {
     this.currentUserSource.next(user);
+  }
+
+  currentProfile(): Observable<User> {
+    if (!this.profileRequest) {
+      this.profileRequest = this.http.get<User>(this.baseUrl + 'users/me').pipe(
+        shareReplay({ bufferSize: 1, refCount: false })
+      );
+    }
+    return this.profileRequest;
+  }
+
+  invalidateProfile() {
+    this.profileRequest = undefined;
+  }
+
+  refreshProfile(): Observable<User> {
+    this.invalidateProfile();
+    return this.currentProfile();
   }
 
   private storeUser(user: UserAuth) {
@@ -44,5 +65,6 @@ export class AccountService {
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
     this.currentUserSource.next(user);
+    this.invalidateProfile();
   }
 }

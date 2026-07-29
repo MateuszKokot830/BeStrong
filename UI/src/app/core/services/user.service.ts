@@ -14,9 +14,6 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentUser() {
-    return this.http.get<User>(this.baseUrl + 'users/me');
-  }
 
   getUser(username: string) {
     return this.http.get<User>(`${this.baseUrl}users/${username}`);
