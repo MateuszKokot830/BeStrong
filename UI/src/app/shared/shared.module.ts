@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -22,6 +23,7 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     RouterModule,
     NgxGalleryModule,
     BsDropdownModule,
+    CollapseModule,
     ModalModule,
     PaginationModule,
     TabsModule,
@@ -35,6 +37,7 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     RouterModule,
     NgxGalleryModule,
     BsDropdownModule,
+    CollapseModule,
     ModalModule,
     PaginationModule,
     TabsModule,

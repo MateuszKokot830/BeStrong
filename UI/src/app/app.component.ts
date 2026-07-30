@@ -18,8 +18,6 @@ export class AppComponent implements OnInit {
 
   setCurrentUser() {
     const stored = localStorage.getItem('user');
-    // Emit even when there is nothing stored: AuthGuard waits on currentUser$,
-    // so skipping the emission would leave guarded routes hanging forever.
     const user: UserAuth | null = stored ? JSON.parse(stored) : null;
     this.accountService.setCurrentUser(user);
   }

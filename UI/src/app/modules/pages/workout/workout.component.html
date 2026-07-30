@@ -1,11 +1,14 @@
-<div class="card" style="height: 700; position: relative;">
+<div class="card page-card">
   <div class="card-body">
     <div class="row">
-      <div class="col-6">
-        <h4 class="text-center text-info mt-3">Add workout
-          <button type="button" class="btn btn-secondary btn-sm" (click)="addExercise()" style="position: absolute; left: 425px;"> Add exercise</button>
-          <button type="button" class="btn btn-success btn-sm" (click)="addWorkout()" style="float: right;"> Save workout</button>
-        </h4>
+      <div class="col-12 col-lg-6">
+        <div class="section-header mt-3">
+          <h4 class="text-info mb-0">Add workout</h4>
+          <div>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="addExercise()">Add exercise</button>
+            <button type="button" class="btn btn-success btn-sm" (click)="addWorkout()">Save workout</button>
+          </div>
+        </div>
         <textarea class="form-control mt-3"
           placeholder="Add workout description here..."
           [(ngModel)]="workoutName"
@@ -14,30 +17,33 @@
         </textarea>
         <div class="card bg-dark mt-3" *ngFor="let draft of drafts; let i = index">
           <div class="card-body">
-            <h4 class="text-white text-center">Exercise {{i + 1}}
-              <button type="button" class="btn btn-danger btn-sm" (click)="removeDraft(i)" style="float: right;">Remove</button>
-            </h4>
+            <div class="section-header">
+              <h4 class="text-white mb-0">Exercise {{i + 1}}</h4>
+              <button type="button" class="btn btn-danger btn-sm" (click)="removeDraft(i)">Remove</button>
+            </div>
             <div class="row">
-              <div class="col-4 mt-4">
+              <div class="col-12 col-md-4 mt-2">
                 <h4 class="text-center">{{getExerciseName(draft.exerciseId)}}</h4>
               </div>
-              <div class="col-8 mt-2">
-                <table cellPadding="0" cellspacing="0" style="margin:auto;">
-                  <thead>
-                    <tr class="text-white text-center">
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">SETS</th>
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">REPS / DURATION</th>
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">WEIGHT</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-white text-center">
-                      <td style="border: 3px solid grey; padding: 5px">{{draft.sets}}</td>
-                      <td style="border: 3px solid grey; padding: 5px">{{draft.reps}}</td>
-                      <td style="border: 3px solid grey; padding: 5px">{{draft.weight}} kg</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="col-12 col-md-8 mt-2">
+                <div class="table-responsive">
+                  <table class="sets-table text-center">
+                    <thead>
+                      <tr class="text-white">
+                        <th scope="col">SETS</th>
+                        <th scope="col">REPS / DURATION</th>
+                        <th scope="col">WEIGHT</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="text-white">
+                        <td>{{draft.sets}}</td>
+                        <td>{{draft.reps}}</td>
+                        <td>{{draft.weight}} kg</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -47,56 +53,61 @@
           <div class="card-body">
             <h4 class="text-white text-center">Exercise {{drafts.length + 1}}</h4>
             <div class="row">
-              <div class="col-5">
+              <div class="col-12 col-md-5">
                 <label for="select" class="form-label">Choose exercise type:</label>
-                <select class="form-select" [(ngModel)]="workoutExercise.exerciseId" id="select" name="exerciseId" style="width: auto;">
+                <select class="custom-select exercise-select" [(ngModel)]="workoutExercise.exerciseId" id="select" name="exerciseId">
                   <option *ngFor="let exercise of exercises" [ngValue]="exercise.id">{{exercise.name}}</option>
                 </select>
               </div>
-              <div class="col-7 mt-2">
-                <table cellPadding="0" cellspacing="0" style="margin:auto;">
-                  <thead>
-                    <tr class="text-white text-center">
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">SETS</th>
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">REPS / DURATION</th>
-                      <th scope="col" style="border: 3px solid grey; padding: 5px">WEIGHT</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-white text-center">
-                      <td style="border: 3px solid grey; padding: 5px">
-                        <input type="number" min="1" size="2" name="sets" [(ngModel)]="workoutExercise.sets" placeholder="0">
-                      </td>
-                      <td style="border: 3px solid grey; padding: 5px">
-                        <input type="number" min="1" size="3" name="reps" [(ngModel)]="workoutExercise.reps" placeholder="0">
-                      </td>
-                      <td style="border: 3px solid grey; padding: 5px">
-                        <input type="number" min="0" size="3" name="weight" [(ngModel)]="workoutExercise.weight" placeholder="0"> kg
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="col-12 col-md-7 mt-2">
+                <div class="table-responsive">
+                  <table class="sets-table text-center">
+                    <thead>
+                      <tr class="text-white">
+                        <th scope="col">SETS</th>
+                        <th scope="col">REPS / DURATION</th>
+                        <th scope="col">WEIGHT</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="text-white">
+                        <td>
+                          <input type="number" min="1" class="form-control form-control-sm" name="sets" [(ngModel)]="workoutExercise.sets" placeholder="0">
+                        </td>
+                        <td>
+                          <input type="number" min="1" class="form-control form-control-sm" name="reps" [(ngModel)]="workoutExercise.reps" placeholder="0">
+                        </td>
+                        <td>
+                          <input type="number" min="0" class="form-control form-control-sm" name="weight" [(ngModel)]="workoutExercise.weight" placeholder="0">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 col-lg-6">
         <div class="card bg-dark mt-3">
           <div class="card-body">
-            <h4 class="text-center text-info mb-3">List of exercises
-              <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm" style="float: right;"> + Add exercise to list</button>
-            </h4>
-            <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px">
-              <tr>
-                <th scope="col" class="text-secondary">Name</th>
-                <th scope="col" class="text-secondary">Description</th>
-              </tr>
-              <tr *ngFor="let exercise of exercises">
-                <th scope="row">{{exercise.name}}</th>
-                <td>{{exercise.description}}</td>
-              </tr>
-            </table>
+            <div class="section-header mb-3">
+              <h4 class="text-info mb-0">List of exercises</h4>
+              <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm">+ Add exercise to list</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table text-white">
+                <tr>
+                  <th scope="col" class="text-secondary">Name</th>
+                  <th scope="col" class="text-secondary">Description</th>
+                </tr>
+                <tr *ngFor="let exercise of exercises">
+                  <th scope="row">{{exercise.name}}</th>
+                  <td>{{exercise.description}}</td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>

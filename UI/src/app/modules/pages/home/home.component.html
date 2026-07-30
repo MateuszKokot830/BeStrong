@@ -1,6 +1,6 @@
-<div class="background">
-  <div class="card bg-primary mb-3" *ngIf="(accountService.currentUser$ | async) === null">
-    <div class="card-header text-info" style="text-align: center;"><h2>Welcome to BeStrong</h2></div>
+<div class="home-content">
+  <div class="card bg-primary mb-3 welcome-card">
+    <div class="card-header text-info centered"><h2>Welcome to BeStrong</h2></div>
     <div class="card-body text-white list-group ml-3">
       <div class="list-group-item">
         <h4 class="card-title">BeStrong is a free, workout tracking app</h4>
@@ -28,40 +28,10 @@
           </li>
         </ul>
       </div>
-      <div class="list-group-item" style="text-align: center;">
+      <div class="list-group-item centered" *ngIf="(accountService.currentUser$ | async) === null">
         <h4 class="card-title text-success">Don't have account yet?</h4>
         <button (click)="registerToggle()" class="btn btn-success btn-lg mr-2">Register</button>
       </div>
     </div>
-  </div>
-  <div class="card bg-primary mb-3" *ngIf="accountService.currentUser$ | async">
-    <div class="card-header text-info" style="text-align: center;"><h2>Welcome to BeStrong</h2></div>
-    <div class="card-body text-white list-group ml-3">
-      <div class="list-group-item">
-        <h4 class="card-title">BeStrong is a free, workout tracking app</h4>
-        <ul class="mb-2">
-          <li>
-            <h5 class="card-text mb-2">Track your workout routines</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">Share workouts to friends</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">Follow other athletes</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">Like or comment posts and workouts</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">Browse statistics and compare yourself</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">Measure progress</h5>
-          </li>
-          <li>
-            <h5 class="card-text mb-2">And many more...</h5>
-          </li>
-        </ul>
-      </div>
   </div>
 </div>

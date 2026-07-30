@@ -1,0 +1,21 @@
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sets-table {
+  width: 100%;
+}
+
+.sets-table th,
+.sets-table td {
+  border: 3px solid grey;
+  padding: 5px;
+}
+
+.exercise-select {
+  width: 100%;
+}

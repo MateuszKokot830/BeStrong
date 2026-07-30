@@ -1,23 +1,22 @@
-<div class="card" style="height: 700; position: relative;">
+<div class="card page-card">
   <div class="card-body">
     <div class="row">
-      <h4 class="text-center text-info mt-1">Search for users
-      </h4>
-      <div class="col-2" *ngFor="let user of users">
+      <div class="col-12">
+        <h4 class="text-center text-info mt-1">Search for users</h4>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let user of users">
         <app-user-card [user]="user"></app-user-card>
       </div>
     </div>
     <div class="d-flex justify-content-center" *ngIf="pagination">
-      <div class="row">
-          <pagination
-          [boundaryLinks]="true"
-          [totalItems]="pagination.totalItems"
-          [itemsPerPage]="pagination.itemsPerPage"
-          [maxSize]="5"
-          [(ngModel)]="pageNumber"
-          (pageChanged)="pageChanged($event)"
-          ></pagination>
-      </div>
+      <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [maxSize]="5"
+        [(ngModel)]="pageNumber"
+        (pageChanged)="pageChanged($event)"
+      ></pagination>
     </div>
   </div>
 </div>

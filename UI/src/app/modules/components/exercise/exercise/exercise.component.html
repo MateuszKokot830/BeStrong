@@ -8,7 +8,7 @@
   <div class="modal-body">
         <input type="text" class="form-control mb-2" name="name" [(ngModel)]="exercise.name" placeholder="Exercise name">
         <input type="text" class="form-control mb-2" name="description" [(ngModel)]="exercise.description" placeholder="Description">
-        <select class="form-select mb-2" name="muscleSubgroup" [(ngModel)]="exercise.muscleSubgroup">
+        <select class="custom-select mb-2" name="muscleSubgroup" [(ngModel)]="exercise.muscleSubgroup">
           <option *ngFor="let subgroup of muscleSubgroups" [ngValue]="subgroup.value">{{subgroup.label}}</option>
         </select>
         <input type="text" class="form-control mb-2" name="imageUrl" [(ngModel)]="exercise.imageUrl" placeholder="Image URL (optional)">

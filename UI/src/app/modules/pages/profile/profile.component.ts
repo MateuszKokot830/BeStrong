@@ -188,7 +188,6 @@ export class ProfileComponent implements OnInit {
     return this.exerciseNames.get(exerciseId) ?? 'Unknown exercise';
   }
 
-  /** "3 x 10" when every set matches, otherwise "10 / 8 / 6". */
   formatReps(exercise: WorkoutExercise) {
     const reps = exercise.sets.map(s => s.reps);
     if (!reps.length)

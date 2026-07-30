@@ -1,0 +1,23 @@
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-image: url('../assets/photos/back.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.25;
+}
+
+.app-content {
+  margin-top: 100px;
+}
+
+@media (max-width: 575.98px) {
+  .app-content {
+    margin-top: 130px;
+  }
+}

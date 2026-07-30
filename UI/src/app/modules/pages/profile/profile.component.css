@@ -10,4 +10,81 @@
   padding: 0 25px;
 }
 
-.ngx-gallery { display: inline-block; margin-bottom: 20px; }
+.ngx-gallery {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.description-card {
+  min-height: 200px;
+}
+
+.stats-table {
+  width: 100%;
+  margin: auto;
+}
+
+.stats-table th,
+.stats-table td {
+  border: 3px solid grey;
+  padding: 5px;
+}
+
+.compact-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.compact-table th,
+.compact-table td {
+  border: 3px solid grey;
+  padding: 2px;
+  word-break: break-word;
+}
+
+.compact-table th:first-child,
+.compact-table td:first-child {
+  width: 50%;
+}
+
+.workout-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  flex: 0 0 calc(50% - 0.25rem);
+  min-width: 0;
+  padding: 10px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+  .stat-row {
+    flex-direction: column;
+  }
+
+  .stat-card {
+    flex-basis: 100%;
+  }
+}
+
+.file-input {
+  display: none;
+}

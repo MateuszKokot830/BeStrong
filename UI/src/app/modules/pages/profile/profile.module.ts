@@ -10,5 +10,4 @@ import { ProfileComponent } from './profile.component';
     RouterModule.forChild([{ path: '', component: ProfileComponent }])
   ]
 })
-
 export class ProfileModule { }

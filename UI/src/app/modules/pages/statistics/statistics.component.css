@@ -1,0 +1,10 @@
+.stats-table th,
+.stats-table td {
+  border: 3px solid grey;
+  padding: 5px;
+}
+
+.calculator-field {
+  max-width: 300px;
+  margin: 0 auto 1rem;
+}

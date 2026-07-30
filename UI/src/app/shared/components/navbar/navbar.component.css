@@ -1,13 +1,40 @@
 .dropdown-toggle, .dropdown-item {
-    text-decoration: none !important;
-    cursor: pointer;
+  text-decoration: none !important;
+  cursor: pointer;
 }
 
-.image1 {
-    mix-blend-mode: multiply;
-    background-color: #3A3F44;
-    width: 10%;
-    height: 10%;
-    text-align: left;
-    margin-left: 20px;
+.brand-logo {
+  mix-blend-mode: multiply;
+  background-color: #3A3F44;
+  height: 40px;
+  width: auto;
+  margin-left: 20px;
+}
+
+.navbar-toggler {
+  margin-left: auto;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.login-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-form .form-control {
+  width: auto;
+}
+
+@media (max-width: 575.98px) {
+  .brand-logo {
+    height: 32px;
+    margin-left: 8px;
+  }
 }

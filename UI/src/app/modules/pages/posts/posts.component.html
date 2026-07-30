@@ -1,54 +1,59 @@
-<div class="card" style="height: 700; position: relative;">
+<div class="card page-card">
   <div class="card-body">
+    <div class="section-header mb-3">
+      <h4 class="text-info mb-0">Activity page</h4>
+      <button (click)="addNewPostToggle()" class="btn btn-sm btn-secondary">+ Add a new post</button>
+    </div>
     <div class="row">
-      <h4 class="text-center text-info mt-1">Activity page
-        <button (click)="addNewPostToggle()" class="btn btn-sm btn-secondary" style="position:absolute; left:1150px;"> + Add a new post</button>
-      </h4>
-      <div class="col-1"></div>
-      <div class="col-10">
-        <div class="card bg-dark mt-5" *ngFor="let post of posts">
+      <div class="col-12 col-lg-10 offset-lg-1">
+        <div class="card bg-dark mt-3" *ngFor="let post of posts">
           <div class="card-header">
             <div class="row">
-                <div class="col-6" style="display: flex; align-items: center;">
-                  <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
-                  <h5 class="text-success text-left">{{getUsername(post.userId)}}</h5>
-                </div>
-                <div class="col-6">
-                  <h5 class="text-info text-right">{{post.createdDate | date:'medium'}}</h5>
-                </div>
+              <div class="col-12 col-sm-6 author-row">
+                <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
+                <h5 class="text-success mb-0">{{getUsername(post.userId)}}</h5>
+              </div>
+              <div class="col-12 col-sm-6 text-sm-right">
+                <h5 class="text-info mb-0">{{post.createdDate | date:'medium'}}</h5>
               </div>
             </div>
-            <div class="card-body">
+          </div>
+          <div class="card-body">
             <div class="row">
-              <h5 class="text-white mt-2">{{post.description}}</h5><p></p>
+              <div class="col-12">
+                <h5 class="text-white mt-2">{{post.description}}</h5>
+              </div>
             </div>
-            <div class="row">
+            <div class="post-footer">
               <span class="text-muted"><i class="bi bi-heart-fill"></i> {{post.likesCount}}</span>
-              <button (click)="addNewCommentToggle(post)" class="btn btn-sm btn-info mr-2" style="margin-left: auto; float: right; width: 15%;">Add comment</button>
+              <button (click)="addNewCommentToggle(post)" class="btn btn-sm btn-info">Add comment</button>
             </div>
             <div class="card mt-3" *ngFor="let comment of post.comments">
               <div class="card-body">
                 <div class="row">
-                  <div class="col-6" style="display: flex; align-items: center;">
+                  <div class="col-12 col-sm-6 author-row">
                     <img src="{{getMainPhoto(comment.userId)}}" alt="main photo">
-                    <h5 class="text-left">{{getUsername(comment.userId)}}</h5>
+                    <h5 class="mb-0">{{getUsername(comment.userId)}}</h5>
                   </div>
-                  <div class="col-6">
-                    <p class="text-info text-right">{{comment.createdDate | date:'medium'}}</p>
+                  <div class="col-12 col-sm-6 text-sm-right">
+                    <p class="text-info mb-0">{{comment.createdDate | date:'medium'}}</p>
                   </div>
                 </div>
                 <div class="row">
-                  <h5 class="text-white mt-2">{{comment.description}}</h5>
+                  <div class="col-12">
+                    <h5 class="text-white mt-2">{{comment.description}}</h5>
+                  </div>
                 </div>
                 <div class="row">
-                  <span class="text-muted"><i class="bi bi-heart-fill"></i> {{comment.likesCount}}</span>
+                  <div class="col-12">
+                    <span class="text-muted"><i class="bi bi-heart-fill"></i> {{comment.likesCount}}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-1"></div>
     </div>
   </div>
 </div>

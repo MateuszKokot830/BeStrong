@@ -10,5 +10,4 @@ import { SearchComponent } from './search.component';
     RouterModule.forChild([{ path: '', component: SearchComponent }])
   ]
 })
-
 export class SearchModule { }

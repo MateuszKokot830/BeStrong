@@ -1,20 +1,14 @@
-.background {
+.home-content {
   display: flex;
-  align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
-.background::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('../../../../assets\photos\back.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  opacity: 0.25;
+.welcome-card {
+  max-width: 700px;
+  width: 100%;
+}
+
+.centered {
+  text-align: center;
 }

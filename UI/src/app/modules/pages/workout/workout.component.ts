@@ -77,7 +77,6 @@ export class WorkoutComponent implements OnInit {
       return;
     }
 
-    // CreateWorkoutDto takes no userId -- the owner comes from the token.
     const workout: WorkoutCreate = {
       name: this.workoutName,
       exercises: this.drafts.map((draft, index) => this.toWorkoutExercise(draft, index))
@@ -92,13 +91,10 @@ export class WorkoutComponent implements OnInit {
         this.workoutExercise = emptyDraft();
         this.toastr.success('Workout has been saved!');
       },
-      // The interceptor toasts the reason; just release the button so the user
-      // can correct the input and retry instead of losing the whole workout.
       error: _ => this.isSaving = false
     });
   }
 
-  /** Expands "3 sets of 10 @ 80kg" into the three individual sets the API wants. */
   private toWorkoutExercise(draft: ExerciseDraft, index: number): WorkoutExercise {
     const setCount = Number(draft.sets) || 0;
 
@@ -106,7 +102,6 @@ export class WorkoutComponent implements OnInit {
       order: index + 1,
       notes: null,
       exerciseId: Number(draft.exerciseId),
-      // Assigned server-side on insert; the DTO requires the property to exist.
       workoutId: 0,
       maxTotalWeight: null,
       bestEstimatedOneRepMax: null,

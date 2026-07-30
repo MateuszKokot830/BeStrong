@@ -1,66 +1,62 @@
-<div class="card" style="height: 700; position: relative;">
+<div class="card page-card">
   <div class="card-body">
     <div class="row">
-      <div class="col-6">
+      <div class="col-12 col-lg-6">
         <div class="card bg-dark mt-3">
           <div class="card-body">
-            <h4 class="text-center text-info mt-1 mb-3">Statistics
-            </h4>
-            <table class="table text-white" cellPadding="0" style="border: 3px solid grey; padding: 5px" *ngIf="statistics">
-              <tr>
-                <th scope="col" class="text-white">Total done workouts:</th>
-                <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Total done exercises:</th>
-                <th scope="col" class="text-white">{{statistics.totalExercises}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Total done sets:</th>
-                <th scope="col" class="text-white">{{statistics.totalSets}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Avg. workouts per week:</th>
-                <th scope="col" class="text-white">{{statistics.avgWorkoutsPerWeek}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Avg. exercises per workout:</th>
-                <th scope="col" class="text-white">{{statistics.avgExercisesPerWorkout}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Avg. sets per workout:</th>
-                <th scope="col" class="text-white">{{statistics.avgSetsPerWorkout}}</th>
-              </tr>
-              <tr>
-                <th scope="col" class="text-white">Favourite exercise:</th>
-                <th scope="col" class="text-white">{{statistics.favouriteExercise}}</th>
-              </tr>
-            </table>
+            <h4 class="text-center text-info mt-1 mb-3">Statistics</h4>
+            <div class="table-responsive" *ngIf="statistics">
+              <table class="table text-white stats-table">
+                <tr>
+                  <th scope="col" class="text-white">Total done workouts:</th>
+                  <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Total done exercises:</th>
+                  <th scope="col" class="text-white">{{statistics.totalExercises}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Total done sets:</th>
+                  <th scope="col" class="text-white">{{statistics.totalSets}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Avg. workouts per week:</th>
+                  <th scope="col" class="text-white">{{statistics.avgWorkoutsPerWeek}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Avg. exercises per workout:</th>
+                  <th scope="col" class="text-white">{{statistics.avgExercisesPerWorkout}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Avg. sets per workout:</th>
+                  <th scope="col" class="text-white">{{statistics.avgSetsPerWorkout}}</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="text-white">Favourite exercise:</th>
+                  <th scope="col" class="text-white">{{statistics.favouriteExercise}}</th>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-12 col-lg-6">
         <div class="card bg-dark mt-3">
-          <div class="card-body">
-            <h4 class="text-center text-info mt-1 mb-3">One Rep Max calculator
-            </h4>
-            <div style="text-align: center; display: flex; justify-content: center;">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <h5 class="text-center text-white">Select lift: </h5>&nbsp;&nbsp;&nbsp;
-              <input class="form-control mb-2" style="width: 300px;" type="text" name="weigth" [(ngModel)]="calculatorWeight" placeholder="0"> &nbsp;&nbsp;kg
+          <div class="card-body text-center">
+            <h4 class="text-info mt-1 mb-3">One Rep Max calculator</h4>
+            <div class="calculator-field">
+              <label class="text-white" for="calculatorWeight">Select lift (kg)</label>
+              <input id="calculatorWeight" class="form-control" type="number" min="0" name="weight" [(ngModel)]="calculatorWeight" placeholder="0">
             </div>
-            <div style="text-align: center; display: flex; justify-content: center;">
-              <h5 class="text-center text-white">Select reps: </h5>&nbsp;&nbsp;&nbsp;
-              <input class="form-control" style="width: 300px;" type="text" name="reps" [(ngModel)]="calculatorReps" placeholder="0">
+            <div class="calculator-field">
+              <label class="text-white" for="calculatorReps">Select reps</label>
+              <input id="calculatorReps" class="form-control" type="number" min="0" name="reps" [(ngModel)]="calculatorReps" placeholder="0">
             </div>
-            <div style="text-align: center; display: flex; justify-content: center;">
-              <button class="btn btn-success btn-sm mt-3" type="button" (click)="calculate()" style="text-align: center;"> Calculate</button>
-            </div>
+            <button class="btn btn-success btn-sm mt-2" type="button" (click)="calculate()">Calculate</button>
           </div>
           <div class="card bg-dark mt-3">
             <div class="card-body">
-              <h4 class="text-center text-info mt-1 mb-3">Your current one rep max is: {{calculatorResult}} kg
-              </h4>
+              <h4 class="text-center text-info mt-1 mb-3">Your current one rep max is: {{calculatorResult}} kg</h4>
             </div>
           </div>
         </div>
