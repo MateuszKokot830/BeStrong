@@ -3,8 +3,8 @@
   <button type="button" class="navbar-toggler" (click)="toggleNav()" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="container navbar-collapse" [collapse]="isNavCollapsed" [isAnimated]="false">
-    <ul class="navbar-nav mr-auto">
+  <div class="container-fluid navbar-collapse" [collapse]="isNavCollapsed" [isAnimated]="false">
+    <ul class="navbar-nav me-auto">
       <ng-container *ngIf="accountService.currentUser$ | async">
         <li class="nav-item">
           <a class="nav-link bi bi-house-fill" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"> Home</a>
@@ -31,7 +31,7 @@
     </ul>
 
     <div class="user-info" *ngIf="(accountService.currentUser$ | async) as user">
-      <h5 class="text-white mt-3 mr-2">{{user.username | titlecase}}</h5>
+      <h5 class="text-white mt-3 me-2">{{user.username | titlecase}}</h5>
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link bi-person-square" routerLink="/profile/{{user.username}}" routerLinkActive="active"> Profile</a>

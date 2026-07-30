@@ -1,15 +1,13 @@
 <form #postForm="ngForm" (ngSubmit)="addComment()" autocomplete="off">
   <div class="modal-header text-center">
       <h4 class="text-white w-100">Add comment to {{user.userName}}'s post</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-      </button>
+      <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
   </div>
   <div class="modal-body">
       <textarea class="form-control mb-2" rows="4" name="description" [(ngModel)]="comment.description" placeholder="Comment description goes here..."></textarea>
   </div>
   <div class="modal-footer text-center">
-      <button class="btn btn-success mr-2" type="submit">Add post</button>
-      <button class="btn btn-secondary mr-2" type="button" (click)="bsModalRef.hide()">Cancel</button>
+      <button class="btn btn-success me-2" type="submit">Add post</button>
+      <button class="btn btn-secondary me-2" type="button" (click)="bsModalRef.hide()">Cancel</button>
   </div>
 </form>

@@ -13,7 +13,7 @@
                 <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
                 <h5 class="text-success mb-0">{{getUsername(post.userId)}}</h5>
               </div>
-              <div class="col-12 col-sm-6 text-sm-right">
+              <div class="col-12 col-sm-6 text-sm-end">
                 <h5 class="text-info mb-0">{{post.createdDate | date:'medium'}}</h5>
               </div>
             </div>
@@ -35,7 +35,7 @@
                     <img src="{{getMainPhoto(comment.userId)}}" alt="main photo">
                     <h5 class="mb-0">{{getUsername(comment.userId)}}</h5>
                   </div>
-                  <div class="col-12 col-sm-6 text-sm-right">
+                  <div class="col-12 col-sm-6 text-sm-end">
                     <p class="text-info mb-0">{{comment.createdDate | date:'medium'}}</p>
                   </div>
                 </div>
