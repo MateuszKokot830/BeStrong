@@ -10,11 +10,6 @@
   padding: 0 25px;
 }
 
-.ngx-gallery {
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
 .profile-actions {
   display: flex;
   flex-wrap: wrap;

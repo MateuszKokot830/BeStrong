@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -26,8 +25,6 @@ export class ProfileComponent implements OnInit {
   sinceLastWorkout = '';
   followers: User[] = [];
   followedUsers: User[] = [];
-  galleryOptions: NgxGalleryOptions[] = [];
-  galleryImages: NgxGalleryImage[] = [];
   isCurrentUser = false;
   isEditMode = false;
   isFollowed = false;
@@ -85,7 +82,7 @@ export class ProfileComponent implements OnInit {
     this.isCurrentUser = user.id === currentUserAcc.id;
     this.isFollowed = user.followers.some(f => f.userId === currentUserAcc.id);
     this.measurements = user.measurements ?? emptyMeasurements();
-    this.galleryImages = this.loadGallery(user);
+    this.currentPhoto = user.photos.length > 0 ? user.photos[0] : null;
   }
 
   private reloadUser() {
@@ -119,32 +116,8 @@ export class ProfileComponent implements OnInit {
     this.sinceLastWorkout = Math.round(dateDifference / (1000 * 3600 * 24)) + ' days ago';
   }
 
-  loadGallery(user: User): NgxGalleryImage[] {
-    this.galleryOptions = [
-      {
-        width: '500px',
-        height: '500px',
-        imagePercent: 100,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        preview: false
-      }
-    ];
-
-    const imageUrls = user.photos.map(photo => ({
-      small: photo.url ?? undefined,
-      medium: photo.url ?? undefined,
-      big: photo.url ?? undefined
-    }));
-
-    this.currentPhoto = user.photos.length > 0 ? user.photos[0] : null;
-    return imageUrls;
-  }
-
-  onChange(data: { index: number }): void {
-    if (!this.user)
-      return;
-
-    this.currentPhoto = this.user.photos[data.index];
+  onPhotoChange(photo: Photo): void {
+    this.currentPhoto = photo;
   }
 
   changeEditMode() {

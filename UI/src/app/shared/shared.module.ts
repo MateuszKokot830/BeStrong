@@ -8,7 +8,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { UserCardComponent } from './components/user-card/user-card.component';
 
@@ -21,7 +20,6 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     CommonModule,
     FormsModule,
     RouterModule,
-    NgxGalleryModule,
     BsDropdownModule,
     CollapseModule,
     ModalModule,
@@ -35,7 +33,6 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     CommonModule,
     FormsModule,
     RouterModule,
-    NgxGalleryModule,
     BsDropdownModule,
     CollapseModule,
     ModalModule,

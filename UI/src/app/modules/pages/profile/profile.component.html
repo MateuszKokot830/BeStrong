@@ -206,7 +206,7 @@
                   </div>
                   <div class="col-12 text-center">
                     <h4 class="text-info mb-2">{{user.userName | titlecase}}'s photos</h4>
-                    <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery mt-2" (change)="onChange($event)"></ngx-gallery>
+                    <app-photo-gallery [photos]="user.photos" (photoChange)="onPhotoChange($event)"></app-photo-gallery>
                   </div>
                 </div>
               </tab>
