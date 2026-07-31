@@ -7,9 +7,10 @@ import { User } from 'src/app/core/models/User';
 import { PostService } from 'src/app/core/services/post.service';
 
 @Component({
-  selector: 'app-add-comment',
-  templateUrl: './add-comment.component.html',
-  styleUrls: ['./add-comment.component.css']
+    selector: 'app-add-comment',
+    templateUrl: './add-comment.component.html',
+    styleUrls: ['./add-comment.component.css'],
+    standalone: false
 })
 export class AddCommentComponent {
   user!: User;

@@ -28,10 +28,12 @@
           </li>
         </ul>
       </div>
-      <div class="list-group-item centered" *ngIf="(accountService.currentUser$ | async) === null">
+      @if ((accountService.currentUser$ | async) === null) {
+      <div class="list-group-item centered">
         <h4 class="card-title text-success">Don't have account yet?</h4>
         <button (click)="registerToggle()" class="btn btn-success btn-lg me-2">Register</button>
       </div>
+      }
     </div>
   </div>
 </div>

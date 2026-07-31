@@ -4,9 +4,10 @@ import { User } from 'src/app/core/models/User';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css'],
+    standalone: false
 })
 export class SearchComponent implements OnInit {
   users: User[] = [];

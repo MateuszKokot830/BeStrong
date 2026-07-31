@@ -6,9 +6,10 @@ import { MuscleSubgroup } from 'src/app/core/models/Enums';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
-  selector: 'app-exercise',
-  templateUrl: './exercise.component.html',
-  styleUrls: ['./exercise.component.css']
+    selector: 'app-exercise',
+    templateUrl: './exercise.component.html',
+    styleUrls: ['./exercise.component.css'],
+    standalone: false
 })
 export class ExerciseComponent {
   saved = new EventEmitter<Exercise>();

@@ -4,9 +4,10 @@ import { LoginRequest } from 'src/app/core/models/Auth';
 import { AccountService } from 'src/app/core/services/account.service';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    standalone: false
 })
 export class NavbarComponent {
   model: LoginRequest = { userName: '', password: '' };

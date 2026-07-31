@@ -4,9 +4,10 @@ import { RegisterRequest } from 'src/app/core/models/Auth';
 import { AccountService } from 'src/app/core/services/account.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    standalone: false
 })
 export class RegisterComponent {
   model: RegisterRequest = { userName: '', password: '' };

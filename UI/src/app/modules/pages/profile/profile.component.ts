@@ -11,9 +11,10 @@ import { UserService } from 'src/app/core/services/user.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    standalone: false
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;

@@ -9,21 +9,24 @@
             <button type="button" class="btn btn-success btn-sm" (click)="addWorkout()">Save workout</button>
           </div>
         </div>
-        <textarea class="form-control mt-3"
+        <textarea
+          class="form-control mt-3"
           placeholder="Add workout description here..."
           [(ngModel)]="workoutName"
           name="workout-name"
-          rows="1">
+          rows="1"
+        >
         </textarea>
-        <div class="card bg-dark mt-3" *ngFor="let draft of drafts; let i = index">
+        @for (draft of drafts; track draft; let i = $index) {
+        <div class="card bg-dark mt-3">
           <div class="card-body">
             <div class="section-header">
-              <h4 class="text-white mb-0">Exercise {{i + 1}}</h4>
+              <h4 class="text-white mb-0">Exercise {{ i + 1 }}</h4>
               <button type="button" class="btn btn-danger btn-sm" (click)="removeDraft(i)">Remove</button>
             </div>
             <div class="row">
               <div class="col-12 col-md-4 mt-2">
-                <h4 class="text-center">{{getExerciseName(draft.exerciseId)}}</h4>
+                <h4 class="text-center">{{ getExerciseName(draft.exerciseId) }}</h4>
               </div>
               <div class="col-12 col-md-8 mt-2">
                 <div class="table-responsive">
@@ -37,9 +40,9 @@
                     </thead>
                     <tbody>
                       <tr class="text-white">
-                        <td>{{draft.sets}}</td>
-                        <td>{{draft.reps}}</td>
-                        <td>{{draft.weight}} kg</td>
+                        <td>{{ draft.sets }}</td>
+                        <td>{{ draft.reps }}</td>
+                        <td>{{ draft.weight }} kg</td>
                       </tr>
                     </tbody>
                   </table>
@@ -48,15 +51,18 @@
             </div>
           </div>
         </div>
+        }
 
         <div class="card bg-dark mt-3">
           <div class="card-body">
-            <h4 class="text-white text-center">Exercise {{drafts.length + 1}}</h4>
+            <h4 class="text-white text-center">Exercise {{ drafts.length + 1 }}</h4>
             <div class="row">
               <div class="col-12 col-md-5">
                 <label for="select" class="form-label">Choose exercise type:</label>
                 <select class="form-select exercise-select" [(ngModel)]="workoutExercise.exerciseId" id="select" name="exerciseId">
-                  <option *ngFor="let exercise of exercises" [ngValue]="exercise.id">{{exercise.name}}</option>
+                  @for (exercise of exercises; track exercise) {
+                  <option [ngValue]="exercise.id">{{ exercise.name }}</option>
+                  }
                 </select>
               </div>
               <div class="col-12 col-md-7 mt-2">
@@ -72,13 +78,34 @@
                     <tbody>
                       <tr class="text-white">
                         <td>
-                          <input type="number" min="1" class="form-control form-control-sm" name="sets" [(ngModel)]="workoutExercise.sets" placeholder="0">
+                          <input
+                            type="number"
+                            min="1"
+                            class="form-control form-control-sm"
+                            name="sets"
+                            [(ngModel)]="workoutExercise.sets"
+                            placeholder="0"
+                          />
                         </td>
                         <td>
-                          <input type="number" min="1" class="form-control form-control-sm" name="reps" [(ngModel)]="workoutExercise.reps" placeholder="0">
+                          <input
+                            type="number"
+                            min="1"
+                            class="form-control form-control-sm"
+                            name="reps"
+                            [(ngModel)]="workoutExercise.reps"
+                            placeholder="0"
+                          />
                         </td>
                         <td>
-                          <input type="number" min="0" class="form-control form-control-sm" name="weight" [(ngModel)]="workoutExercise.weight" placeholder="0">
+                          <input
+                            type="number"
+                            min="0"
+                            class="form-control form-control-sm"
+                            name="weight"
+                            [(ngModel)]="workoutExercise.weight"
+                            placeholder="0"
+                          />
                         </td>
                       </tr>
                     </tbody>
@@ -102,10 +129,12 @@
                   <th scope="col" class="text-secondary">Name</th>
                   <th scope="col" class="text-secondary">Description</th>
                 </tr>
-                <tr *ngFor="let exercise of exercises">
-                  <th scope="row">{{exercise.name}}</th>
-                  <td>{{exercise.description}}</td>
+                @for (exercise of exercises; track exercise) {
+                <tr>
+                  <th scope="row">{{ exercise.name }}</th>
+                  <td>{{ exercise.description }}</td>
                 </tr>
+                }
               </table>
             </div>
           </div>

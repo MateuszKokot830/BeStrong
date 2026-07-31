@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "ui-dev-server",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "UI", "run", "start"],
+      "runtimeExecutable": "C:\\Users\\mateu\\BeStrong\\UI\\dev-server-launch.cmd",
+      "runtimeArgs": [],
       "port": 4200
     }
   ]

@@ -1,18 +1,20 @@
 <form #exerciseForm="ngForm" (ngSubmit)="addExercise()" autocomplete="off">
   <div class="modal-header text-center">
-      <h2 class="text-white w-100">Add new exercise</h2>
-      <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
+    <h2 class="text-white w-100">Add new exercise</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
   </div>
   <div class="modal-body">
-        <input type="text" class="form-control mb-2" name="name" [(ngModel)]="exercise.name" placeholder="Exercise name">
-        <input type="text" class="form-control mb-2" name="description" [(ngModel)]="exercise.description" placeholder="Description">
-        <select class="form-select mb-2" name="muscleSubgroup" [(ngModel)]="exercise.muscleSubgroup">
-          <option *ngFor="let subgroup of muscleSubgroups" [ngValue]="subgroup.value">{{subgroup.label}}</option>
-        </select>
-        <input type="text" class="form-control mb-2" name="imageUrl" [(ngModel)]="exercise.imageUrl" placeholder="Image URL (optional)">
+    <input type="text" class="form-control mb-2" name="name" [(ngModel)]="exercise.name" placeholder="Exercise name" />
+    <input type="text" class="form-control mb-2" name="description" [(ngModel)]="exercise.description" placeholder="Description" />
+    <select class="form-select mb-2" name="muscleSubgroup" [(ngModel)]="exercise.muscleSubgroup">
+      @for (subgroup of muscleSubgroups; track subgroup) {
+      <option [ngValue]="subgroup.value">{{ subgroup.label }}</option>
+      }
+    </select>
+    <input type="text" class="form-control mb-2" name="imageUrl" [(ngModel)]="exercise.imageUrl" placeholder="Image URL (optional)" />
   </div>
   <div class="modal-footer text-center">
-      <button class="btn btn-success me-2" type="submit">Save exercise</button>
-      <button class="btn btn-secondary me-2" type="button" (click)="bsModalRef.hide()">Cancel</button>
+    <button class="btn btn-success me-2" type="submit">Save exercise</button>
+    <button class="btn btn-secondary me-2" type="button" (click)="bsModalRef.hide()">Cancel</button>
   </div>
 </form>

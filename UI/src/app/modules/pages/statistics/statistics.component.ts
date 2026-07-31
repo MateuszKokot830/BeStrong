@@ -5,9 +5,10 @@ import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
-  selector: 'app-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.css']
+    selector: 'app-statistics',
+    templateUrl: './statistics.component.html',
+    styleUrls: ['./statistics.component.css'],
+    standalone: false
 })
 export class StatisticsComponent implements OnInit {
   statistics: Statistics | null = null;

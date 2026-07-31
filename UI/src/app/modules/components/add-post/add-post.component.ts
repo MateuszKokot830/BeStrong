@@ -6,9 +6,10 @@ import { PostType } from 'src/app/core/models/Enums';
 import { PostService } from 'src/app/core/services/post.service';
 
 @Component({
-  selector: 'app-add-post',
-  templateUrl: './add-post.component.html',
-  styleUrls: ['./add-post.component.css']
+    selector: 'app-add-post',
+    templateUrl: './add-post.component.html',
+    styleUrls: ['./add-post.component.css'],
+    standalone: false
 })
 export class AddPostComponent {
   saved = new EventEmitter<Post>();

@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { Photo } from 'src/app/core/models/Photo';
 
 @Component({
-  selector: 'app-photo-gallery',
-  templateUrl: './photo-gallery.component.html',
-  styleUrls: ['./photo-gallery.component.css']
+    selector: 'app-photo-gallery',
+    templateUrl: './photo-gallery.component.html',
+    styleUrls: ['./photo-gallery.component.css'],
+    standalone: false
 })
 export class PhotoGalleryComponent implements OnChanges {
   @Input() photos: Photo[] = [];

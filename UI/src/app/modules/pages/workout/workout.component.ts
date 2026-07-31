@@ -14,9 +14,10 @@ interface ExerciseDraft {
 }
 
 @Component({
-  selector: 'app-workout',
-  templateUrl: './workout.component.html',
-  styleUrls: ['./workout.component.css']
+    selector: 'app-workout',
+    templateUrl: './workout.component.html',
+    styleUrls: ['./workout.component.css'],
+    standalone: false
 })
 export class WorkoutComponent implements OnInit {
   exercises: Exercise[] = [];

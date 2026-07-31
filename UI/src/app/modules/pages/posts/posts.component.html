@@ -6,53 +6,57 @@
     </div>
     <div class="row">
       <div class="col-12 col-lg-10 offset-lg-1">
-        <div class="card bg-dark mt-3" *ngFor="let post of posts">
+        @for (post of posts; track post) {
+        <div class="card bg-dark mt-3">
           <div class="card-header">
             <div class="row">
               <div class="col-12 col-sm-6 author-row">
-                <img src="{{getMainPhoto(post.userId)}}" alt="main photo">
-                <h5 class="text-success mb-0">{{getUsername(post.userId)}}</h5>
+                <img src="{{ getMainPhoto(post.userId) }}" alt="main photo" />
+                <h5 class="text-success mb-0">{{ getUsername(post.userId) }}</h5>
               </div>
               <div class="col-12 col-sm-6 text-sm-end">
-                <h5 class="text-info mb-0">{{post.createdDate | date:'medium'}}</h5>
+                <h5 class="text-info mb-0">{{ post.createdDate | date : 'medium' }}</h5>
               </div>
             </div>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-12">
-                <h5 class="text-white mt-2">{{post.description}}</h5>
+                <h5 class="text-white mt-2">{{ post.description }}</h5>
               </div>
             </div>
             <div class="post-footer">
-              <span class="text-muted"><i class="bi bi-heart-fill"></i> {{post.likesCount}}</span>
+              <span class="text-muted"><i class="bi bi-heart-fill"></i> {{ post.likesCount }}</span>
               <button (click)="addNewCommentToggle(post)" class="btn btn-sm btn-info">Add comment</button>
             </div>
-            <div class="card mt-3" *ngFor="let comment of post.comments">
+            @for (comment of post.comments; track comment) {
+            <div class="card mt-3">
               <div class="card-body">
                 <div class="row">
                   <div class="col-12 col-sm-6 author-row">
-                    <img src="{{getMainPhoto(comment.userId)}}" alt="main photo">
-                    <h5 class="mb-0">{{getUsername(comment.userId)}}</h5>
+                    <img src="{{ getMainPhoto(comment.userId) }}" alt="main photo" />
+                    <h5 class="mb-0">{{ getUsername(comment.userId) }}</h5>
                   </div>
                   <div class="col-12 col-sm-6 text-sm-end">
-                    <p class="text-info mb-0">{{comment.createdDate | date:'medium'}}</p>
+                    <p class="text-info mb-0">{{ comment.createdDate | date : 'medium' }}</p>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <h5 class="text-white mt-2">{{comment.description}}</h5>
+                    <h5 class="text-white mt-2">{{ comment.description }}</h5>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <span class="text-muted"><i class="bi bi-heart-fill"></i> {{comment.likesCount}}</span>
+                    <span class="text-muted"><i class="bi bi-heart-fill"></i> {{ comment.likesCount }}</span>
                   </div>
                 </div>
               </div>
             </div>
+            }
           </div>
         </div>
+        }
       </div>
     </div>
   </div>

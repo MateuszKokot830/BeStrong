@@ -11,9 +11,10 @@ import { AddCommentComponent } from '../../components/add-comment/add-comment.co
 import { AddPostComponent } from '../../components/add-post/add-post.component';
 
 @Component({
-  selector: 'app-posts',
-  templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.css']
+    selector: 'app-posts',
+    templateUrl: './posts.component.html',
+    styleUrls: ['./posts.component.css'],
+    standalone: false
 })
 export class PostsComponent implements OnInit {
   user: User | null = null;

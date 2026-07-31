@@ -5,38 +5,40 @@
         <div class="card bg-dark mt-3">
           <div class="card-body">
             <h4 class="text-center text-info mt-1 mb-3">Statistics</h4>
-            <div class="table-responsive" *ngIf="statistics">
+            @if (statistics) {
+            <div class="table-responsive">
               <table class="table text-white stats-table">
                 <tr>
                   <th scope="col" class="text-white">Total done workouts:</th>
-                  <th scope="col" class="text-white">{{statistics.totalWorkouts}}</th>
+                  <th scope="col" class="text-white">{{ statistics.totalWorkouts }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Total done exercises:</th>
-                  <th scope="col" class="text-white">{{statistics.totalExercises}}</th>
+                  <th scope="col" class="text-white">{{ statistics.totalExercises }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Total done sets:</th>
-                  <th scope="col" class="text-white">{{statistics.totalSets}}</th>
+                  <th scope="col" class="text-white">{{ statistics.totalSets }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Avg. workouts per week:</th>
-                  <th scope="col" class="text-white">{{statistics.avgWorkoutsPerWeek}}</th>
+                  <th scope="col" class="text-white">{{ statistics.avgWorkoutsPerWeek }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Avg. exercises per workout:</th>
-                  <th scope="col" class="text-white">{{statistics.avgExercisesPerWorkout}}</th>
+                  <th scope="col" class="text-white">{{ statistics.avgExercisesPerWorkout }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Avg. sets per workout:</th>
-                  <th scope="col" class="text-white">{{statistics.avgSetsPerWorkout}}</th>
+                  <th scope="col" class="text-white">{{ statistics.avgSetsPerWorkout }}</th>
                 </tr>
                 <tr>
                   <th scope="col" class="text-white">Favourite exercise:</th>
-                  <th scope="col" class="text-white">{{statistics.favouriteExercise}}</th>
+                  <th scope="col" class="text-white">{{ statistics.favouriteExercise }}</th>
                 </tr>
               </table>
             </div>
+            }
           </div>
         </div>
       </div>
@@ -46,17 +48,33 @@
             <h4 class="text-info mt-1 mb-3">One Rep Max calculator</h4>
             <div class="calculator-field">
               <label class="text-white" for="calculatorWeight">Select lift (kg)</label>
-              <input id="calculatorWeight" class="form-control" type="number" min="0" name="weight" [(ngModel)]="calculatorWeight" placeholder="0">
+              <input
+                id="calculatorWeight"
+                class="form-control"
+                type="number"
+                min="0"
+                name="weight"
+                [(ngModel)]="calculatorWeight"
+                placeholder="0"
+              />
             </div>
             <div class="calculator-field">
               <label class="text-white" for="calculatorReps">Select reps</label>
-              <input id="calculatorReps" class="form-control" type="number" min="0" name="reps" [(ngModel)]="calculatorReps" placeholder="0">
+              <input
+                id="calculatorReps"
+                class="form-control"
+                type="number"
+                min="0"
+                name="reps"
+                [(ngModel)]="calculatorReps"
+                placeholder="0"
+              />
             </div>
             <button class="btn btn-success btn-sm mt-2" type="button" (click)="calculate()">Calculate</button>
           </div>
           <div class="card bg-dark mt-3">
             <div class="card-body">
-              <h4 class="text-center text-info mt-1 mb-3">Your current one rep max is: {{calculatorResult}} kg</h4>
+              <h4 class="text-center text-info mt-1 mb-3">Your current one rep max is: {{ calculatorResult }} kg</h4>
             </div>
           </div>
         </div>
