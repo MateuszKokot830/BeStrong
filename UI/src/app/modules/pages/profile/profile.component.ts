@@ -38,15 +38,18 @@ export class ProfileComponent implements OnInit {
     private workoutService: WorkoutService) { }
 
   ngOnInit(): void {
-    this.loadProfile();
+    this.route.paramMap.subscribe(params => {
+      const username = params.get('username');
+      if (!username)
+        return;
+
+      this.loadProfile(username);
+    });
   }
 
-  loadProfile() {
-    const username = this.route.snapshot.paramMap.get('username');
-    if (!username)
-      return;
-
+  loadProfile(username: string) {
     this.isLoading = true;
+    this.isEditMode = false;
 
     forkJoin({
       user: this.userService.getUser(username),
@@ -109,8 +112,11 @@ export class ProfileComponent implements OnInit {
 
   private setWorkouts(workouts: Workout[]) {
     this.workouts = workouts;
-    if (!workouts.length)
+    if (!workouts.length) {
+      this.lastWorkout = null;
+      this.sinceLastWorkout = '';
       return;
+    }
 
     this.lastWorkout = workouts[0];
     const dateDifference = new Date().getTime() - new Date(this.lastWorkout.date).getTime();
@@ -187,6 +193,7 @@ export class ProfileComponent implements OnInit {
       return;
 
     const wasFollowed = this.isFollowed;
+    const username = this.user.userName;
     const request = wasFollowed
       ? this.userService.unfollowUser(this.currentUserAcc.id, this.user.id)
       : this.userService.followUser(this.currentUserAcc.id, this.user.id);
@@ -195,7 +202,7 @@ export class ProfileComponent implements OnInit {
       next: _ => {
         this.accountService.invalidateProfile();
         this.toastr.success(wasFollowed ? 'Unfollowed' : 'Now following');
-        this.loadProfile();
+        this.loadProfile(username);
       }
     });
   }

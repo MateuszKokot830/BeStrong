@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/core/models/User';
 
@@ -8,14 +8,10 @@ import { User } from 'src/app/core/models/User';
     styleUrls: ['./user-card.component.css'],
     standalone: false
 })
-export class UserCardComponent implements OnInit {
+export class UserCardComponent {
   @Input() user!: User;
 
   constructor(private router: Router) { }
-
-  ngOnInit(): void {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-  }
 
   goToProfile(username: string) {
     this.router.navigate(['/profile/' + username]);
