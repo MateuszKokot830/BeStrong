@@ -6,9 +6,11 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
+import { AccountService } from '../services/account.service';
 
 interface ValidationProblem {
   errors?: Record<string, string[]>;
@@ -24,19 +26,36 @@ interface ApiException {
 }
 
 const GENERIC_MESSAGE = 'Something went wrong. Please refresh the page.';
+const SESSION_EXPIRED_MESSAGE = 'Your session has expired. Please log in again.';
+const AUTH_ENDPOINTS = ['auth/login', 'auth/register'];
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, private accountService: AccountService,
+    private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        this.notify(error);
+        if (error.status === 401 && !this.isAuthEndpoint(request.url)) {
+          this.handleSessionExpiry();
+        } else {
+          this.notify(error);
+        }
         return throwError(() => error);
       })
     );
+  }
+
+  private isAuthEndpoint(url: string): boolean {
+    return AUTH_ENDPOINTS.some(endpoint => url.includes(endpoint));
+  }
+
+  private handleSessionExpiry() {
+    this.accountService.logout();
+    this.router.navigateByUrl('/');
+    this.toastr.error(SESSION_EXPIRED_MESSAGE);
   }
 
   private notify(error: HttpErrorResponse) {

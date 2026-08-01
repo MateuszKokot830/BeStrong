@@ -17,7 +17,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
         PaginationModule,
         TabsModule,
         ToastrModule.forRoot({
-            positionClass: 'toast-bottom-right'
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: true
         })], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
