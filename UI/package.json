@@ -25,7 +25,7 @@
     "bootswatch": "5.3.8",
     "ngx-bootstrap": "21.2.1",
     "ngx-toastr": "^16.2.0",
-    "rxjs": "~6.6.0",
+    "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.1"
   },

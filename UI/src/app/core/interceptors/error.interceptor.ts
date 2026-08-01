@@ -34,7 +34,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         this.notify(error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
