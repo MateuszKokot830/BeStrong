@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Exercise } from 'src/app/core/models/Exercise';
+import { MuscleGroup, MuscleSubgroup } from 'src/app/core/models/Enums';
 import { WorkoutCreate, WorkoutExercise } from 'src/app/core/models/Workout';
+import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 import { ExerciseComponent } from '../../components/exercise/exercise/exercise.component';
 
@@ -12,6 +14,8 @@ interface ExerciseDraft {
   reps: number;
   weight: number;
 }
+
+const DEFAULT_EXERCISE_IMAGE = 'assets/photos/defaultPhoto.jpg';
 
 @Component({
     selector: 'app-workout',
@@ -26,12 +30,21 @@ export class WorkoutComponent implements OnInit {
   drafts: ExerciseDraft[] = [];
   workoutExercise = emptyDraft();
   isSaving = false;
+  isAdmin = false;
+
+  muscleGroups = Object.keys(MuscleGroup)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({ value: MuscleGroup[key as keyof typeof MuscleGroup], label: key }));
 
   constructor(private workoutService: WorkoutService, private toastr: ToastrService,
-    private modalService: BsModalService) { }
+    private modalService: BsModalService, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.loadExercises();
+
+    this.accountService.currentProfile().subscribe({
+      next: user => this.isAdmin = user.isAdmin
+    });
   }
 
   loadExercises() {
@@ -45,6 +58,20 @@ export class WorkoutComponent implements OnInit {
 
   getExerciseName(exerciseId: number) {
     return this.exerciseNames.get(exerciseId) ?? 'Unknown exercise';
+  }
+
+  exercisesByGroup(group: MuscleGroup | null): Exercise[] {
+    return group === null
+      ? this.exercises
+      : this.exercises.filter(e => e.muscleGroup === group);
+  }
+
+  getMuscleSubgroupLabel(exercise: Exercise): string {
+    return MuscleSubgroup[exercise.muscleSubgroup] ?? 'Unknown';
+  }
+
+  getExerciseImage(exercise: Exercise): string {
+    return exercise.imageUrl || DEFAULT_EXERCISE_IMAGE;
   }
 
   addNewExerciseToggle() {

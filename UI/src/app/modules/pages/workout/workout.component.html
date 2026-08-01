@@ -120,23 +120,41 @@
         <div class="card bg-dark mt-3">
           <div class="card-body">
             <div class="section-header mb-3">
-              <h4 class="text-info mb-0">List of exercises</h4>
+              <h4 class="text-info mb-0 flex-grow-1 text-center">List of exercises</h4>
+              @if (isAdmin) {
               <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm">+ Add exercise to list</button>
+              }
             </div>
-            <div class="table-responsive">
-              <table class="table text-white">
-                <tr>
-                  <th scope="col" class="text-secondary">Name</th>
-                  <th scope="col" class="text-secondary">Description</th>
-                </tr>
-                @for (exercise of exercises; track exercise) {
-                <tr>
-                  <th scope="row">{{ exercise.name }}</th>
-                  <td>{{ exercise.description }}</td>
-                </tr>
-                }
-              </table>
-            </div>
+
+            <ng-template #exerciseRows let-list>
+              @for (exercise of list; track exercise.id) {
+              <div class="exercise-row">
+                <img [src]="getExerciseImage(exercise)" [alt]="exercise.name" class="exercise-image" />
+                <div class="exercise-info">
+                  <div class="exercise-name">{{ exercise.name }}</div>
+                  <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+                  <div class="exercise-description">{{ exercise.description }}</div>
+                </div>
+              </div>
+              } @empty {
+              <p class="text-white-50 mb-0">No exercises here yet.</p>
+              }
+            </ng-template>
+
+            <tabset>
+              <tab heading="All">
+                <div class="exercise-list mt-2">
+                  <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(null) }"></ng-container>
+                </div>
+              </tab>
+              @for (group of muscleGroups; track group.value) {
+              <tab [heading]="group.label">
+                <div class="exercise-list mt-2">
+                  <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(group.value) }"></ng-container>
+                </div>
+              </tab>
+              }
+            </tabset>
           </div>
         </div>
       </div>

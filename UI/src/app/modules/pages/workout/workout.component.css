@@ -19,3 +19,47 @@
 .exercise-select {
   width: 100%;
 }
+
+.exercise-list {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.exercise-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exercise-row:last-child {
+  border-bottom: none;
+}
+
+.exercise-image {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.exercise-info {
+  color: #fff;
+  min-width: 0;
+}
+
+.exercise-name {
+  font-weight: bold;
+}
+
+.exercise-subgroup {
+  font-style: italic;
+  color: #fff;
+}
+
+.exercise-description {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+}

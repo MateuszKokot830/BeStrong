@@ -23,6 +23,7 @@ export interface User {
   posts: Post[];
   followedUsers: Follower[];
   followers: Follower[];
+  isAdmin: boolean;
 }
 
 export interface Measurements {

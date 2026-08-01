@@ -3,6 +3,7 @@ using Application.Dto.Photo;
 using Application.Dto.Post;
 using Application.Dto.User;
 using Domain.Aggregates;
+using Domain.Common;
 using Domain.Common.Extensions;
 using Domain.ValueObjects;
 using System.Linq.Expressions;
@@ -44,7 +45,8 @@ namespace Application.Mappings
                 .ToList(),
             user.Followers
                 .Select(f => new FollowerDto(f.UserId, f.FollowedUserId, f.FollowedAt))
-                .ToList()
+                .ToList(),
+            user.Roles.Any(r => r.Name == Roles.Admin)
         );
 
         public static UserDto WithComputedWorkoutSince(this UserDto dto) =>
@@ -69,7 +71,8 @@ namespace Application.Mappings
             user.Photos?.Select(p => p.ToDto()).ToList() ?? [],
             user.Posts?.Select(p => p.ToDto()).ToList() ?? [],
             user.FollowedUsers?.Select(f => f.ToDto()).ToList() ?? [],
-            user.Followers?.Select(f => f.ToDto()).ToList() ?? []
+            user.Followers?.Select(f => f.ToDto()).ToList() ?? [],
+            user.Roles?.Any(r => r.Name == Roles.Admin) ?? false
         );
 
         public static User ToEntity(this Dto.Auth.UserRegisterRequestDto dto) => new()

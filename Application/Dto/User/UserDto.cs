@@ -25,6 +25,7 @@ namespace Application.Dto.User
         IReadOnlyCollection<PhotoDto> Photos,
         IReadOnlyCollection<PostDto> Posts,
         IReadOnlyCollection<FollowerDto> FollowedUsers,
-        IReadOnlyCollection<FollowerDto> Followers
+        IReadOnlyCollection<FollowerDto> Followers,
+        bool IsAdmin
     );
 }
