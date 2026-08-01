@@ -19,19 +19,27 @@ namespace Infrastructure.Searchers
                 .Select(UserMappings.Selector)
                 .ToListAsync(cancellationToken);
 
-        public async Task<UserDto?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default) =>
-            await _context.Users
+        public async Task<UserDto?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users
                 .AsNoTracking()
                 .Where(u => u.NormalizedUserName == username.ToUpperInvariant())
                 .Select(UserMappings.Selector)
                 .SingleOrDefaultAsync(cancellationToken);
 
-        public async Task<UserDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default) =>
-            await _context.Users
+            return user?.WithComputedWorkoutSince();
+        }
+
+        public async Task<UserDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users
                 .AsNoTracking()
                 .Where(u => u.Id == id)
                 .Select(UserMappings.Selector)
                 .SingleOrDefaultAsync(cancellationToken);
+
+            return user?.WithComputedWorkoutSince();
+        }
 
         public async Task<IReadOnlyList<UserDto>> FindByIdsAsync(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default) =>
             await _context.Users

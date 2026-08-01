@@ -3,6 +3,7 @@ using Application.Dto.Photo;
 using Application.Dto.Post;
 using Application.Dto.User;
 using Domain.Aggregates;
+using Domain.Common.Extensions;
 using Domain.ValueObjects;
 using System.Linq.Expressions;
 
@@ -46,6 +47,8 @@ namespace Application.Mappings
                 .ToList()
         );
 
+        public static UserDto WithComputedWorkoutSince(this UserDto dto) =>
+            dto with { WorkoutSince = dto.DateOfWorkoutStart?.GetTimeDifferenceString() };
 
         public static UserDto ToDto(this User user) => new(
             user.Id,
