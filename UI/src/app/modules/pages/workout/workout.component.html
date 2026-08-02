@@ -1,126 +1,127 @@
 <div class="card page-card">
   <div class="card-body">
     <div class="row">
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-lg-6" #leftPanel>
         <div class="section-header mt-3">
           <h4 class="text-info mb-0">Add workout</h4>
           <div>
-            <button type="button" class="btn btn-secondary btn-sm" (click)="addExercise()">Add exercise</button>
-            <button type="button" class="btn btn-success btn-sm" (click)="addWorkout()">Save workout</button>
+            @if (!draft.isEmpty()) {
+            <button type="button" class="btn btn-danger btn-sm" (click)="cancelWorkout()">Cancel workout</button>
+            }
+            <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="addWorkout()">Save workout</button>
           </div>
         </div>
         <textarea
           class="form-control mt-3"
           placeholder="Add workout description here..."
-          [(ngModel)]="workoutName"
+          [(ngModel)]="draft.name"
           name="workout-name"
           rows="1"
         >
         </textarea>
-        @for (draft of drafts; track draft; let i = $index) {
-        <div class="card bg-dark mt-3">
-          <div class="card-body">
-            <div class="section-header">
-              <h4 class="text-white mb-0">Exercise {{ i + 1 }}</h4>
-              <button type="button" class="btn btn-danger btn-sm" (click)="removeDraft(i)">Remove</button>
-            </div>
-            <div class="row">
-              <div class="col-12 col-md-4 mt-2">
-                <h4 class="text-center">{{ getExerciseName(draft.exerciseId) }}</h4>
-              </div>
-              <div class="col-12 col-md-8 mt-2">
-                <div class="table-responsive">
-                  <table class="sets-table text-center">
-                    <thead>
-                      <tr class="text-white">
-                        <th scope="col">SETS</th>
-                        <th scope="col">REPS / DURATION</th>
-                        <th scope="col">WEIGHT</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="text-white">
-                        <td>{{ draft.sets }}</td>
-                        <td>{{ draft.reps }}</td>
-                        <td>{{ draft.weight }} kg</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        }
 
-        <div class="card bg-dark mt-3">
+        @for (exercise of draft.exercises; track exercise; let i = $index) {
+        <div
+          class="card bg-dark mt-3 draft-exercise"
+          [class.dragging-over]="i === dragOverIndex"
+          draggable="true"
+          (dragstart)="onDragStart(i)"
+          (dragover)="onDragOver($event); dragOverIndex = i"
+          (dragleave)="dragOverIndex = null"
+          (drop)="onDrop(i)"
+          (dragend)="onDragEnd()"
+        >
           <div class="card-body">
-            <h4 class="text-white text-center">Exercise {{ drafts.length + 1 }}</h4>
-            <div class="row">
-              <div class="col-12 col-md-5">
-                <label for="select" class="form-label">Choose exercise type:</label>
-                <select class="form-select exercise-select" [(ngModel)]="workoutExercise.exerciseId" id="select" name="exerciseId">
-                  @for (exercise of exercises; track exercise) {
-                  <option [ngValue]="exercise.id">{{ exercise.name }}</option>
-                  }
-                </select>
+            <div class="exercise-row draft-exercise-row">
+              <div class="drag-order">
+                <i class="bi bi-grip-vertical drag-handle" aria-hidden="true" title="Drag to reorder"></i>
+                <span class="draft-exercise-order">{{ i + 1 }}.</span>
               </div>
-              <div class="col-12 col-md-7 mt-2">
-                <div class="table-responsive">
-                  <table class="sets-table text-center">
-                    <thead>
-                      <tr class="text-white">
-                        <th scope="col">SETS</th>
-                        <th scope="col">REPS / DURATION</th>
-                        <th scope="col">WEIGHT</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="text-white">
-                        <td>
-                          <input
-                            type="number"
-                            min="1"
-                            class="form-control form-control-sm"
-                            name="sets"
-                            [(ngModel)]="workoutExercise.sets"
-                            placeholder="0"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            min="1"
-                            class="form-control form-control-sm"
-                            name="reps"
-                            [(ngModel)]="workoutExercise.reps"
-                            placeholder="0"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            min="0"
-                            class="form-control form-control-sm"
-                            name="weight"
-                            [(ngModel)]="workoutExercise.weight"
-                            placeholder="0"
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <img [src]="getExerciseImage(exercise)" [alt]="exercise.name" class="exercise-image" />
+              <div class="exercise-row-main">
+                <div class="exercise-row-top">
+                  <div class="exercise-info">
+                    <div class="exercise-name">{{ exercise.name }}</div>
+                    <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+                  </div>
+                  <div class="exercise-actions">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="removeExerciseFromWorkout(i)">Remove exercise</button>
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="addSet(i)">+ Add set</button>
+                  </div>
                 </div>
+                <input
+                  type="text"
+                  class="form-control form-control-sm mt-2 notes-input"
+                  placeholder="Add notes here…"
+                  [(ngModel)]="exercise.notes"
+                  [name]="'notes-' + i"
+                />
               </div>
+            </div>
+
+            <div class="table-responsive mt-2">
+              <table class="sets-table text-center">
+                <thead>
+                  <tr class="text-white">
+                    <th scope="col">Set</th>
+                    <th scope="col">Previous</th>
+                    <th scope="col">Weight (kg)</th>
+                    <th scope="col">Reps / Duration</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (set of exercise.sets; track set; let si = $index) {
+                  <tr class="text-white">
+                    <td>{{ si + 1 }}</td>
+                    <td>{{ getPreviousLabel(exercise.exerciseId, si) }}</td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="set.weight"
+                        [name]="'weight-' + i + '-' + si"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="set.reps"
+                        [name]="'reps-' + i + '-' + si"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        (click)="removeSet(i, si)"
+                        [disabled]="exercise.sets.length === 1"
+                        aria-label="Remove set"
+                      >
+                        &times;
+                      </button>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
+        } @empty {
+        <p class="text-white-50 mt-3 mb-0">No exercises added yet — pick one from "Choose exercise to add" on the right.</p>
+        }
       </div>
       <div class="col-12 col-lg-6">
-        <div class="card bg-dark mt-3">
+        <div class="card bg-dark mt-3 exercise-panel-card" [style.height.px]="rightPanelHeight" #exercisePanel>
           <div class="card-body">
             <div class="section-header mb-3">
-              <h4 class="text-info mb-0 flex-grow-1 text-center">List of exercises</h4>
+              <h4 class="text-info mb-0 flex-grow-1 text-center">Choose exercise to add</h4>
               @if (isAdmin) {
               <button type="button" (click)="addNewExerciseToggle()" class="btn btn-secondary btn-sm">+ Add exercise to list</button>
               }
@@ -130,9 +131,16 @@
               @for (exercise of list; track exercise.id) {
               <div class="exercise-row">
                 <img [src]="getExerciseImage(exercise)" [alt]="exercise.name" class="exercise-image" />
-                <div class="exercise-info">
-                  <div class="exercise-name">{{ exercise.name }}</div>
-                  <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+                <div class="exercise-row-main">
+                  <div class="exercise-row-top">
+                    <div class="exercise-info">
+                      <div class="exercise-name">{{ exercise.name }}</div>
+                      <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+                    </div>
+                    <div class="exercise-actions">
+                      <button type="button" class="btn btn-secondary btn-sm" (click)="addExerciseToWorkout(exercise)">+ Add exercise</button>
+                    </div>
+                  </div>
                   <div class="exercise-description">{{ exercise.description }}</div>
                 </div>
               </div>
@@ -142,13 +150,13 @@
             </ng-template>
 
             <tabset>
-              <tab heading="All">
+              <tab heading="All" (selectTab)="onTabSelect()">
                 <div class="exercise-list mt-2">
                   <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(null) }"></ng-container>
                 </div>
               </tab>
               @for (group of muscleGroups; track group.value) {
-              <tab [heading]="group.label">
+              <tab [heading]="group.label" (selectTab)="onTabSelect()">
                 <div class="exercise-list mt-2">
                   <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(group.value) }"></ng-container>
                 </div>

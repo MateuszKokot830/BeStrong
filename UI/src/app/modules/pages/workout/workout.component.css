@@ -1,3 +1,7 @@
+.row {
+  align-items: flex-start;
+}
+
 .section-header {
   display: flex;
   flex-wrap: wrap;
@@ -20,14 +24,50 @@
   width: 100%;
 }
 
+.exercise-panel-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.exercise-panel-card .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card tabset {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card ::ng-deep .tab-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card tab.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .exercise-list {
-  max-height: 480px;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  padding-right: 0.75rem;
 }
 
 .exercise-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -35,6 +75,18 @@
 
 .exercise-row:last-child {
   border-bottom: none;
+}
+
+.exercise-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.exercise-actions .btn {
+  white-space: nowrap;
 }
 
 .exercise-image {
@@ -52,14 +104,62 @@
 
 .exercise-name {
   font-weight: bold;
+  margin-bottom: 0.35rem;
 }
 
 .exercise-subgroup {
   font-style: italic;
   color: #fff;
+  margin-bottom: 0.35rem;
 }
 
 .exercise-description {
   color: rgba(255, 255, 255, 0.75);
   font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.exercise-row-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.exercise-row-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.notes-input {
+  width: 100%;
+}
+
+.draft-exercise {
+  cursor: grab;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.draft-exercise.dragging-over {
+  border-color: #0dcaf0;
+}
+
+.drag-order {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.drag-handle {
+  cursor: grab;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.draft-exercise-order {
+  font-weight: bold;
 }

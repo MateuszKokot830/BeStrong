@@ -5,6 +5,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { LoginRequest, RegisterRequest, UserAuth } from '../models/Auth';
 import { User } from '../models/User';
 import { environment } from 'src/environments/environment';
+import { WorkoutDraftService } from './workout-draft.service';
 
 const STORAGE_KEY = 'user';
 
@@ -17,7 +18,7 @@ export class AccountService {
   currentUser$ = this.currentUserSource.asObservable();
   private profileRequest?: Observable<User>;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private workoutDraft: WorkoutDraftService) { }
 
   login(credentials: LoginRequest) {
     return this.http.post<UserAuth>(this.baseUrl + 'auth/login', credentials).pipe(
@@ -35,6 +36,7 @@ export class AccountService {
     localStorage.removeItem(STORAGE_KEY);
     this.currentUserSource.next(null);
     this.invalidateProfile();
+    this.workoutDraft.clear();
   }
 
   setCurrentUser(user: UserAuth | null) {

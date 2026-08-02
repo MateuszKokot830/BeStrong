@@ -1,21 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Exercise } from 'src/app/core/models/Exercise';
 import { MuscleGroup, MuscleSubgroup } from 'src/app/core/models/Enums';
-import { WorkoutCreate, WorkoutExercise } from 'src/app/core/models/Workout';
+import { Workout, WorkoutCreate, WorkoutExercise, WorkoutSet } from 'src/app/core/models/Workout';
 import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
+import { DraftExercise, WorkoutDraftService } from 'src/app/core/services/workout-draft.service';
 import { ExerciseComponent } from '../../components/exercise/exercise/exercise.component';
 
-interface ExerciseDraft {
-  exerciseId: number;
-  sets: number;
-  reps: number;
-  weight: number;
-}
-
 const DEFAULT_EXERCISE_IMAGE = 'assets/photos/defaultPhoto.jpg';
+const DEFAULT_PANEL_HEIGHT = 600;
 
 @Component({
     selector: 'app-workout',
@@ -23,41 +18,93 @@ const DEFAULT_EXERCISE_IMAGE = 'assets/photos/defaultPhoto.jpg';
     styleUrls: ['./workout.component.css'],
     standalone: false
 })
-export class WorkoutComponent implements OnInit {
+export class WorkoutComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('leftPanel') leftPanelRef!: ElementRef<HTMLElement>;
+  @ViewChild('exercisePanel') exercisePanelRef!: ElementRef<HTMLElement>;
+
   exercises: Exercise[] = [];
-  exerciseNames = new Map<number, string>();
-  workoutName = '';
-  drafts: ExerciseDraft[] = [];
-  workoutExercise = emptyDraft();
   isSaving = false;
   isAdmin = false;
+  dragOverIndex: number | null = null;
+  rightPanelHeight: number = DEFAULT_PANEL_HEIGHT;
 
   muscleGroups = Object.keys(MuscleGroup)
     .filter(key => isNaN(Number(key)))
     .map(key => ({ value: MuscleGroup[key as keyof typeof MuscleGroup], label: key }));
 
+  private previousSetsByExercise = new Map<number, WorkoutSet[]>();
+  private dragIndex: number | null = null;
+  private resizeObserver?: ResizeObserver;
+  private currentUserId: number | null = null;
+
   constructor(private workoutService: WorkoutService, private toastr: ToastrService,
-    private modalService: BsModalService, private accountService: AccountService) { }
+    private modalService: BsModalService, private accountService: AccountService,
+    private zone: NgZone, public draft: WorkoutDraftService) { }
 
   ngOnInit(): void {
     this.loadExercises();
 
     this.accountService.currentProfile().subscribe({
-      next: user => this.isAdmin = user.isAdmin
+      next: user => {
+        this.isAdmin = user.isAdmin;
+        this.currentUserId = user.id;
+        this.refreshPreviousSets();
+      }
     });
+  }
+
+  private refreshPreviousSets(): void {
+    if (this.currentUserId === null)
+      return;
+
+    this.workoutService.getUserWorkouts(this.currentUserId).subscribe({
+      next: workouts => this.buildPreviousSetsIndex(workouts)
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.zone.run(() => this.updateRightPanelHeight());
+    });
+    this.resizeObserver.observe(this.leftPanelRef.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
   }
 
   loadExercises() {
     this.workoutService.getExercises().subscribe({
       next: exercises => {
         this.exercises = exercises;
-        this.exerciseNames = new Map(exercises.map(e => [e.id, e.name ?? 'Unknown exercise']));
+        setTimeout(() => this.updateRightPanelHeight());
       }
     });
   }
 
-  getExerciseName(exerciseId: number) {
-    return this.exerciseNames.get(exerciseId) ?? 'Unknown exercise';
+  onTabSelect(): void {
+    setTimeout(() => this.updateRightPanelHeight());
+  }
+
+  private updateRightPanelHeight(): void {
+    if (!this.leftPanelRef || !this.exercisePanelRef)
+      return;
+
+    const leftHeight = this.leftPanelRef.nativeElement.getBoundingClientRect().height;
+    const cardEl = this.exercisePanelRef.nativeElement;
+    const activeList = cardEl.querySelector<HTMLElement>('tab.active .exercise-list');
+    if (!activeList)
+      return;
+
+    // Everything in the card besides the scrollable list itself (header, tab nav, padding) —
+    // the list is the only flexible piece, so this overhead is constant regardless of the
+    // height currently applied.
+    const chrome = cardEl.getBoundingClientRect().height - activeList.clientHeight;
+
+    const upperBound = activeList.scrollHeight + chrome;
+    const lowerBound = Math.min(DEFAULT_PANEL_HEIGHT, upperBound);
+
+    this.rightPanelHeight = Math.min(Math.max(leftHeight, lowerBound), upperBound);
   }
 
   exercisesByGroup(group: MuscleGroup | null): Exercise[] {
@@ -66,11 +113,11 @@ export class WorkoutComponent implements OnInit {
       : this.exercises.filter(e => e.muscleGroup === group);
   }
 
-  getMuscleSubgroupLabel(exercise: Exercise): string {
+  getMuscleSubgroupLabel(exercise: { muscleSubgroup: MuscleSubgroup }): string {
     return MuscleSubgroup[exercise.muscleSubgroup] ?? 'Unknown';
   }
 
-  getExerciseImage(exercise: Exercise): string {
+  getExerciseImage(exercise: { imageUrl: string | null }): string {
     return exercise.imageUrl || DEFAULT_EXERCISE_IMAGE;
   }
 
@@ -79,71 +126,117 @@ export class WorkoutComponent implements OnInit {
     ref.content?.saved.subscribe(() => this.loadExercises());
   }
 
-  addExercise() {
-    const draft = this.workoutExercise;
-
-    if (!draft.exerciseId) {
-      this.toastr.error('Pick an exercise first.');
-      return;
-    }
-    if (!draft.sets || !draft.reps) {
-      this.toastr.error('Sets and reps are required.');
-      return;
-    }
-
-    this.drafts.push({ ...draft });
-    this.workoutExercise = emptyDraft();
+  addExerciseToWorkout(exercise: Exercise) {
+    this.draft.addExercise(exercise);
+    this.toastr.success(`${exercise.name} added to workout`);
   }
 
-  removeDraft(index: number) {
-    this.drafts.splice(index, 1);
+  removeExerciseFromWorkout(index: number) {
+    this.draft.removeExercise(index);
+  }
+
+  addSet(exerciseIndex: number) {
+    this.draft.addSet(exerciseIndex);
+  }
+
+  removeSet(exerciseIndex: number, setIndex: number) {
+    this.draft.removeSet(exerciseIndex, setIndex);
+  }
+
+  cancelWorkout() {
+    if (this.draft.isEmpty())
+      return;
+
+    if (confirm('This will discard the workout you are building. Continue?')) {
+      this.draft.clear();
+    }
+  }
+
+  onDragStart(index: number) {
+    this.dragIndex = index;
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDrop(index: number) {
+    if (this.dragIndex !== null) {
+      this.draft.reorder(this.dragIndex, index);
+    }
+    this.dragIndex = null;
+    this.dragOverIndex = null;
+  }
+
+  onDragEnd() {
+    this.dragIndex = null;
+    this.dragOverIndex = null;
+  }
+
+  getPreviousLabel(exerciseId: number, setIndex: number): string {
+    const setNumber = setIndex + 1;
+    const set = this.previousSetsByExercise.get(exerciseId)?.find(s => s.setNumber === setNumber);
+    return set ? `${set.weight ?? 0}kg x ${set.reps}` : '-';
   }
 
   addWorkout() {
-    if (!this.drafts.length) {
+    if (!this.draft.exercises.length) {
       this.toastr.error('Add at least one exercise before saving.');
       return;
     }
 
+    const hasMissingReps = this.draft.exercises.some(e => e.sets.some(s => !s.reps));
+    if (hasMissingReps) {
+      this.toastr.error('Fill in reps for every set.');
+      return;
+    }
+
     const workout: WorkoutCreate = {
-      name: this.workoutName,
-      exercises: this.drafts.map((draft, index) => this.toWorkoutExercise(draft, index))
+      name: this.draft.name || null,
+      exercises: this.draft.exercises.map((exercise, index) => this.toWorkoutExercise(exercise, index))
     };
 
     this.isSaving = true;
     this.workoutService.addWorkout(workout).subscribe({
       next: _ => {
         this.isSaving = false;
-        this.drafts = [];
-        this.workoutName = '';
-        this.workoutExercise = emptyDraft();
+        this.draft.clear();
+        this.refreshPreviousSets();
         this.toastr.success('Workout has been saved!');
       },
       error: _ => this.isSaving = false
     });
   }
 
-  private toWorkoutExercise(draft: ExerciseDraft, index: number): WorkoutExercise {
-    const setCount = Number(draft.sets) || 0;
-
+  private toWorkoutExercise(exercise: DraftExercise, index: number): WorkoutExercise {
     return {
       order: index + 1,
-      notes: null,
-      exerciseId: Number(draft.exerciseId),
+      notes: exercise.notes,
+      exerciseId: exercise.exerciseId,
       workoutId: 0,
       maxTotalWeight: null,
       bestEstimatedOneRepMax: null,
-      sets: Array.from({ length: setCount }, (_, i) => ({
-        setNumber: i + 1,
-        reps: Number(draft.reps) || 0,
-        weight: Number(draft.weight) || 0,
+      sets: exercise.sets.map((set, setIndex) => ({
+        setNumber: setIndex + 1,
+        reps: Number(set.reps) || 0,
+        weight: set.weight !== null ? Number(set.weight) : null,
         totalWeight: null,
         estimatedOneRepMax: null
       }))
     };
   }
-}
 
-function emptyDraft(): ExerciseDraft {
-  return { exerciseId: 0, sets: 0, reps: 0, weight: 0 };
+  private buildPreviousSetsIndex(workouts: Workout[]) {
+    const map = new Map<number, WorkoutSet[]>();
+
+    for (const workout of workouts) {
+      for (const workoutExercise of workout.workoutExercises) {
+        if (!map.has(workoutExercise.exerciseId)) {
+          map.set(workoutExercise.exerciseId, workoutExercise.sets);
+        }
+      }
+    }
+
+    this.previousSetsByExercise = map;
+  }
 }
