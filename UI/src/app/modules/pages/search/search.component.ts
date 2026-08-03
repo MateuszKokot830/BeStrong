@@ -13,7 +13,7 @@ export class SearchComponent implements OnInit {
   users: User[] = [];
   pagination: Pagination | null = null;
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 12;
 
   constructor(private userService: UserService) { }
 

@@ -42,7 +42,6 @@ namespace WebAPI.Controllers
         }
 
         [SwaggerOperation(Summary = "Retrieves all users as pagination list")]
-        [Authorize(Roles = Roles.Admin)]
         [HttpGet("list")]
         public async Task<IActionResult> GetUsersList([FromQuery] UserSearchCriteria criteria)
         {
