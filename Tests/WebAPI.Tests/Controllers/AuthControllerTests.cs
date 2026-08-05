@@ -4,6 +4,7 @@ using Application.Queries.Login;
 using Domain.Errors;
 using ErrorOr;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -222,6 +223,54 @@ namespace WebAPI.Tests.Controllers
             var result = await _sut.Login(ValidLoginDto());
 
             AssertStatus(result, StatusCodes.Status500InternalServerError);
+        }
+
+        // ---------------------------------------------------------------
+        // Error mapping — multiple errors of different types
+        // ---------------------------------------------------------------
+
+        [Fact]
+        public async Task Register_WhenErrorListHasMixedTypes_StatusIsDrivenByFirstError()
+        {
+            ErrorOr<UserAuthResponseDto> errors = new List<Error>
+            {
+                Errors.User.DuplicateUsername,
+                Error.Unexpected("UnhandledException", "An unexpected error occurred.")
+            };
+            SetupRegister(errors);
+
+            var result = await _sut.Register(ValidRegisterDto());
+
+            AssertStatus(result, StatusCodes.Status409Conflict);
+        }
+
+        [Fact]
+        public async Task Login_WhenErrorListHasMixedTypes_StatusIsDrivenByFirstError()
+        {
+            ErrorOr<UserAuthResponseDto> errors = new List<Error>
+            {
+                Error.Unexpected("UnhandledException", "An unexpected error occurred."),
+                Errors.Auth.InvalidCredentials
+            };
+            SetupLogin(errors);
+
+            var result = await _sut.Login(ValidLoginDto());
+
+            AssertStatus(result, StatusCodes.Status500InternalServerError);
+        }
+
+        // ---------------------------------------------------------------
+        // Anonymous access
+        // ---------------------------------------------------------------
+
+        [Fact]
+        public void AuthController_AllowsAnonymousAccess()
+        {
+            var attribute = typeof(AuthController)
+                .GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: true)
+                .SingleOrDefault();
+
+            Assert.NotNull(attribute);
         }
     }
 }
