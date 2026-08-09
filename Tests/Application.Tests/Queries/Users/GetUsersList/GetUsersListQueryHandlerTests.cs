@@ -21,7 +21,7 @@ namespace Application.Tests.Queries.Users.GetUsersList
         [Fact]
         public async Task Handle_PassesCriteriaThroughAndReturnsPagedResult()
         {
-            var criteria = new UserSearchCriteria { Username = "ali", PageNumber = 2, PageSize = 10 };
+            var criteria = new UserSearchCriteria { ExcludeUsername = "ali", PageNumber = 2, PageSize = 10 };
             var page = new PaginationList<UserDto>([UserDtoFactory.Create(1, "alice")], count: 1, pageNumber: 2, pageSize: 10);
             _userSearcher.Setup(s => s.GetPagedAsync(criteria, It.IsAny<CancellationToken>())).ReturnsAsync(page);
 

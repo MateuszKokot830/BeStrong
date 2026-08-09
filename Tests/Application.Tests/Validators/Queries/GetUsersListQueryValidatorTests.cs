@@ -9,7 +9,7 @@ namespace Application.Tests.Validators.Queries
     {
         private readonly GetUsersListQueryValidator _validator = new();
 
-        private static UserSearchCriteria Valid() => new() { PageNumber = 1, PageSize = 10, Username = "ali" };
+        private static UserSearchCriteria Valid() => new() { PageNumber = 1, PageSize = 10, ExcludeUsername = "ali" };
 
         [Fact]
         public void Validate_WithValidCriteria_HasNoErrors()
@@ -42,25 +42,25 @@ namespace Application.Tests.Validators.Queries
         }
 
         [Fact]
-        public void Validate_WhenUsernameFilterExceedsMaxLength_HasError()
+        public void Validate_WhenExcludeUsernameFilterExceedsMaxLength_HasError()
         {
             var criteria = Valid();
-            criteria.Username = new string('a', 51);
+            criteria.ExcludeUsername = new string('a', 51);
 
             var result = _validator.TestValidate(new GetUsersListQuery(criteria));
 
-            result.ShouldHaveValidationErrorFor("Criteria.Username");
+            result.ShouldHaveValidationErrorFor("Criteria.ExcludeUsername");
         }
 
         [Fact]
-        public void Validate_WhenUsernameFilterIsNull_HasNoError()
+        public void Validate_WhenExcludeUsernameFilterIsNull_HasNoError()
         {
             var criteria = Valid();
-            criteria.Username = null;
+            criteria.ExcludeUsername = null;
 
             var result = _validator.TestValidate(new GetUsersListQuery(criteria));
 
-            result.ShouldNotHaveValidationErrorFor("Criteria.Username");
+            result.ShouldNotHaveValidationErrorFor("Criteria.ExcludeUsername");
         }
     }
 }

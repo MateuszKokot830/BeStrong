@@ -52,7 +52,7 @@ namespace Infrastructure.Searchers
         {
             var query = _context.Users
                 .AsNoTracking()
-                .Where(u => criteria.Username == null || u.UserName != criteria.Username)
+                .Where(u => criteria.ExcludeUsername == null || u.UserName != criteria.ExcludeUsername)
                 .OrderBy(u => u.UserName)
                 .Select(UserMappings.Selector);
 

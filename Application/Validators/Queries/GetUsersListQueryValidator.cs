@@ -14,9 +14,9 @@ namespace Application.Validators.Queries
                 .GreaterThan(0).WithMessage("Page size must be greater than 0.")
                 .LessThanOrEqualTo(50).WithMessage("Page size cannot exceed 50.");
 
-            RuleFor(x => x.Criteria.Username)
-                .MaximumLength(50).WithMessage("Username filter cannot exceed 50 characters.")
-                .When(x => x.Criteria.Username is not null);
+            RuleFor(x => x.Criteria.ExcludeUsername)
+                .MaximumLength(50).WithMessage("ExcludeUsername filter cannot exceed 50 characters.")
+                .When(x => x.Criteria.ExcludeUsername is not null);
         }
     }
 }

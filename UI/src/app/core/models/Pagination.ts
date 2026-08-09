@@ -23,5 +23,5 @@ export interface PaginationParams {
 }
 
 export interface UserSearchCriteria extends PaginationParams {
-  username?: string;
+  excludeUsername?: string;
 }

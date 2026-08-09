@@ -63,8 +63,8 @@ export class UserService {
       .set('pageNumber', criteria.pageNumber)
       .set('pageSize', criteria.pageSize);
 
-    if (criteria.username) {
-      params = params.set('username', criteria.username);
+    if (criteria.excludeUsername) {
+      params = params.set('excludeUsername', criteria.excludeUsername);
     }
 
     return this.http.get<User[]>(this.baseUrl + 'users/list', { observe: 'response', params }).pipe(
