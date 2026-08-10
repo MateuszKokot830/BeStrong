@@ -1,5 +1,6 @@
 using Application.Commands.Workouts.CreateWorkout;
 using Application.Dto.Workout;
+using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Aggregates;
@@ -11,11 +12,12 @@ namespace Application.Tests.Commands.Workouts.CreateWorkout
     {
         private readonly Mock<IWorkoutRepository> _workoutRepository = new();
         private readonly Mock<ICurrentUserService> _currentUserService = new();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly CreateWorkoutCommandHandler _sut;
 
         public CreateWorkoutCommandHandlerTests()
         {
-            _sut = new CreateWorkoutCommandHandler(_workoutRepository.Object, _currentUserService.Object);
+            _sut = new CreateWorkoutCommandHandler(_workoutRepository.Object, _currentUserService.Object, _unitOfWork.Object);
         }
 
         [Fact]
@@ -34,6 +36,17 @@ namespace Application.Tests.Commands.Workouts.CreateWorkout
             _workoutRepository.Verify(r => r.AddAsync(
                 It.Is<Workout>(w => w.UserId == 7 && w.Name == "Push Day" && w.WorkoutExercises.Count == 1),
                 It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_CommitsBeforeBuildingTheDto_SoTheGeneratedIdIsAvailable()
+        {
+            _currentUserService.Setup(s => s.UserId).Returns(7);
+            var dto = new CreateWorkoutDto("Push Day", []);
+
+            await _sut.Handle(new CreateWorkoutCommand(dto), CancellationToken.None);
+
+            _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

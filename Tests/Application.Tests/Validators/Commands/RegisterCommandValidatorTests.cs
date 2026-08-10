@@ -15,7 +15,7 @@ namespace Application.Tests.Validators.Commands
         [Fact]
         public void Validate_WithValidCredentials_HasNoErrors()
         {
-            var result = _validator.TestValidate(Command("newuser", "Password1"));
+            var result = _validator.TestValidate(Command("newuser", "Password1!"));
 
             result.ShouldNotHaveAnyValidationErrors();
         }
@@ -71,7 +71,15 @@ namespace Application.Tests.Validators.Commands
         [Fact]
         public void Validate_WhenPasswordHasNoDigit_HasError()
         {
-            var result = _validator.TestValidate(Command("newuser", "PasswordOnly"));
+            var result = _validator.TestValidate(Command("newuser", "PasswordOnly!"));
+
+            result.ShouldHaveValidationErrorFor("UserRegisterRequestDto.Password");
+        }
+
+        [Fact]
+        public void Validate_WhenPasswordHasNoNonAlphanumericCharacter_HasError()
+        {
+            var result = _validator.TestValidate(Command("newuser", "Password1"));
 
             result.ShouldHaveValidationErrorFor("UserRegisterRequestDto.Password");
         }

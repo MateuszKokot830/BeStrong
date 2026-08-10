@@ -17,7 +17,8 @@ namespace Application.Validators.Commands
                 .NotEmpty().WithMessage("Password is required.")
                 .MinimumLength(8).WithMessage("Password must be at least 8 characters.")
                 .MaximumLength(100).WithMessage("Password cannot exceed 100 characters.")
-                .Matches(@"\d").WithMessage("Password must contain at least one digit.");
+                .Matches(@"\d").WithMessage("Password must contain at least one digit.")
+                .Matches(@"[^a-zA-Z0-9]").WithMessage("Password must contain at least one non-alphanumeric character.");
         }
     }
 }

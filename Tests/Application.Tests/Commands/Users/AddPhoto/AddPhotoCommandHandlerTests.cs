@@ -1,5 +1,6 @@
 using Application.Commands.Users.AddPhoto;
 using Application.Dto.Photo;
+using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Aggregates;
@@ -14,11 +15,12 @@ namespace Application.Tests.Commands.Users.AddPhoto
         private readonly Mock<IUserRepository> _userRepository = new();
         private readonly Mock<IPhotoService> _photoService = new();
         private readonly Mock<ICurrentUserService> _currentUserService = new();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly AddPhotoCommandHandler _sut;
 
         public AddPhotoCommandHandlerTests()
         {
-            _sut = new AddPhotoCommandHandler(_userRepository.Object, _photoService.Object, _currentUserService.Object);
+            _sut = new AddPhotoCommandHandler(_userRepository.Object, _photoService.Object, _currentUserService.Object, _unitOfWork.Object);
         }
 
         private static AddPhotoCommand Command(int userId) =>
@@ -60,6 +62,22 @@ namespace Application.Tests.Commands.Users.AddPhoto
 
             Assert.Equal(Errors.Photo.UploadFailed, result.FirstError);
             _userRepository.Verify(r => r.AddPhotoAsync(It.IsAny<Photo>(), It.IsAny<CancellationToken>()), Times.Never);
+            _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_WhenSucceeds_CommitsBeforeBuildingTheDto_SoTheGeneratedIdIsAvailable()
+        {
+            var user = new User { Id = 5, Photos = [] };
+            _userRepository.Setup(r => r.GetByIdAsync(5, It.IsAny<CancellationToken>())).ReturnsAsync(user);
+            _currentUserService.Setup(s => s.IsOwnerOrAdmin(5)).Returns(true);
+            _photoService
+                .Setup(s => s.UploadAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new PhotoUploadResult("http://img/1.jpg", "pub-1"));
+
+            await _sut.Handle(Command(5), CancellationToken.None);
+
+            _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]

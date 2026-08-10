@@ -1,4 +1,5 @@
 using Application.Dto.Photo;
+using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappings;
@@ -12,11 +13,13 @@ namespace Application.Commands.Users.AddPhoto
     public class AddPhotoCommandHandler(
         IUserRepository userRepository,
         IPhotoService photoService,
-        ICurrentUserService currentUserService) : IRequestHandler<AddPhotoCommand, ErrorOr<PhotoDto>>
+        ICurrentUserService currentUserService,
+        IUnitOfWork unitOfWork) : IRequestHandler<AddPhotoCommand, ErrorOr<PhotoDto>>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPhotoService _photoService = photoService;
         private readonly ICurrentUserService _currentUserService = currentUserService;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<ErrorOr<PhotoDto>> Handle(AddPhotoCommand request, CancellationToken cancellationToken)
         {
@@ -46,6 +49,7 @@ namespace Application.Commands.Users.AddPhoto
             };
 
             await _userRepository.AddPhotoAsync(photo, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
             return photo.ToDto();
         }
     }

@@ -1,5 +1,6 @@
 using Application.Commands.WorkoutPlans.CreateWorkoutPlan;
 using Application.Dto.WorkoutPlan;
+using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Aggregates;
@@ -12,11 +13,12 @@ namespace Application.Tests.Commands.WorkoutPlans.CreateWorkoutPlan
     {
         private readonly Mock<IWorkoutPlanRepository> _workoutPlanRepository = new();
         private readonly Mock<ICurrentUserService> _currentUserService = new();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly CreateWorkoutPlanCommandHandler _sut;
 
         public CreateWorkoutPlanCommandHandlerTests()
         {
-            _sut = new CreateWorkoutPlanCommandHandler(_workoutPlanRepository.Object, _currentUserService.Object);
+            _sut = new CreateWorkoutPlanCommandHandler(_workoutPlanRepository.Object, _currentUserService.Object, _unitOfWork.Object);
         }
 
         [Fact]
@@ -34,6 +36,17 @@ namespace Application.Tests.Commands.WorkoutPlans.CreateWorkoutPlan
             _workoutPlanRepository.Verify(r => r.AddAsync(
                 It.Is<WorkoutPlan>(p => p.CreatedById == 7 && p.Name == "Push Pull Legs"),
                 It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_CommitsBeforeBuildingTheDto_SoTheGeneratedIdIsAvailable()
+        {
+            _currentUserService.Setup(s => s.UserId).Returns(7);
+            var dto = new WorkoutPlanCreateDto("Push Pull Legs", "desc", WorkoutPlanCategory.PushPullLegs, IsPublic: true, []);
+
+            await _sut.Handle(new CreateWorkoutPlanCommand(dto), CancellationToken.None);
+
+            _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
