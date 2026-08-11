@@ -22,34 +22,6 @@
   min-height: 200px;
 }
 
-.stats-table {
-  width: 100%;
-  margin: auto;
-}
-
-.stats-table th,
-.stats-table td {
-  border: 3px solid grey;
-  padding: 5px;
-}
-
-.compact-table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.compact-table th,
-.compact-table td {
-  border: 3px solid grey;
-  padding: 2px;
-  word-break: break-word;
-}
-
-.compact-table th:first-child,
-.compact-table td:first-child {
-  width: 50%;
-}
-
 .workout-history-header {
   display: flex;
   align-items: center;

@@ -10,14 +10,8 @@
   gap: 0.5rem;
 }
 
-.sets-table {
-  width: 100%;
-}
-
-.sets-table th,
-.sets-table td {
-  border: 3px solid grey;
-  padding: 5px;
+.sets-pane {
+  min-width: 480px;
 }
 
 .exercise-select {

@@ -10,66 +10,64 @@
             alt="{{ user.userName }}"
             class="card-imp-top img-thumbnail"
           />
-          <table class="text-white mb-2" cellPadding="3">
-            <tr>
-              <th scope="row">Name:</th>
+          <dl class="data-pane mb-2">
+            <div class="data-row cols-kv">
+              <dt>Name</dt>
               @if (!isEditMode) {
-              <td>{{ user.name }}</td>
+              <dd>{{ user.name }}</dd>
               } @if (isEditMode) {
-              <td>
+              <dd>
                 <input type="text" class="form-control form-control-sm" [(ngModel)]="user.name" name="name" />
-              </td>
+              </dd>
               }
-            </tr>
-            <tr>
-              <th scope="row">Surname:</th>
+            </div>
+            <div class="data-row cols-kv">
+              <dt>Surname</dt>
               @if (!isEditMode) {
-              <td>{{ user.surname }}</td>
+              <dd>{{ user.surname }}</dd>
               } @if (isEditMode) {
-              <td>
+              <dd>
                 <input type="text" class="form-control form-control-sm" [(ngModel)]="user.surname" name="surname" />
-              </td>
+              </dd>
               }
-            </tr>
-            <tr>
+            </div>
+            <div class="data-row cols-kv">
               @if (!isEditMode) {
-              <th scope="row">Age:</th>
-              } @if (!isEditMode) {
-              <td>{{ user.age }}</td>
+              <dt>Age</dt>
+              <dd>{{ user.age }}</dd>
               } @if (isEditMode) {
-              <th scope="row">Date of birth:</th>
-              } @if (isEditMode) {
-              <td>
+              <dt>Date of birth</dt>
+              <dd>
                 <input type="date" class="form-control form-control-sm" [(ngModel)]="user.dateOfBirth" />
-              </td>
+              </dd>
               }
-            </tr>
-            <tr>
-              <th scope="row">Location:</th>
+            </div>
+            <div class="data-row cols-kv">
+              <dt>Location</dt>
               @if (!isEditMode) {
-              <td>{{ user.city }}, {{ user.country }}</td>
+              <dd>{{ user.city }}, {{ user.country }}</dd>
               } @if (isEditMode) {
-              <td>
+              <dd>
                 <input type="text" class="form-control form-control-sm mb-1" [(ngModel)]="user.city" name="city" placeholder="City" />
                 <input type="text" class="form-control form-control-sm" [(ngModel)]="user.country" name="country" placeholder="Country" />
-              </td>
+              </dd>
               }
-            </tr>
-            <tr>
-              <th scope="row">Workout since:</th>
+            </div>
+            <div class="data-row cols-kv">
+              <dt>Workout since</dt>
               @if (!isEditMode) {
-              <td>{{ user.workoutSince }}</td>
+              <dd>{{ user.workoutSince }}</dd>
               } @if (isEditMode) {
-              <td>
+              <dd>
                 <input type="date" class="form-control form-control-sm" [(ngModel)]="user.dateOfWorkoutStart" />
-              </td>
+              </dd>
               }
-            </tr>
-            <tr>
-              <th scope="row">Last workout:</th>
-              <td>{{ sinceLastWorkout }}</td>
-            </tr>
-          </table>
+            </div>
+            <div class="data-row cols-kv">
+              <dt>Last workout</dt>
+              <dd>{{ sinceLastWorkout }}</dd>
+            </div>
+          </dl>
         </div>
         <div class="col-12 col-lg-8 mt-2">
           @if (isCurrentUser && !isEditMode) {
@@ -109,97 +107,95 @@
                   <div class="card bg-dark stat-card">
                     <div class="card-body">
                       <h4 class="text-center mt-2 mb-2 text-info">Measurements</h4>
-                      <div class="table-responsive mb-3">
-                        <table class="stats-table">
-                          <tr class="text-white">
-                            <th scope="row">Height:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.height }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.height" name="height" /> cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Weight:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.weight }} kg</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.weight" name="weight" /> kg
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Chest:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.chest }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.chest" name="chest" /> cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Shoulders:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.shoulders }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input
-                                type="text"
-                                class="form-control form-control-sm"
-                                [(ngModel)]="measurements.shoulders"
-                                name="shoulders"
-                              />
-                              cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Arms:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.arms }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.arms" name="arms" /> cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Waist:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.waist }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.waist" name="waist" /> cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Hips:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.hips }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.hips" name="hips" /> cm
-                            </td>
-                            }
-                          </tr>
-                          <tr class="text-white">
-                            <th scope="row">Thights:</th>
-                            @if (!isEditMode) {
-                            <td>{{ measurements.thights }} cm</td>
-                            } @if (isEditMode) {
-                            <td>
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.thights" name="thights" />
-                              cm
-                            </td>
-                            }
-                          </tr>
-                        </table>
-                      </div>
+                      <dl class="data-pane mb-3">
+                        <div class="data-row cols-kv">
+                          <dt>Height</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.height }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.height" name="height" /> cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Weight</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.weight }} kg</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.weight" name="weight" /> kg
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Chest</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.chest }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.chest" name="chest" /> cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Shoulders</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.shoulders }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input
+                              type="text"
+                              class="form-control form-control-sm"
+                              [(ngModel)]="measurements.shoulders"
+                              name="shoulders"
+                            />
+                            cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Arms</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.arms }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.arms" name="arms" /> cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Waist</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.waist }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.waist" name="waist" /> cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Hips</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.hips }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.hips" name="hips" /> cm
+                          </dd>
+                          }
+                        </div>
+                        <div class="data-row cols-kv">
+                          <dt>Thighs</dt>
+                          @if (!isEditMode) {
+                          <dd>{{ measurements.thights }} cm</dd>
+                          } @if (isEditMode) {
+                          <dd>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="measurements.thights" name="thights" />
+                            cm
+                          </dd>
+                          }
+                        </div>
+                      </dl>
                     </div>
                   </div>
                   <div class="card bg-dark stat-card">
@@ -210,23 +206,19 @@
                         {{ lastWorkout.date | date : 'fullDate' }} <br />
                         {{ lastWorkout.name }}
                       </h5>
-                      <div class="table-responsive mb-3">
-                        <table class="stats-table">
-                          <thead>
-                            <tr class="text-white">
-                              <th scope="col">Exercise</th>
-                              <th scope="col">Sets x Reps</th>
-                              <th scope="col">Weight</th>
-                            </tr>
-                          </thead>
-                          @for (exercise of lastWorkout.workoutExercises; track exercise) {
-                          <tr class="text-white">
-                            <td>{{ getExerciseName(exercise.exerciseId) }}</td>
-                            <td>{{ formatReps(exercise) }}</td>
-                            <td>{{ formatWeight(exercise) }}</td>
-                          </tr>
-                          }
-                        </table>
+                      <div class="data-pane mb-3">
+                        <div class="data-row cols-exercise data-row--head">
+                          <span>Exercise</span>
+                          <span>Sets × Reps</span>
+                          <span>Weight</span>
+                        </div>
+                        @for (exercise of lastWorkout.workoutExercises; track exercise) {
+                        <div class="data-row cols-exercise">
+                          <span>{{ getExerciseName(exercise.exerciseId) }}</span>
+                          <span>{{ formatReps(exercise) }}</span>
+                          <span>{{ formatWeight(exercise) }}</span>
+                        </div>
+                        }
                       </div>
                       } @else {
                       <p class="text-center text-white mb-0">No workouts logged yet.</p>
@@ -249,23 +241,19 @@
                         {{ workout.date | date }} <br />
                         {{ workout.name }}
                       </h5>
-                      <div class="table-responsive mb-3">
-                        <table class="compact-table">
-                          <thead>
-                            <tr class="text-white">
-                              <th scope="col">Exercise</th>
-                              <th scope="col">Sets x Reps</th>
-                              <th scope="col">Weight</th>
-                            </tr>
-                          </thead>
-                          @for (exercise of workout.workoutExercises; track exercise) {
-                          <tr class="text-white">
-                            <td>{{ getExerciseName(exercise.exerciseId) }}</td>
-                            <td>{{ formatReps(exercise) }}</td>
-                            <td>{{ formatWeight(exercise) }}</td>
-                          </tr>
-                          }
-                        </table>
+                      <div class="data-pane mb-3">
+                        <div class="data-row cols-exercise data-row--head">
+                          <span>Exercise</span>
+                          <span>Sets × Reps</span>
+                          <span>Weight</span>
+                        </div>
+                        @for (exercise of workout.workoutExercises; track exercise) {
+                        <div class="data-row cols-exercise">
+                          <span>{{ getExerciseName(exercise.exerciseId) }}</span>
+                          <span>{{ formatReps(exercise) }}</span>
+                          <span>{{ formatWeight(exercise) }}</span>
+                        </div>
+                        }
                       </div>
                     </div>
                   </div>
