@@ -1,10 +1,8 @@
-using Application.Dto.Exercise;
-
 namespace Application.Dto.WorkoutPlan
 {
-    public record WorkoutTemplateExerciseDto(
+    public record WorkoutTemplateExerciseCreateDto(
         int Order,
-        ExerciseDto Exercise,
+        int ExerciseId,
         int Sets,
         int MinReps,
         int MaxReps

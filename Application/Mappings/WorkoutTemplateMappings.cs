@@ -11,7 +11,7 @@ namespace Application.Mappings
             template.Exercises?.Select(e => e.ToDto()).ToList() ?? []
         );
 
-        public static WorkoutTemplate ToEntity(this WorkoutTemplateDto dto) => new()
+        public static WorkoutTemplate ToEntity(this WorkoutTemplateCreateDto dto) => new()
         {
             Order = dto.Order,
             Name = dto.Name,

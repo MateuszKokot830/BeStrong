@@ -15,10 +15,20 @@ namespace Application.Tests.Commands.WorkoutPlans.CreateWorkoutPlan
         private readonly Mock<ICurrentUserService> _currentUserService = new();
         private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly CreateWorkoutPlanCommandHandler _sut;
+        private WorkoutPlan? _addedPlan;
 
         public CreateWorkoutPlanCommandHandlerTests()
         {
             _sut = new CreateWorkoutPlanCommandHandler(_workoutPlanRepository.Object, _currentUserService.Object, _unitOfWork.Object);
+
+            _workoutPlanRepository
+                .Setup(r => r.AddAsync(It.IsAny<WorkoutPlan>(), It.IsAny<CancellationToken>()))
+                .Callback<WorkoutPlan, CancellationToken>((plan, _) => _addedPlan = plan)
+                .Returns(Task.CompletedTask);
+
+            _workoutPlanRepository
+                .Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _addedPlan);
         }
 
         [Fact]
@@ -39,7 +49,7 @@ namespace Application.Tests.Commands.WorkoutPlans.CreateWorkoutPlan
         }
 
         [Fact]
-        public async Task Handle_CommitsBeforeBuildingTheDto_SoTheGeneratedIdIsAvailable()
+        public async Task Handle_CommitsBeforeReReadingTheSavedPlan()
         {
             _currentUserService.Setup(s => s.UserId).Returns(7);
             var dto = new WorkoutPlanCreateDto("Push Pull Legs", "desc", WorkoutPlanCategory.PushPullLegs, IsPublic: true, []);
@@ -47,6 +57,7 @@ namespace Application.Tests.Commands.WorkoutPlans.CreateWorkoutPlan
             await _sut.Handle(new CreateWorkoutPlanCommand(dto), CancellationToken.None);
 
             _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _workoutPlanRepository.Verify(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

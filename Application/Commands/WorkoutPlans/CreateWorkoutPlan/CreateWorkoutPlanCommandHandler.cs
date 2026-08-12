@@ -22,7 +22,9 @@ namespace Application.Commands.WorkoutPlans.CreateWorkoutPlan
             var plan = request.WorkoutPlanCreateDto.ToEntity(_currentUserService.UserId);
             await _workoutPlanRepository.AddAsync(plan, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
-            return plan.ToDto();
+
+            var saved = await _workoutPlanRepository.GetByIdAsync(plan.Id, cancellationToken);
+            return saved!.ToDto();
         }
     }
 }

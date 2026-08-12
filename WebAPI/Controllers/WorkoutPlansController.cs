@@ -9,12 +9,24 @@ using Application.Commands.WorkoutPlans.UnassignWorkoutPlan;
 using Application.Dto.WorkoutPlan;
 using Application.Queries.WorkoutPlans.GetPublicWorkoutPlans;
 using Application.Queries.WorkoutPlans.GetWorkoutPlanById;
+using Domain.Common;
 
 namespace WebAPI.Controllers
 {
     public class WorkoutPlansController(IMediator mediator) : BaseApiController
     {
         private readonly IMediator _mediator = mediator;
+
+        [SwaggerOperation(Summary = "Retrieves the available workout plan categories")]
+        [HttpGet("categories")]
+        public IActionResult GetWorkoutPlanCategories()
+        {
+            var categories = Enum.GetValues<WorkoutPlanCategory>()
+                .Select(category => new WorkoutPlanCategoryDto((int)category, category.ToString(), category.ToDisplayName()))
+                .ToList();
+
+            return Ok(categories);
+        }
 
         [SwaggerOperation(Summary = "Creates a new workout plan")]
         [HttpPost]

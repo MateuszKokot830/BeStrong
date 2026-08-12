@@ -7,6 +7,6 @@ namespace Application.Dto.WorkoutPlan
         string? Description,
         WorkoutPlanCategory Category,
         bool IsPublic,
-        IReadOnlyCollection<WorkoutTemplateDto> WorkoutTemplates
+        IReadOnlyCollection<WorkoutTemplateCreateDto> WorkoutTemplates
     );
 }

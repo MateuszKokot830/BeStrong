@@ -14,7 +14,7 @@ namespace Infrastructure.Searchers
         private IQueryable<WorkoutPlan> GetQueryable() =>
             _context.WorkoutPlans
                 .AsNoTracking()
-                .Include(p => p.WorkoutTemplates).ThenInclude(t => t.Exercises)
+                .Include(p => p.WorkoutTemplates).ThenInclude(t => t.Exercises).ThenInclude(e => e.Exercise)
                 .Include(p => p.UsedBy);
 
         public async Task<WorkoutPlanDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default)

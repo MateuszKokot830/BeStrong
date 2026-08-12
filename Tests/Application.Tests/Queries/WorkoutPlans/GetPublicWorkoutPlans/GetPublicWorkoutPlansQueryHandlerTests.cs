@@ -19,7 +19,7 @@ namespace Application.Tests.Queries.WorkoutPlans.GetPublicWorkoutPlans
         [Fact]
         public async Task Handle_ReturnsPublicPlansFromSearcher()
         {
-            var plans = new List<WorkoutPlanDto> { new(1, 7, [], "Plan", "Desc", WorkoutPlanCategory.FullBody, true, []) };
+            var plans = new List<WorkoutPlanDto> { new(1, 7, [], "Plan", "Desc", WorkoutPlanCategory.FullBody, "Full Body", true, []) };
             _workoutPlanSearcher.Setup(s => s.GetPublicAsync(It.IsAny<CancellationToken>())).ReturnsAsync(plans);
 
             var result = await _sut.Handle(new GetPublicWorkoutPlansQuery(), CancellationToken.None);

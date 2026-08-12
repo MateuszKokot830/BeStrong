@@ -4,16 +4,17 @@ using FluentValidation.TestHelper;
 
 namespace Application.Tests.Validators.Common
 {
-    public class WorkoutTemplateDtoValidatorTests
+    public class WorkoutTemplateCreateDtoValidatorTests
     {
-        private readonly WorkoutTemplateDtoValidator _validator = new();
+        private readonly WorkoutTemplateCreateDtoValidator _validator = new();
 
-        private static WorkoutTemplateExerciseDto ValidExercise() => new(Order: 0, ExerciseId: 1);
+        private static WorkoutTemplateExerciseCreateDto ValidExercise() =>
+            new(Order: 0, ExerciseId: 1, Sets: 3, MinReps: 8, MaxReps: 10);
 
         [Fact]
         public void Validate_WithValidTemplate_HasNoErrors()
         {
-            var dto = new WorkoutTemplateDto(Order: 0, Name: "Day A", Exercises: [ValidExercise()]);
+            var dto = new WorkoutTemplateCreateDto(Order: 0, Name: "Day A", Exercises: [ValidExercise()]);
 
             var result = _validator.TestValidate(dto);
 
@@ -23,7 +24,7 @@ namespace Application.Tests.Validators.Common
         [Fact]
         public void Validate_WhenNameIsNull_HasNoError()
         {
-            var dto = new WorkoutTemplateDto(Order: 0, Name: null, Exercises: [ValidExercise()]);
+            var dto = new WorkoutTemplateCreateDto(Order: 0, Name: null, Exercises: [ValidExercise()]);
 
             var result = _validator.TestValidate(dto);
 
@@ -33,7 +34,7 @@ namespace Application.Tests.Validators.Common
         [Fact]
         public void Validate_WhenNameExceedsMaxLength_HasError()
         {
-            var dto = new WorkoutTemplateDto(Order: 0, Name: new string('a', 101), Exercises: [ValidExercise()]);
+            var dto = new WorkoutTemplateCreateDto(Order: 0, Name: new string('a', 101), Exercises: [ValidExercise()]);
 
             var result = _validator.TestValidate(dto);
 
@@ -43,7 +44,7 @@ namespace Application.Tests.Validators.Common
         [Fact]
         public void Validate_WhenExercisesIsEmpty_HasError()
         {
-            var dto = new WorkoutTemplateDto(Order: 0, Name: "Day A", Exercises: []);
+            var dto = new WorkoutTemplateCreateDto(Order: 0, Name: "Day A", Exercises: []);
 
             var result = _validator.TestValidate(dto);
 

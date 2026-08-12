@@ -10,8 +10,8 @@ namespace Application.Tests.Validators.Commands
     {
         private readonly CreateWorkoutPlanCommandValidator _validator = new();
 
-        private static WorkoutTemplateDto ValidTemplate() =>
-            new(0, "Day A", [new WorkoutTemplateExerciseDto(0, 1)]);
+        private static WorkoutTemplateCreateDto ValidTemplate() =>
+            new(0, "Day A", [new WorkoutTemplateExerciseCreateDto(0, 1, Sets: 3, MinReps: 8, MaxReps: 10)]);
 
         private static WorkoutPlanCreateDto Valid() =>
             new("Push Pull Legs", "desc", WorkoutPlanCategory.PushPullLegs, IsPublic: true, [ValidTemplate()]);

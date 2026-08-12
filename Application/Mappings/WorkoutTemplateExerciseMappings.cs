@@ -7,13 +7,19 @@ namespace Application.Mappings
     {
         public static WorkoutTemplateExerciseDto ToDto(this WorkoutTemplateExercise exercise) => new(
             exercise.Order,
-            exercise.ExerciseId
+            exercise.Exercise!.ToDto(),
+            exercise.Sets,
+            exercise.MinReps,
+            exercise.MaxReps
         );
 
-        public static WorkoutTemplateExercise ToEntity(this WorkoutTemplateExerciseDto dto) => new()
+        public static WorkoutTemplateExercise ToEntity(this WorkoutTemplateExerciseCreateDto dto) => new()
         {
             Order = dto.Order,
-            ExerciseId = dto.ExerciseId
+            ExerciseId = dto.ExerciseId,
+            Sets = dto.Sets,
+            MinReps = dto.MinReps,
+            MaxReps = dto.MaxReps
         };
     }
 }

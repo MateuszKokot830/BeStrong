@@ -7,6 +7,9 @@ namespace Domain.Entities
     public class WorkoutTemplateExercise : Entity<int>
     {
         public int Order { get; set; }
+        public int Sets { get; set; }
+        public int MinReps { get; set; }
+        public int MaxReps { get; set; }
         public int ExerciseId { get; set; }
         [ForeignKey("ExerciseId")]
         public virtual Exercise? Exercise { get; set; }

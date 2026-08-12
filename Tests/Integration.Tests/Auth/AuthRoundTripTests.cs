@@ -46,14 +46,11 @@ namespace Integration.Tests.Auth
         }
 
         [Fact]
-        public async Task Register_WithPasswordMissingNonAlphanumericCharacter_ReturnsBadRequest()
+        public async Task Register_WithWeakPassword_ReturnsUnprocessableEntity()
         {
-            // RegisterCommandValidator now mirrors Identity's real password policy, so this is
-            // caught by validation before ever reaching the handler/Identity — a 400, not the 422
-            // that came from Identity rejecting it further down the pipeline.
-            var response = await _client.PostAsJsonAsync("/api/auth/register", new UserRegisterRequestDto("alice_weak", "Password1"));
+            var response = await _client.PostAsJsonAsync("/api/auth/register", new UserRegisterRequestDto("alice_weak", "password1!"));
 
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
 
         [Fact]

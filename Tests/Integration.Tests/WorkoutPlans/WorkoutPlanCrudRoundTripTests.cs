@@ -36,8 +36,8 @@ namespace Integration.Tests.WorkoutPlans
             WorkoutPlanCategory.PushPullLegs,
             isPublic,
             [
-                new WorkoutTemplateDto(Order: 0, Name: "Push Day", Exercises: [new WorkoutTemplateExerciseDto(Order: 0, exerciseId)]),
-                new WorkoutTemplateDto(Order: 1, Name: "Pull Day", Exercises: [new WorkoutTemplateExerciseDto(Order: 0, exerciseId)])
+                new WorkoutTemplateCreateDto(Order: 0, Name: "Push Day", Exercises: [new WorkoutTemplateExerciseCreateDto(Order: 0, exerciseId, Sets: 3, MinReps: 8, MaxReps: 10)]),
+                new WorkoutTemplateCreateDto(Order: 1, Name: "Pull Day", Exercises: [new WorkoutTemplateExerciseCreateDto(Order: 0, exerciseId, Sets: 4, MinReps: 6, MaxReps: 8)])
             ]);
 
         [Fact]
@@ -56,6 +56,15 @@ namespace Integration.Tests.WorkoutPlans
             Assert.NotEqual(0, created!.Id);
             Assert.Equal(2, created.WorkoutTemplates.Count);
             Assert.All(created.WorkoutTemplates, t => Assert.Single(t.Exercises));
+            Assert.Equal("Push Pull Legs", created.CategoryLabel);
+
+            var pushDay = created.WorkoutTemplates.Single(t => t.Name == "Push Day");
+            var pushExercise = pushDay.Exercises.Single();
+            Assert.Equal(exercise.Id, pushExercise.Exercise.Id);
+            Assert.Equal(exercise.Name, pushExercise.Exercise.Name);
+            Assert.Equal(3, pushExercise.Sets);
+            Assert.Equal(8, pushExercise.MinReps);
+            Assert.Equal(10, pushExercise.MaxReps);
 
             var getResponse = await _client.GetAsync($"/api/workoutplans/{created.Id}");
             Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
@@ -63,6 +72,7 @@ namespace Integration.Tests.WorkoutPlans
             Assert.Equal(2, fetched!.WorkoutTemplates.Count);
             Assert.Contains(fetched.WorkoutTemplates, t => t.Name == "Push Day");
             Assert.Contains(fetched.WorkoutTemplates, t => t.Name == "Pull Day");
+            Assert.Contains(fetched.WorkoutTemplates, t => t.Exercises.Single().Exercise.Id == exercise.Id);
         }
 
         [Fact]

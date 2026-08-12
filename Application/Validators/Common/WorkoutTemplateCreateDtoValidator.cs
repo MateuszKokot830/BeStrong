@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Validators.Common
 {
-    public sealed class WorkoutTemplateDtoValidator : AbstractValidator<WorkoutTemplateDto>
+    public sealed class WorkoutTemplateCreateDtoValidator : AbstractValidator<WorkoutTemplateCreateDto>
     {
-        public WorkoutTemplateDtoValidator()
+        public WorkoutTemplateCreateDtoValidator()
         {
             RuleFor(x => x.Order)
                 .GreaterThanOrEqualTo(0).WithMessage("Order cannot be negative.");
@@ -18,7 +18,7 @@ namespace Application.Validators.Common
                 .NotEmpty().WithMessage("A workout template must contain at least one exercise.");
 
             RuleForEach(x => x.Exercises)
-                .SetValidator(new WorkoutTemplateExerciseDtoValidator());
+                .SetValidator(new WorkoutTemplateExerciseCreateDtoValidator());
         }
     }
 }

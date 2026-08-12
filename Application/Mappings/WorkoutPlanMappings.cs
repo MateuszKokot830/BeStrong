@@ -1,5 +1,6 @@
 using Application.Dto.WorkoutPlan;
 using Domain.Aggregates;
+using Domain.Common;
 
 namespace Application.Mappings
 {
@@ -12,6 +13,7 @@ namespace Application.Mappings
             plan.Name,
             plan.Description,
             plan.Category,
+            plan.Category.ToDisplayName(),
             plan.IsPublic,
             plan.WorkoutTemplates?.Select(t => t.ToDto()).ToList() ?? []
         );

@@ -20,7 +20,7 @@ namespace Application.Validators.Commands
                 .NotEmpty().WithMessage("A workout plan must contain at least one workout template.");
 
             RuleForEach(x => x.WorkoutPlanCreateDto.WorkoutTemplates)
-                .SetValidator(new WorkoutTemplateDtoValidator());
+                .SetValidator(new WorkoutTemplateCreateDtoValidator());
         }
     }
 }
