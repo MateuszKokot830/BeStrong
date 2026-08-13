@@ -1,0 +1,233 @@
+.row {
+  align-items: flex-start;
+}
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.plan-meta-row {
+  align-items: flex-end;
+}
+
+.exercise-panel-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.exercise-panel-card .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card tabset {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card ::ng-deep .tab-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-panel-card tab.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.exercise-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.75rem;
+}
+
+.exercise-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exercise-row:last-child {
+  border-bottom: none;
+}
+
+.exercise-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.exercise-actions .btn {
+  white-space: nowrap;
+}
+
+.exercise-image {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.exercise-image-sm {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.exercise-info {
+  color: #fff;
+  min-width: 0;
+}
+
+.exercise-name {
+  font-weight: bold;
+  margin-bottom: 0.35rem;
+}
+
+.exercise-subgroup {
+  font-style: italic;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.exercise-description {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.exercise-row-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.exercise-row-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.draft-exercise-order {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.75);
+  flex-shrink: 0;
+}
+
+.template-card {
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.template-card.active {
+  border-color: var(--accent);
+}
+
+.template-header {
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.template-select {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.template-name-input {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.plan-exercise-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: grab;
+  border-left: 2px solid transparent;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.sets-reps {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.sr-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0;
+}
+
+.sr-field input {
+  width: 52px;
+  padding: 0.2rem 0.3rem;
+  text-align: center;
+}
+
+.plan-exercise-row:last-of-type {
+  border-bottom: none;
+}
+
+.plan-exercise-row:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.plan-exercise-row.dragging-over {
+  border-left-color: var(--accent);
+}
+
+.plan-exercise-row .exercise-row-main {
+  min-width: 0;
+}
+
+.plan-exercise-row .exercise-name {
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.plan-exercise-row .exercise-subgroup {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}

@@ -1,1 +1,201 @@
-<p>workout-plan works!</p>
+<div class="card page-card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12 col-lg-6" #leftPanel>
+        <div class="section-header mt-3">
+          <h4 class="text-info mb-0">Build workout plan</h4>
+          <div class="d-flex gap-2">
+            @if (!draft.isEmpty()) {
+            <button type="button" class="btn btn-danger btn-sm" (click)="cancelPlan()">Cancel plan</button>
+            }
+            <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="savePlan()">Save plan</button>
+          </div>
+        </div>
+
+        <input
+          type="text"
+          class="form-control mt-3"
+          placeholder="Workout plan name"
+          [(ngModel)]="draft.name"
+          name="plan-name"
+        />
+        <textarea
+          class="form-control mt-2"
+          placeholder="Add a description (optional)..."
+          [(ngModel)]="draft.description"
+          name="plan-description"
+          rows="2"
+        >
+        </textarea>
+
+        <div class="row mt-2 g-2 plan-meta-row">
+          <div class="col-12 col-sm-7">
+            <label class="text-white-50 small mb-1" for="planCategory">Category</label>
+            <select id="planCategory" class="form-select form-select-sm" [(ngModel)]="draft.category" name="planCategory">
+              @for (cat of categories; track cat.value) {
+              <option [ngValue]="cat.value">{{ cat.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-12 col-sm-5 d-flex align-items-end">
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="planIsPublic"
+                [(ngModel)]="draft.isPublic"
+                name="planIsPublic"
+              />
+              <label class="form-check-label text-white" for="planIsPublic">Make this plan public</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header mt-4 mb-1">
+          <h5 class="text-info mb-0">Workouts in this plan</h5>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="addTemplate()">+ Add workout</button>
+        </div>
+
+        @for (template of draft.templates; track template; let ti = $index) {
+        <div class="card bg-dark mt-3 template-card" [class.active]="ti === draft.activeTemplateIndex">
+          <div class="card-body">
+            <div class="section-header template-header">
+              <div class="template-select form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="activeTemplate"
+                  [id]="'template-radio-' + ti"
+                  [checked]="ti === draft.activeTemplateIndex"
+                  (change)="selectTemplate(ti)"
+                />
+                <label class="form-check-label text-white-50 small" [for]="'template-radio-' + ti">Add exercises here</label>
+              </div>
+              <input
+                type="text"
+                class="form-control form-control-sm template-name-input"
+                placeholder="Workout name"
+                [(ngModel)]="template.name"
+                [name]="'template-name-' + ti"
+              />
+              <button type="button" class="btn btn-danger btn-sm" (click)="removeTemplate(ti)">Remove</button>
+            </div>
+
+            @for (exercise of template.exercises; track exercise; let ei = $index) {
+            <div
+              class="plan-exercise-row"
+              [class.dragging-over]="ti === dragOverTemplateIndex && ei === dragOverIndex"
+              draggable="true"
+              (dragstart)="onDragStart(ti, ei)"
+              (dragover)="onDragOver($event); dragOverTemplateIndex = ti; dragOverIndex = ei"
+              (dragleave)="dragOverIndex = null"
+              (drop)="onDrop(ti, ei)"
+              (dragend)="onDragEnd()"
+            >
+              <i class="bi bi-grip-vertical drag-handle" aria-hidden="true" title="Drag to reorder"></i>
+              <span class="draft-exercise-order">{{ ei + 1 }}.</span>
+              <img [src]="getExerciseImage(exercise)" [alt]="exercise.name" class="exercise-image-sm" />
+              <div class="exercise-row-main">
+                <div class="exercise-name">{{ exercise.name }}</div>
+                <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+              </div>
+              <div class="sets-reps">
+                <label class="sr-field">
+                  <span>Sets</span>
+                  <input
+                    type="number"
+                    min="1"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="exercise.sets"
+                    [name]="'sets-' + ti + '-' + ei"
+                  />
+                </label>
+                <label class="sr-field">
+                  <span>Min reps</span>
+                  <input
+                    type="number"
+                    min="1"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="exercise.minReps"
+                    [name]="'min-reps-' + ti + '-' + ei"
+                  />
+                </label>
+                <label class="sr-field">
+                  <span>Max reps</span>
+                  <input
+                    type="number"
+                    min="1"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="exercise.maxReps"
+                    [name]="'max-reps-' + ti + '-' + ei"
+                  />
+                </label>
+              </div>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeExerciseFromTemplate(ti, ei)"
+                aria-label="Remove exercise"
+              >
+                &times;
+              </button>
+            </div>
+            } @empty {
+            <p class="text-white-50 mt-2 mb-0 small">No exercises yet — select this workout, then add exercises from the right.</p>
+            }
+          </div>
+        </div>
+        } @empty {
+        <p class="text-white-50 mt-3 mb-0">No workouts yet — click "+ Add workout" to start building your plan.</p>
+        }
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card bg-dark mt-3 exercise-panel-card" [style.height.px]="rightPanelHeight" #exercisePanel>
+          <div class="card-body">
+            <div class="section-header mb-3">
+              <h4 class="text-info mb-0 flex-grow-1 text-center">Add to: {{ activeTemplateName() }}</h4>
+            </div>
+
+            <ng-template #exerciseRows let-list>
+              @for (exercise of list; track exercise.id) {
+              <div class="exercise-row">
+                <img [src]="getExerciseImage(exercise)" [alt]="exercise.name" class="exercise-image" />
+                <div class="exercise-row-main">
+                  <div class="exercise-row-top">
+                    <div class="exercise-info">
+                      <div class="exercise-name">{{ exercise.name }}</div>
+                      <div class="exercise-subgroup">{{ getMuscleSubgroupLabel(exercise) }}</div>
+                    </div>
+                    <div class="exercise-actions">
+                      <button type="button" class="btn btn-secondary btn-sm" (click)="addExerciseToActiveTemplate(exercise)">+ Add exercise</button>
+                    </div>
+                  </div>
+                  <div class="exercise-description">{{ exercise.description }}</div>
+                </div>
+              </div>
+              } @empty {
+              <p class="text-white-50 mb-0">No exercises here yet.</p>
+              }
+            </ng-template>
+
+            <tabset>
+              <tab heading="All" (selectTab)="onTabSelect()">
+                <div class="exercise-list mt-2">
+                  <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(null) }"></ng-container>
+                </div>
+              </tab>
+              @for (group of muscleGroups; track group.value) {
+              <tab [heading]="group.label" (selectTab)="onTabSelect()">
+                <div class="exercise-list mt-2">
+                  <ng-container *ngTemplateOutlet="exerciseRows; context: { $implicit: exercisesByGroup(group.value) }"></ng-container>
+                </div>
+              </tab>
+              }
+            </tabset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

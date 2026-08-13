@@ -1,3 +1,4 @@
+import { Exercise } from './Exercise';
 import { WorkoutPlanCategory } from './Enums';
 import { User } from './User';
 
@@ -8,6 +9,7 @@ export interface WorkoutPlan {
   name: string | null;
   description: string | null;
   category: WorkoutPlanCategory;
+  categoryLabel: string;
   isPublic: boolean;
   workoutTemplates: WorkoutTemplate[];
 }
@@ -20,7 +22,10 @@ export interface WorkoutTemplate {
 
 export interface WorkoutTemplateExercise {
   order: number;
-  exerciseId: number;
+  exercise: Exercise;
+  sets: number;
+  minReps: number;
+  maxReps: number;
 }
 
 export interface WorkoutPlanCreate {
@@ -28,5 +33,25 @@ export interface WorkoutPlanCreate {
   description: string | null;
   category: WorkoutPlanCategory;
   isPublic: boolean;
-  workoutTemplates: WorkoutTemplate[];
+  workoutTemplates: WorkoutTemplateCreate[];
+}
+
+export interface WorkoutTemplateCreate {
+  order: number;
+  name: string | null;
+  exercises: WorkoutTemplateExerciseCreate[];
+}
+
+export interface WorkoutTemplateExerciseCreate {
+  order: number;
+  exerciseId: number;
+  sets: number;
+  minReps: number;
+  maxReps: number;
+}
+
+export interface WorkoutPlanCategoryOption {
+  value: WorkoutPlanCategory;
+  name: string;
+  label: string;
 }
