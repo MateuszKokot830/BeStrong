@@ -7,6 +7,6 @@ namespace Application.Tests.TestDoubles
     {
         public static UserDto Create(int id, string username, bool isAdmin = false) => new(
             id, username, DateTime.UtcNow.AddYears(-25), null, null, null, Gender.Male, null, null, null,
-            null, 0, null, null, null, [], [], [], [], isAdmin);
+            null, 0, null, null, null, [], [], [], [], isAdmin, null, null);
     }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from '../models/Exercise';
 import { MuscleSubgroup, WorkoutPlanCategory } from '../models/Enums';
+import { WorkoutPlan } from '../models/WorkoutPlan';
 
 export interface DraftTemplateExercise {
   exerciseId: number;
@@ -27,6 +28,28 @@ export class WorkoutPlanDraftService {
   isPublic = false;
   templates: DraftTemplate[] = [this.createTemplate(1)];
   activeTemplateIndex = 0;
+  editingPlanId: number | null = null;
+
+  loadFrom(plan: WorkoutPlan) {
+    this.editingPlanId = plan.id;
+    this.name = plan.name ?? '';
+    this.description = plan.description ?? '';
+    this.category = plan.category;
+    this.isPublic = plan.isPublic;
+    this.templates = plan.workoutTemplates.map(t => ({
+      name: t.name ?? '',
+      exercises: t.exercises.map(e => ({
+        exerciseId: e.exercise.id,
+        name: e.exercise.name,
+        imageUrl: e.exercise.imageUrl,
+        muscleSubgroup: e.exercise.muscleSubgroup,
+        sets: e.sets,
+        minReps: e.minReps,
+        maxReps: e.maxReps
+      }))
+    }));
+    this.activeTemplateIndex = 0;
+  }
 
   addTemplate() {
     this.templates.push(this.createTemplate(this.templates.length + 1));
@@ -86,6 +109,7 @@ export class WorkoutPlanDraftService {
     this.isPublic = false;
     this.templates = [this.createTemplate(1)];
     this.activeTemplateIndex = 0;
+    this.editingPlanId = null;
   }
 
   private createTemplate(order: number): DraftTemplate {

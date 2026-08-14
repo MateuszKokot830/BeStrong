@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Exercise } from 'src/app/core/models/Exercise';
 import { MuscleGroup, MuscleSubgroup } from 'src/app/core/models/Enums';
@@ -37,11 +38,24 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   private resizeObserver?: ResizeObserver;
 
   constructor(private workoutService: WorkoutService, private workoutPlanService: WorkoutPlanService,
-    private toastr: ToastrService, private zone: NgZone, public draft: WorkoutPlanDraftService) { }
+    private toastr: ToastrService, private zone: NgZone, public draft: WorkoutPlanDraftService,
+    private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.loadExercises();
     this.loadCategories();
+
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.workoutPlanService.getWorkoutPlan(+id).subscribe({
+          next: plan => this.draft.loadFrom(plan),
+          error: _ => this.router.navigateByUrl('/workout-plans')
+        });
+      } else {
+        this.draft.editingPlanId = null;
+      }
+    });
   }
 
   loadCategories() {
@@ -167,8 +181,16 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.draft.isEmpty())
       return;
 
-    if (confirm('This will discard the workout plan you are building. Continue?')) {
+    const isEditing = this.draft.editingPlanId !== null;
+    const message = isEditing
+      ? 'Discard your changes to this workout plan? Any unsaved edits will be lost.'
+      : 'This will discard the workout plan you are building. Continue?';
+
+    if (confirm(message)) {
       this.draft.clear();
+      if (isEditing) {
+        this.router.navigateByUrl('/workout-plans');
+      }
     }
   }
 
@@ -205,12 +227,20 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
       workoutTemplates: this.draft.templates.map((template, index) => this.toWorkoutTemplate(template, index))
     };
 
+    const editingPlanId = this.draft.editingPlanId;
+    const request = editingPlanId
+      ? this.workoutPlanService.updateWorkoutPlan(editingPlanId, plan)
+      : this.workoutPlanService.addWorkoutPlan(plan);
+
     this.isSaving = true;
-    this.workoutPlanService.addWorkoutPlan(plan).subscribe({
+    request.subscribe({
       next: _ => {
         this.isSaving = false;
         this.draft.clear();
         this.toastr.success('Workout plan has been saved!');
+        if (editingPlanId) {
+          this.router.navigateByUrl('/workout-plans');
+        }
       },
       error: _ => this.isSaving = false
     });

@@ -3,12 +3,12 @@
     <div class="row">
       <div class="col-12 col-lg-6" #leftPanel>
         <div class="section-header mt-3">
-          <h4 class="text-info mb-0">Build workout plan</h4>
+          <h4 class="text-info mb-0">{{ draft.editingPlanId ? 'Edit workout plan' : 'Build workout plan' }}</h4>
           <div class="d-flex gap-2">
             @if (!draft.isEmpty()) {
-            <button type="button" class="btn btn-danger btn-sm" (click)="cancelPlan()">Cancel plan</button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="cancelPlan()">{{ draft.editingPlanId ? 'Discard changes' : 'Cancel plan' }}</button>
             }
-            <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="savePlan()">Save plan</button>
+            <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="savePlan()">{{ draft.editingPlanId ? 'Save changes' : 'Save plan' }}</button>
           </div>
         </div>
 

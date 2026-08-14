@@ -112,18 +112,127 @@ namespace Integration.Tests.WorkoutPlans
         }
 
         [Fact]
-        public async Task GetPublicWorkoutPlans_OnlyReturnsPlansMarkedPublic()
+        public async Task GetWorkoutPlans_ReturnsPublicAndOwnPlans_ExcludesOthersPrivatePlans()
         {
             var exercise = await CreateExerciseAsAdminAsync("WP Overhead Press");
-            var token = await _client.RegisterAndGetTokenAsync("iris_wppublic");
+            var token = await _client.RegisterAndGetTokenAsync("iris_wpbrowse");
             _client.SetBearerToken(token);
-            await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: true));
-            await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: false));
+            var publicResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: true));
+            var publicPlan = await publicResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+            var privateResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: false));
+            var privatePlan = await privateResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            using var strangerClient = _factory.CreateClient();
+            var strangerToken = await strangerClient.RegisterAndGetTokenAsync("iris_wpbrowsestranger");
+            strangerClient.SetBearerToken(strangerToken);
+            var strangerResponse = await strangerClient.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: false));
+            var strangerPrivatePlan = await strangerResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
 
             var response = await _client.GetAsync("/api/workoutplans");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.Headers.Contains("Pagination"));
             var plans = await response.Content.ReadFromJsonAsync<List<WorkoutPlanDto>>();
 
-            Assert.All(plans!, p => Assert.True(p.IsPublic));
+            Assert.Contains(plans!, p => p.Id == publicPlan!.Id);
+            Assert.Contains(plans!, p => p.Id == privatePlan!.Id);
+            Assert.DoesNotContain(plans!, p => p.Id == strangerPrivatePlan!.Id);
+        }
+
+        [Fact]
+        public async Task GetWorkoutPlans_FiltersByCategoryAndName()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("WP Lateral Raise");
+            var token = await _client.RegisterAndGetTokenAsync("iris_wpfilter");
+            _client.SetBearerToken(token);
+            var createResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: true));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            var matchResponse = await _client.GetAsync("/api/workoutplans?category=1&name=Push%20Pull%20Legs");
+            var matchPlans = await matchResponse.Content.ReadFromJsonAsync<List<WorkoutPlanDto>>();
+            Assert.Contains(matchPlans!, p => p.Id == created!.Id);
+
+            var noMatchResponse = await _client.GetAsync("/api/workoutplans?category=0");
+            var noMatchPlans = await noMatchResponse.Content.ReadFromJsonAsync<List<WorkoutPlanDto>>();
+            Assert.DoesNotContain(noMatchPlans!, p => p.Id == created!.Id);
+        }
+
+        [Fact]
+        public async Task UpdateWorkoutPlan_WhenNotInUse_PersistsChanges()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("WP Leg Curl");
+            var token = await _client.RegisterAndGetTokenAsync("iris_wpupdate");
+            _client.SetBearerToken(token);
+            var createResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            var updateDto = PlanWithNestedTemplates(exercise.Id) with { Name = "Renamed Plan" };
+            var updateResponse = await _client.PutAsJsonAsync($"/api/workoutplans/{created!.Id}", updateDto);
+            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
+            var updated = await updateResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+            Assert.Equal("Renamed Plan", updated!.Name);
+
+            var getResponse = await _client.GetAsync($"/api/workoutplans/{created.Id}");
+            var fetched = await getResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+            Assert.Equal("Renamed Plan", fetched!.Name);
+        }
+
+        [Fact]
+        public async Task UpdateWorkoutPlan_AsADifferentUser_ReturnsUnauthorized()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("WP Face Pull");
+            var ownerToken = await _client.RegisterAndGetTokenAsync("iris_wpupdateowner");
+            _client.SetBearerToken(ownerToken);
+            var createResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            using var strangerClient = _factory.CreateClient();
+            var strangerToken = await strangerClient.RegisterAndGetTokenAsync("iris_wpupdatestranger");
+            strangerClient.SetBearerToken(strangerToken);
+
+            var updateResponse = await strangerClient.PutAsJsonAsync($"/api/workoutplans/{created!.Id}", PlanWithNestedTemplates(exercise.Id));
+
+            Assert.Equal(HttpStatusCode.Unauthorized, updateResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateWorkoutPlan_WhenPlanInUse_ReturnsConflict()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("WP Cable Fly");
+            var ownerToken = await _client.RegisterAndGetTokenAsync("iris_wpupdateinuse");
+            _client.SetBearerToken(ownerToken);
+            var createResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: true));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            using var assigneeClient = _factory.CreateClient();
+            var assigneeToken = await assigneeClient.RegisterAndGetTokenAsync("iris_wpupdateinuseassignee");
+            assigneeClient.SetBearerToken(assigneeToken);
+            await assigneeClient.PostAsync($"/api/workoutplans/{created!.Id}/assign", content: null);
+
+            var updateResponse = await _client.PutAsJsonAsync($"/api/workoutplans/{created.Id}", PlanWithNestedTemplates(exercise.Id));
+
+            Assert.Equal(HttpStatusCode.Conflict, updateResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteWorkoutPlan_WhenPlanInUse_ReturnsConflict()
+        {
+            // Regression test: DeleteWorkoutPlanCommandHandler used to delete unconditionally, and since
+            // User.WorkoutPlanId -> WorkoutPlan is OnDelete(Restrict), deleting an in-use plan used to
+            // throw a raw unhandled SqliteException instead of a clean 409.
+            var exercise = await CreateExerciseAsAdminAsync("WP Leg Raise");
+            var ownerToken = await _client.RegisterAndGetTokenAsync("iris_wpdeleteinuse");
+            _client.SetBearerToken(ownerToken);
+            var createResponse = await _client.PostAsJsonAsync("/api/workoutplans", PlanWithNestedTemplates(exercise.Id, isPublic: true));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutPlanDto>();
+
+            using var assigneeClient = _factory.CreateClient();
+            var assigneeToken = await assigneeClient.RegisterAndGetTokenAsync("iris_wpdeleteinuseassignee");
+            assigneeClient.SetBearerToken(assigneeToken);
+            await assigneeClient.PostAsync($"/api/workoutplans/{created!.Id}/assign", content: null);
+
+            var deleteResponse = await _client.DeleteAsync($"/api/workoutplans/{created.Id}");
+
+            Assert.Equal(HttpStatusCode.Conflict, deleteResponse.StatusCode);
         }
 
         [Fact]

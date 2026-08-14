@@ -1,0 +1,105 @@
+<div class="card page-card">
+  <div class="card-body">
+    <div class="position-relative mt-1 mb-2">
+      <h4 class="text-center text-info mb-0">Workout Plans</h4>
+      @if ((accountService.currentProfile$ | async)?.workoutPlanName; as planName) {
+      <span class="position-absolute top-0 end-0 text-white-50 small">Current plan: {{ planName }}</span>
+      }
+    </div>
+
+    <div class="row mb-3 g-2 align-items-end">
+      <div class="col-12 col-sm-4 col-md-3">
+        <label class="text-white-50 small mb-1" for="planCategoryFilter">Category</label>
+        <select
+          id="planCategoryFilter"
+          class="form-select form-select-sm"
+          [(ngModel)]="selectedCategory"
+          (ngModelChange)="onCategoryChange()"
+        >
+          <option [ngValue]="null">All categories</option>
+          @for (cat of categories; track cat.value) {
+          <option [ngValue]="cat.value">{{ cat.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-12 col-sm-8 col-md-5">
+        <label class="text-white-50 small mb-1" for="planNameFilter">Name</label>
+        <input
+          id="planNameFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by name..."
+          [ngModel]="nameFilter"
+          (ngModelChange)="onNameFilterChange($event)"
+        />
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-check">
+          <input
+            id="onlyOwnFilter"
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="onlyOwnFilter"
+            (ngModelChange)="onOnlyOwnChange()"
+          />
+          <label class="form-check-label text-white-50 small" for="onlyOwnFilter">Only own workout plans</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      @for (plan of plans; track plan.id) {
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card bg-dark mb-3 plan-card" [class.active-plan]="isCurrent(plan)">
+          <div class="card-body">
+            <h6 class="card-title plan-title">
+              {{ plan.name }}
+              @if (isCurrent(plan)) {
+              <span class="badge bg-success ms-1">Active</span>
+              }
+            </h6>
+            <p class="text-muted small mb-1">{{ plan.categoryLabel }}</p>
+            @if (plan.description) {
+            <p class="small plan-description">{{ plan.description }}</p>
+            }
+            <p class="small text-muted mb-2">{{ plan.usedBy.length }} user{{ plan.usedBy.length === 1 ? '' : 's' }} using this plan</p>
+
+            <button type="button" class="btn btn-sm btn-outline-info w-100 mb-2" (click)="viewDetails(plan)">Show details</button>
+
+            @if (isCurrent(plan)) {
+            <button type="button" class="btn btn-sm btn-outline-warning w-100" (click)="deactivate(plan)">Deactivate plan</button>
+            } @else {
+            <button type="button" class="btn btn-sm btn-outline-success w-100" (click)="assign(plan)">Use this plan</button>
+            }
+
+            @if (isOwn(plan)) {
+              @if (plan.usedBy.length === 0) {
+              <div class="mt-2 d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-light flex-fill" (click)="edit(plan)">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-danger flex-fill" (click)="delete(plan)">Delete</button>
+              </div>
+              } @else {
+              <p class="small text-muted mt-2 mb-0">In use — cannot edit or delete</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+      } @empty {
+      <p class="text-white-50 text-center mt-3">No workout plans match your filters.</p>
+      }
+    </div>
+
+    @if (pagination) {
+    <div class="d-flex justify-content-center mt-4">
+      <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [maxSize]="5"
+        [(ngModel)]="pageNumber"
+        (pageChanged)="pageChanged($event)"
+      ></pagination>
+    </div>
+    }
+  </div>
+</div>

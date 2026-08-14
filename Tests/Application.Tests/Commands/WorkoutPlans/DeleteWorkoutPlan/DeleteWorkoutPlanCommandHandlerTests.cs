@@ -52,5 +52,18 @@ namespace Application.Tests.Commands.WorkoutPlans.DeleteWorkoutPlan
             Assert.False(result.IsError);
             _workoutPlanRepository.Verify(r => r.DeleteAsync(plan, It.IsAny<CancellationToken>()), Times.Once);
         }
+
+        [Fact]
+        public async Task Handle_WhenPlanIsInUse_ReturnsInUse()
+        {
+            var plan = new WorkoutPlan { Id = 1, CreatedById = 5, UsedBy = [new User { Id = 99 }] };
+            _workoutPlanRepository.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(plan);
+            _currentUserService.Setup(s => s.IsOwnerOrAdmin(5)).Returns(true);
+
+            var result = await _sut.Handle(new DeleteWorkoutPlanCommand(1), CancellationToken.None);
+
+            Assert.Equal(Errors.WorkoutPlan.InUse, result.FirstError);
+            _workoutPlanRepository.Verify(r => r.DeleteAsync(It.IsAny<WorkoutPlan>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
     }
 }

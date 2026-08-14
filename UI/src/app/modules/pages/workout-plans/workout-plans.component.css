@@ -1,0 +1,21 @@
+.plan-card {
+  height: 100%;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.plan-card.active-plan {
+  border-color: var(--accent);
+}
+
+.plan-title {
+  overflow-wrap: anywhere;
+}
+
+.plan-description {
+  color: rgba(255, 255, 255, 0.75);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

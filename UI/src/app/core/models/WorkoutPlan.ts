@@ -1,5 +1,6 @@
 import { Exercise } from './Exercise';
 import { WorkoutPlanCategory } from './Enums';
+import { PaginationParams } from './Pagination';
 import { User } from './User';
 
 export interface WorkoutPlan {
@@ -54,4 +55,10 @@ export interface WorkoutPlanCategoryOption {
   value: WorkoutPlanCategory;
   name: string;
   label: string;
+}
+
+export interface WorkoutPlanCriteria extends PaginationParams {
+  category?: WorkoutPlanCategory;
+  name?: string;
+  onlyOwn?: boolean;
 }

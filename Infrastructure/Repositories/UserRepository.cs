@@ -16,7 +16,8 @@ namespace Infrastructure.Repositories
             .Include(u => u.Photos)
             .Include(u => u.Measurements)
             .Include(u => u.FollowedUsers)
-            .Include(u => u.Followers);
+            .Include(u => u.Followers)
+            .Include(u => u.WorkoutPlan);
 
         public async Task<User?> GetByUsernameAsync(string? username, CancellationToken cancellationToken = default)
         {

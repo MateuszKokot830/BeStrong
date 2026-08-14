@@ -6,10 +6,14 @@ using Application.Commands.WorkoutPlans.AssignWorkoutPlan;
 using Application.Commands.WorkoutPlans.CreateWorkoutPlan;
 using Application.Commands.WorkoutPlans.DeleteWorkoutPlan;
 using Application.Commands.WorkoutPlans.UnassignWorkoutPlan;
+using Application.Commands.WorkoutPlans.UpdateWorkoutPlan;
 using Application.Dto.WorkoutPlan;
-using Application.Queries.WorkoutPlans.GetPublicWorkoutPlans;
+using Application.Helpers;
+using Application.Helpers.Criteria;
 using Application.Queries.WorkoutPlans.GetWorkoutPlanById;
+using Application.Queries.WorkoutPlans.GetWorkoutPlans;
 using Domain.Common;
+using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -38,14 +42,22 @@ namespace WebAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [SwaggerOperation(Summary = "Retrieves all public workout plans")]
+        [SwaggerOperation(Summary = "Retrieves workout plans visible to the current user (public or own), filtered and paginated")]
         [HttpGet]
-        public async Task<IActionResult> GetPublicWorkoutPlans()
+        public async Task<IActionResult> GetWorkoutPlans([FromQuery] WorkoutPlanSearchCriteria criteria)
         {
-            ErrorOr<IEnumerable<WorkoutPlanDto>> result = await _mediator.Send(new GetPublicWorkoutPlansQuery());
-            return result.Match(
-                plans => Ok(plans),
-                errors => Problem(errors));
+            ErrorOr<PaginationList<WorkoutPlanDto>> result = await _mediator.Send(new GetWorkoutPlansQuery(criteria));
+
+            if (result.IsError)
+                return Problem(result.Errors);
+
+            Response.AddPaginationHeader(new PaginationHeader(
+                result.Value.CurrentPage,
+                result.Value.PageSize,
+                result.Value.TotalItems,
+                result.Value.TotalPages));
+
+            return Ok(result.Value);
         }
 
         [SwaggerOperation(Summary = "Retrieves a workout plan by id")]
@@ -53,6 +65,16 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetWorkoutPlanById(int id)
         {
             ErrorOr<WorkoutPlanDto> result = await _mediator.Send(new GetWorkoutPlanByIdQuery(id));
+            return result.Match(
+                plan => Ok(plan),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Updates a workout plan by id")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateWorkoutPlan(int id, WorkoutPlanCreateDto workoutPlanCreateDto)
+        {
+            ErrorOr<WorkoutPlanDto> result = await _mediator.Send(new UpdateWorkoutPlanCommand(id, workoutPlanCreateDto));
             return result.Match(
                 plan => Ok(plan),
                 errors => Problem(errors));

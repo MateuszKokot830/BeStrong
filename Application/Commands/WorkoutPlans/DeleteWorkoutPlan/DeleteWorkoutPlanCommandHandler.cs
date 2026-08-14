@@ -22,6 +22,9 @@ namespace Application.Commands.WorkoutPlans.DeleteWorkoutPlan
             if (!_currentUserService.IsOwnerOrAdmin(plan.CreatedById))
                 return Errors.WorkoutPlan.Unauthorized;
 
+            if (plan.UsedBy.Count > 0)
+                return Errors.WorkoutPlan.InUse;
+
             await _workoutPlanRepository.DeleteAsync(plan, cancellationToken);
             return Unit.Value;
         }

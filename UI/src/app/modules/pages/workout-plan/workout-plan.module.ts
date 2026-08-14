@@ -7,7 +7,10 @@ import { WorkoutPlanComponent } from './workout-plan.component';
   declarations: [WorkoutPlanComponent],
   imports: [
     SharedModule,
-    RouterModule.forChild([{ path: '', component: WorkoutPlanComponent }])
+    RouterModule.forChild([
+      { path: '', component: WorkoutPlanComponent },
+      { path: 'edit/:id', component: WorkoutPlanComponent }
+    ])
   ]
 })
 export class WorkoutPlanModule { }

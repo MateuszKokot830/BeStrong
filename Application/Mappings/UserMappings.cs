@@ -46,7 +46,9 @@ namespace Application.Mappings
             user.Followers
                 .Select(f => new FollowerDto(f.UserId, f.FollowedUserId, f.FollowedAt))
                 .ToList(),
-            user.Roles.Any(r => r.Name == Roles.Admin)
+            user.Roles.Any(r => r.Name == Roles.Admin),
+            user.WorkoutPlanId,
+            user.WorkoutPlan != null ? user.WorkoutPlan.Name : null
         );
 
         public static UserDto WithComputedWorkoutSince(this UserDto dto) =>
@@ -72,7 +74,9 @@ namespace Application.Mappings
             user.Posts?.Select(p => p.ToDto()).ToList() ?? [],
             user.FollowedUsers?.Select(f => f.ToDto()).ToList() ?? [],
             user.Followers?.Select(f => f.ToDto()).ToList() ?? [],
-            user.Roles?.Any(r => r.Name == Roles.Admin) ?? false
+            user.Roles?.Any(r => r.Name == Roles.Admin) ?? false,
+            user.WorkoutPlanId,
+            user.WorkoutPlan?.Name
         );
 
         public static User ToEntity(this Dto.Auth.UserRegisterRequestDto dto) => new()

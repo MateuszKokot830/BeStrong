@@ -36,6 +36,12 @@ const routes: Routes = [
     loadChildren: () => import('./modules/pages/workout-plan/workout-plan.module').then(m => m.WorkoutPlanModule)
   },
   {
+    path: 'workout-plans',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/workout-plans/workout-plans.module').then(m => m.WorkoutPlansModule)
+  },
+  {
     path: 'statistics',
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],

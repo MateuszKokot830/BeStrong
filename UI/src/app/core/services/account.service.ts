@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { shareReplay, tap } from 'rxjs/operators';
-import { Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { LoginRequest, RegisterRequest, UserAuth } from '../models/Auth';
 import { User } from '../models/User';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,8 @@ export class AccountService {
   baseUrl = environment.baseUrl;
   private currentUserSource = new ReplaySubject<UserAuth | null>(1);
   currentUser$ = this.currentUserSource.asObservable();
+  private currentProfileSource = new BehaviorSubject<User | null>(null);
+  currentProfile$ = this.currentProfileSource.asObservable();
   private profileRequest?: Observable<User>;
 
   constructor(private http: HttpClient, private workoutDraft: WorkoutDraftService) { }
@@ -35,6 +37,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem(STORAGE_KEY);
     this.currentUserSource.next(null);
+    this.currentProfileSource.next(null);
     this.invalidateProfile();
     this.workoutDraft.clear();
   }
@@ -46,6 +49,7 @@ export class AccountService {
   currentProfile(): Observable<User> {
     if (!this.profileRequest) {
       this.profileRequest = this.http.get<User>(this.baseUrl + 'users/me').pipe(
+        tap(user => this.currentProfileSource.next(user)),
         shareReplay({ bufferSize: 1, refCount: false })
       );
     }

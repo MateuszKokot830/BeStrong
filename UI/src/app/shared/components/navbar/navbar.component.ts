@@ -21,6 +21,12 @@ export class NavbarComponent {
         this.isNavCollapsed = true;
       }
     });
+
+    this.accountService.currentUser$.subscribe(user => {
+      if (user) {
+        this.accountService.currentProfile().subscribe();
+      }
+    });
   }
 
   toggleNav() {

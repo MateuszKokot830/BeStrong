@@ -24,6 +24,8 @@ export interface User {
   followedUsers: Follower[];
   followers: Follower[];
   isAdmin: boolean;
+  workoutPlanId: number | null;
+  workoutPlanName: string | null;
 }
 
 export interface Measurements {

@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h4 class="modal-title text-info mb-0">{{ plan.name }}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+<div class="modal-body">
+  <p class="text-muted small mb-1">{{ plan.categoryLabel }} · {{ plan.isPublic ? 'Public' : 'Private' }}</p>
+  @if (plan.description) {
+  <p class="text-white">{{ plan.description }}</p>
+  }
+
+  @for (template of plan.workoutTemplates; track template.order) {
+  <h6 class="text-info mt-3">{{ template.name || 'Workout ' + template.order }}</h6>
+  <div class="data-pane mb-2">
+    <div class="data-row cols-exercise data-row--head">
+      <span>Exercise</span>
+      <span>Sets</span>
+      <span>Reps</span>
+    </div>
+    @for (exercise of template.exercises; track exercise.order) {
+    <div class="data-row cols-exercise">
+      <span>{{ exercise.exercise.name }}</span>
+      <span>{{ exercise.sets }}</span>
+      <span>{{ exercise.minReps }}–{{ exercise.maxReps }}</span>
+    </div>
+    }
+  </div>
+  }
+</div>
+<div class="modal-footer text-center">
+  <button class="btn btn-secondary" type="button" (click)="bsModalRef.hide()">Close</button>
+</div>

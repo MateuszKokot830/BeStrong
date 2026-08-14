@@ -26,6 +26,8 @@ namespace Application.Dto.User
         IReadOnlyCollection<PostDto> Posts,
         IReadOnlyCollection<FollowerDto> FollowedUsers,
         IReadOnlyCollection<FollowerDto> Followers,
-        bool IsAdmin
+        bool IsAdmin,
+        int? WorkoutPlanId,
+        string? WorkoutPlanName
     );
 }
