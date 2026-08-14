@@ -30,7 +30,7 @@ namespace Application.Tests.Queries.Posts.GetPostById
         [Fact]
         public async Task Handle_WhenPostExists_ReturnsIt()
         {
-            var post = new PostDto(1, 1, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, 0, []);
+            var post = new PostDto(1, 1, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, null, 0, []);
             _postSearcher.Setup(s => s.FindByIdAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(post);
 
             var result = await _sut.Handle(new GetPostByIdQuery(1), CancellationToken.None);

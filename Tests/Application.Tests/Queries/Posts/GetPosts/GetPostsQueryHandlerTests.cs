@@ -19,7 +19,7 @@ namespace Application.Tests.Queries.Posts.GetPosts
         [Fact]
         public async Task Handle_ReturnsAllPostsFromSearcher()
         {
-            var posts = new List<PostDto> { new(1, 1, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, 0, []) };
+            var posts = new List<PostDto> { new(1, 1, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, null, 0, []) };
             _postSearcher.Setup(s => s.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(posts);
 
             var result = await _sut.Handle(new GetPostsQuery(), CancellationToken.None);

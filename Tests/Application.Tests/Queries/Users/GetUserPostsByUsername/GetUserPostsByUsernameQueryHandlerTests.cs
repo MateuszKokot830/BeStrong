@@ -36,7 +36,7 @@ namespace Application.Tests.Queries.Users.GetUserPostsByUsername
         {
             var user = UserDtoFactory.Create(7, "alice");
             _userSearcher.Setup(s => s.FindByUsernameAsync("alice", It.IsAny<CancellationToken>())).ReturnsAsync(user);
-            var posts = new List<PostDto> { new(1, 7, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, 0, []) };
+            var posts = new List<PostDto> { new(1, 7, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, null, 0, []) };
             _postSearcher.Setup(s => s.FindByUserIdAsync(7, It.IsAny<CancellationToken>())).ReturnsAsync(posts);
 
             var result = await _sut.Handle(new GetUserPostsByUsernameQuery("alice"), CancellationToken.None);

@@ -1,4 +1,5 @@
 using Domain.Aggregates;
+using Domain.Common;
 using Domain.Entities;
 using Infrastructure.Repositories;
 using Infrastructure.Tests.TestDoubles;
@@ -97,6 +98,32 @@ namespace Infrastructure.Tests.Repositories
 
             var loaded = await _sut.GetByIdAsync(workout.Id, CancellationToken.None);
             Assert.Null(loaded);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_CascadesToItsWorkoutPublicationPost()
+        {
+            var user = await CreateUserAsync();
+            var workout = new Workout { UserId = user.Id, Name = "Push Day", Date = DateTime.UtcNow };
+            await _sut.AddAsync(workout, CancellationToken.None);
+            await Context.SaveChangesAsync();
+            var post = new Post
+            {
+                UserId = user.Id,
+                Type = PostType.WorkoutPublication,
+                Description = "Push Day",
+                CreatedDate = DateTime.UtcNow,
+                WorkoutId = workout.Id
+            };
+            Context.Posts.Add(post);
+            await Context.SaveChangesAsync();
+            Context.ChangeTracker.Clear();
+
+            var toDelete = await _sut.GetByIdAsync(workout.Id, CancellationToken.None);
+            await _sut.DeleteAsync(toDelete!, CancellationToken.None);
+            await Context.SaveChangesAsync();
+
+            Assert.Null(await Context.Posts.FindAsync(post.Id));
         }
     }
 }

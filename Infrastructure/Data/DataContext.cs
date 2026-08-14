@@ -30,6 +30,14 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
+            builder.Entity<Post>(entity =>
+            {
+                entity.HasOne(x => x.Workout)
+                .WithMany()
+                .HasForeignKey(x => x.WorkoutId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
             builder.Entity<PostLike>(entity =>
             {
                 entity.HasOne(x => x.User)

@@ -72,6 +72,38 @@ namespace Infrastructure.Tests.Searchers
         }
 
         [Fact]
+        public async Task FindByIdAsync_ForAWorkoutPublicationPost_IncludesTheWorkoutExercisesAndSets()
+        {
+            var user = await CreateUserAsync();
+            var exercise = await CreateExerciseAsync();
+            var workout = new Workout
+            {
+                UserId = user.Id,
+                Name = "Push Day",
+                Date = DateTime.UtcNow,
+                WorkoutExercises = [new WorkoutExercise { ExerciseId = exercise.Id, Sets = [new WorkoutSet { SetNumber = 1, Reps = 10 }] }]
+            };
+            Context.Workouts.Add(workout);
+            await Context.SaveChangesAsync();
+            var post = new Post
+            {
+                UserId = user.Id,
+                Type = PostType.WorkoutPublication,
+                Description = "Push Day",
+                CreatedDate = DateTime.UtcNow,
+                WorkoutId = workout.Id
+            };
+            Context.Posts.Add(post);
+            await Context.SaveChangesAsync();
+
+            var result = await _sut.FindByIdAsync(post.Id, CancellationToken.None);
+
+            Assert.NotNull(result!.Workout);
+            Assert.Single(result.Workout!.WorkoutExercises);
+            Assert.Single(result.Workout.WorkoutExercises.First().Sets);
+        }
+
+        [Fact]
         public async Task FindByUserIdsAsync_ReturnsPostsFromAnyOfTheGivenUsers_OrderedByCreatedDateDescending()
         {
             var user1 = await CreateUserAsync("alice");

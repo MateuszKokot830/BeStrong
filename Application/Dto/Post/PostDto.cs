@@ -1,4 +1,5 @@
 using Application.Dto.Comment;
+using Application.Dto.Workout;
 using Domain.Common;
 
 namespace Application.Dto.Post
@@ -12,6 +13,7 @@ namespace Application.Dto.Post
         DateTime? UpdatedDate,
         int? WorkoutId,
         int? WorkoutPlanId,
+        WorkoutDto? Workout,
         int LikesCount,
         IReadOnlyCollection<CommentDto> Comments
     );

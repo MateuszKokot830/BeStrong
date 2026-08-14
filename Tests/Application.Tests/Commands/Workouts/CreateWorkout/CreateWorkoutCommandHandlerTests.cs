@@ -3,7 +3,9 @@ using Application.Dto.Workout;
 using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Notifications;
 using Domain.Aggregates;
+using MediatR;
 using Moq;
 
 namespace Application.Tests.Commands.Workouts.CreateWorkout
@@ -12,12 +14,13 @@ namespace Application.Tests.Commands.Workouts.CreateWorkout
     {
         private readonly Mock<IWorkoutRepository> _workoutRepository = new();
         private readonly Mock<ICurrentUserService> _currentUserService = new();
+        private readonly Mock<IPublisher> _publisher = new();
         private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly CreateWorkoutCommandHandler _sut;
 
         public CreateWorkoutCommandHandlerTests()
         {
-            _sut = new CreateWorkoutCommandHandler(_workoutRepository.Object, _currentUserService.Object, _unitOfWork.Object);
+            _sut = new CreateWorkoutCommandHandler(_workoutRepository.Object, _currentUserService.Object, _publisher.Object, _unitOfWork.Object);
         }
 
         [Fact]
@@ -47,6 +50,19 @@ namespace Application.Tests.Commands.Workouts.CreateWorkout
             await _sut.Handle(new CreateWorkoutCommand(dto), CancellationToken.None);
 
             _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_PublishesWorkoutSavedNotification_WithTheCurrentUserAndWorkoutName()
+        {
+            _currentUserService.Setup(s => s.UserId).Returns(7);
+            var dto = new CreateWorkoutDto("Push Day", []);
+
+            await _sut.Handle(new CreateWorkoutCommand(dto), CancellationToken.None);
+
+            _publisher.Verify(p => p.Publish(
+                It.Is<WorkoutSavedNotification>(n => n.UserId == 7 && n.Description == "Push Day"),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

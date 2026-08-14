@@ -14,7 +14,8 @@ namespace Infrastructure.Searchers
             _context.Posts
                 .AsNoTracking()
                 .Include(p => p.Likes)
-                .Include(p => p.Comments).ThenInclude(c => c.Likes);
+                .Include(p => p.Comments).ThenInclude(c => c.Likes)
+                .Include(p => p.Workout).ThenInclude(w => w!.WorkoutExercises).ThenInclude(we => we.Sets);
 
         public async Task<PostDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {

@@ -24,7 +24,7 @@ namespace Application.Tests.Queries.Posts.GetFollowedUsersPosts
         {
             _currentUserService.Setup(s => s.UserId).Returns(7);
             _userSearcher.Setup(s => s.GetFollowedUserIdsAsync(7, It.IsAny<CancellationToken>())).ReturnsAsync([2, 3]);
-            var posts = new List<PostDto> { new(1, 2, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, 0, []) };
+            var posts = new List<PostDto> { new(1, 2, PostType.Normal, "hi", DateTime.UtcNow, null, null, null, null, 0, []) };
             _postSearcher
                 .Setup(s => s.FindByUserIdsAsync(It.Is<IReadOnlyCollection<int>>(ids => ids.SequenceEqual(new[] { 2, 3 })), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(posts);

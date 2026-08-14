@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Application.Dto.Exercise;
+using Application.Dto.Post;
 using Application.Dto.User;
 using Application.Dto.Workout;
 using Domain.Common;
@@ -67,6 +68,47 @@ namespace Integration.Tests.Workouts
             var listAfterDeleteResponse = await _client.GetAsync($"/api/workouts/{me.Id}");
             var workoutsAfterDelete = await listAfterDeleteResponse.Content.ReadFromJsonAsync<List<WorkoutDto>>();
             Assert.DoesNotContain(workoutsAfterDelete!, w => w.Id == created.Id);
+        }
+
+        [Fact]
+        public async Task CreateWorkout_AutomaticallyPublishesAWorkoutPublicationPost()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("Overhead Press");
+            var token = await _client.RegisterAndGetTokenAsync("jack_workoutpost");
+            _client.SetBearerToken(token);
+
+            var createResponse = await _client.PostAsJsonAsync("/api/workouts", WorkoutWithOneExercise(exercise.Id, "Shoulder Day"));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutDto>();
+
+            var postsResponse = await _client.GetAsync("/api/posts");
+            var posts = await postsResponse.Content.ReadFromJsonAsync<List<PostDto>>();
+
+            var post = Assert.Single(posts!, p => p.WorkoutId == created!.Id);
+            Assert.Equal(PostType.WorkoutPublication, post.Type);
+            Assert.Equal("Shoulder Day", post.Description);
+            Assert.NotNull(post.Workout);
+            Assert.Single(post.Workout!.WorkoutExercises);
+            Assert.Single(post.Workout.WorkoutExercises.First().Sets);
+        }
+
+        [Fact]
+        public async Task DeleteWorkout_AlsoRemovesItsWorkoutPublicationPost()
+        {
+            var exercise = await CreateExerciseAsAdminAsync("Lat Pulldown");
+            var token = await _client.RegisterAndGetTokenAsync("jack_workoutpostdel");
+            _client.SetBearerToken(token);
+            var createResponse = await _client.PostAsJsonAsync("/api/workouts", WorkoutWithOneExercise(exercise.Id, "Back Day"));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutDto>();
+
+            var postsBeforeResponse = await _client.GetAsync("/api/posts");
+            var postsBefore = await postsBeforeResponse.Content.ReadFromJsonAsync<List<PostDto>>();
+            var post = postsBefore!.Single(p => p.WorkoutId == created!.Id);
+
+            var deleteResponse = await _client.DeleteAsync($"/api/workouts/{created!.Id}");
+            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+            var getPostResponse = await _client.GetAsync($"/api/posts/{post.Id}");
+            Assert.Equal(HttpStatusCode.NotFound, getPostResponse.StatusCode);
         }
 
         [Fact]

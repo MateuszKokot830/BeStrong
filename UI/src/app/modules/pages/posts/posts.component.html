@@ -22,7 +22,28 @@
           <div class="card-body">
             <div class="row">
               <div class="col-12">
+                @if (post.type === PostType.WorkoutPublication) {
+                <h5 class="text-info mb-2"><i class="bi bi-lightning-fill"></i> Logged a workout</h5>
+                }
+                @if (post.description) {
                 <h5 class="text-white post-description">{{ post.description }}</h5>
+                }
+                @if (post.type === PostType.WorkoutPublication && post.workout) {
+                <div class="data-pane mt-2">
+                  <div class="data-row cols-exercise data-row--head">
+                    <span>Exercise</span>
+                    <span>Sets × Reps</span>
+                    <span>Weight</span>
+                  </div>
+                  @for (exercise of post.workout.workoutExercises; track exercise) {
+                  <div class="data-row cols-exercise">
+                    <span>{{ getExerciseName(exercise.exerciseId) }}</span>
+                    <span>{{ formatReps(exercise) }}</span>
+                    <span>{{ formatWeight(exercise) }}</span>
+                  </div>
+                  }
+                </div>
+                }
               </div>
             </div>
             <div class="post-footer">

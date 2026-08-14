@@ -14,6 +14,7 @@ namespace Application.Mappings
             post.UpdatedDate,
             post.WorkoutId,
             post.WorkoutPlanId,
+            post.Workout?.ToDto(),
             post.Likes?.Count ?? 0,
             post.Comments?.Select(c => c.ToDto()).ToList() ?? []
         );

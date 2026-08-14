@@ -1,5 +1,6 @@
 import { Comment } from './Comment';
 import { PostType } from './Enums';
+import { Workout } from './Workout';
 
 export interface Post {
   id: number;
@@ -10,6 +11,7 @@ export interface Post {
   updatedDate: string | null;
   workoutId: number | null;
   workoutPlanId: number | null;
+  workout: Workout | null;
   likesCount: number;
   comments: Comment[];
 }
