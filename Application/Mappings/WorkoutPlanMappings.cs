@@ -15,7 +15,8 @@ namespace Application.Mappings
             plan.Category,
             plan.Category.ToDisplayName(),
             plan.IsPublic,
-            plan.WorkoutTemplates?.Select(t => t.ToDto()).ToList() ?? []
+            plan.WorkoutTemplates?.Select(t => t.ToDto()).ToList() ?? [],
+            plan.CreatedBy != null ? $"{plan.CreatedBy.Name} {plan.CreatedBy.Surname}".Trim() : string.Empty
         );
 
         public static WorkoutPlan ToEntity(this WorkoutPlanCreateDto dto, int createdById) => new()

@@ -17,7 +17,8 @@ namespace Infrastructure.Searchers
             _context.WorkoutPlans
                 .AsNoTracking()
                 .Include(p => p.WorkoutTemplates).ThenInclude(t => t.Exercises).ThenInclude(e => e.Exercise)
-                .Include(p => p.UsedBy);
+                .Include(p => p.UsedBy)
+                .Include(p => p.CreatedBy);
 
         public async Task<WorkoutPlanDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
@@ -25,12 +26,17 @@ namespace Infrastructure.Searchers
             return plan?.ToDto();
         }
 
-        public async Task<PaginationList<WorkoutPlanDto>> GetPagedAsync(WorkoutPlanSearchCriteria criteria, int requestingUserId, CancellationToken cancellationToken = default)
+        public async Task<PaginationList<WorkoutPlanDto>> GetPagedAsync(WorkoutPlanSearchCriteria criteria, int requestingUserId, IReadOnlyList<int>? followedUserIds, CancellationToken cancellationToken = default)
         {
             var query = GetQueryable()
-                .Where(p => criteria.OnlyOwn ? p.CreatedById == requestingUserId : (p.IsPublic || p.CreatedById == requestingUserId))
+                .Where(p =>
+                    (criteria.CreatedBy == CreatedByFilter.OnlyMyself && p.CreatedById == requestingUserId) ||
+                    (criteria.CreatedBy == CreatedByFilter.OnlyFollowers && p.IsPublic && followedUserIds != null && followedUserIds.Contains(p.CreatedById)) ||
+                    (criteria.CreatedBy == CreatedByFilter.All && (p.IsPublic || p.CreatedById == requestingUserId)))
                 .Where(p => criteria.Category == null || p.Category == criteria.Category)
                 .Where(p => criteria.Name == null || (p.Name != null && EF.Functions.Like(p.Name, $"%{criteria.Name}%")))
+                .Where(p => criteria.OwnerName == null || (p.CreatedBy != null &&
+                    EF.Functions.Like((p.CreatedBy.Name ?? "") + " " + (p.CreatedBy.Surname ?? ""), $"%{criteria.OwnerName}%")))
                 .OrderBy(p => p.Name);
 
             var count = await query.CountAsync(cancellationToken);

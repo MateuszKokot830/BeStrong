@@ -65,6 +65,28 @@ namespace Application.Tests.Validators.Queries
         }
 
         [Fact]
+        public void Validate_WhenOwnerNameFilterExceedsMaxLength_HasError()
+        {
+            var criteria = Valid();
+            criteria.OwnerName = new string('a', 101);
+
+            var result = _validator.TestValidate(new GetWorkoutPlansQuery(criteria));
+
+            result.ShouldHaveValidationErrorFor("Criteria.OwnerName");
+        }
+
+        [Fact]
+        public void Validate_WhenOwnerNameFilterIsNull_HasNoError()
+        {
+            var criteria = Valid();
+            criteria.OwnerName = null;
+
+            var result = _validator.TestValidate(new GetWorkoutPlansQuery(criteria));
+
+            result.ShouldNotHaveValidationErrorFor("Criteria.OwnerName");
+        }
+
+        [Fact]
         public void Validate_WhenCategoryIsNull_HasNoError()
         {
             var criteria = Valid();

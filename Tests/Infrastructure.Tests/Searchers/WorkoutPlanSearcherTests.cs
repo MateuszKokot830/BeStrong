@@ -57,14 +57,14 @@ namespace Infrastructure.Tests.Searchers
                 new WorkoutPlan { CreatedById = other.Id, Name = "Others Private Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = false });
             await Context.SaveChangesAsync();
 
-            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria(), owner.Id, CancellationToken.None);
+            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria(), owner.Id, null, CancellationToken.None);
 
             Assert.Equal(2, result.TotalItems);
             Assert.DoesNotContain(result, p => p.Name == "Others Private Plan");
         }
 
         [Fact]
-        public async Task GetPagedAsync_WhenOnlyOwn_ExcludesOthersPublicPlans()
+        public async Task GetPagedAsync_WhenOnlyMyself_ExcludesOthersPublicPlans()
         {
             var owner = await CreateUserAsync("owner");
             var other = await CreateUserAsync("other");
@@ -73,10 +73,33 @@ namespace Infrastructure.Tests.Searchers
                 new WorkoutPlan { CreatedById = owner.Id, Name = "My Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = false });
             await Context.SaveChangesAsync();
 
-            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { OnlyOwn = true }, owner.Id, CancellationToken.None);
+            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { CreatedBy = CreatedByFilter.OnlyMyself }, owner.Id, null, CancellationToken.None);
 
             Assert.Single(result);
             Assert.Equal("My Plan", result[0].Name);
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_WhenOnlyFollowers_ReturnsOnlyPublicPlansFromFollowedUsers()
+        {
+            var requester = await CreateUserAsync("requester");
+            var followed = await CreateUserAsync("followed");
+            var notFollowed = await CreateUserAsync("notfollowed");
+            Context.WorkoutPlans.AddRange(
+                new WorkoutPlan { CreatedById = followed.Id, Name = "Followed Public Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = true },
+                new WorkoutPlan { CreatedById = followed.Id, Name = "Followed Private Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = false },
+                new WorkoutPlan { CreatedById = notFollowed.Id, Name = "Not Followed Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = true },
+                new WorkoutPlan { CreatedById = requester.Id, Name = "My Own Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = true });
+            await Context.SaveChangesAsync();
+
+            var result = await _sut.GetPagedAsync(
+                new WorkoutPlanSearchCriteria { CreatedBy = CreatedByFilter.OnlyFollowers },
+                requester.Id,
+                [followed.Id],
+                CancellationToken.None);
+
+            Assert.Single(result);
+            Assert.Equal("Followed Public Plan", result[0].Name);
         }
 
         [Fact]
@@ -88,7 +111,7 @@ namespace Infrastructure.Tests.Searchers
                 new WorkoutPlan { CreatedById = user.Id, Name = "PPL Plan", Category = WorkoutPlanCategory.PushPullLegs, IsPublic = true });
             await Context.SaveChangesAsync();
 
-            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { Category = WorkoutPlanCategory.PushPullLegs }, user.Id, CancellationToken.None);
+            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { Category = WorkoutPlanCategory.PushPullLegs }, user.Id, null, CancellationToken.None);
 
             Assert.Single(result);
             Assert.Equal("PPL Plan", result[0].Name);
@@ -103,10 +126,32 @@ namespace Infrastructure.Tests.Searchers
                 new WorkoutPlan { CreatedById = user.Id, Name = "Winter Bulk", Category = WorkoutPlanCategory.FullBody, IsPublic = true });
             await Context.SaveChangesAsync();
 
-            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { Name = "summer" }, user.Id, CancellationToken.None);
+            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { Name = "summer" }, user.Id, null, CancellationToken.None);
 
             Assert.Single(result);
             Assert.Equal("Summer Shred", result[0].Name);
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_FiltersByOwnerNameSubstring_CaseInsensitive()
+        {
+            var jane = await CreateUserAsync("jane");
+            jane.Name = "Jane";
+            jane.Surname = "Doe";
+            var john = await CreateUserAsync("john");
+            john.Name = "John";
+            john.Surname = "Smith";
+            await Context.SaveChangesAsync();
+
+            Context.WorkoutPlans.AddRange(
+                new WorkoutPlan { CreatedById = jane.Id, Name = "Jane's Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = true },
+                new WorkoutPlan { CreatedById = john.Id, Name = "John's Plan", Category = WorkoutPlanCategory.FullBody, IsPublic = true });
+            await Context.SaveChangesAsync();
+
+            var result = await _sut.GetPagedAsync(new WorkoutPlanSearchCriteria { OwnerName = "jane doe" }, jane.Id, null, CancellationToken.None);
+
+            Assert.Single(result);
+            Assert.Equal("Jane's Plan", result[0].Name);
         }
     }
 }

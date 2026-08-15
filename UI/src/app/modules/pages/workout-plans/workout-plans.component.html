@@ -1,6 +1,7 @@
 <div class="card page-card">
   <div class="card-body">
     <div class="position-relative mt-1 mb-2">
+      <button type="button" class="btn btn-sm btn-outline-success position-absolute top-0 start-0" (click)="createPlan()">Add new workout plan</button>
       <h4 class="text-center text-info mb-0">Workout Plans</h4>
       @if ((accountService.currentProfile$ | async)?.workoutPlanName; as planName) {
       <span class="position-absolute top-0 end-0 text-white-50 small">Current plan: {{ planName }}</span>
@@ -8,7 +9,7 @@
     </div>
 
     <div class="row mb-3 g-2 align-items-end">
-      <div class="col-12 col-sm-4 col-md-3">
+      <div class="col-12 col-sm-6 col-md-3">
         <label class="text-white-50 small mb-1" for="planCategoryFilter">Category</label>
         <select
           id="planCategoryFilter"
@@ -22,28 +23,41 @@
           }
         </select>
       </div>
-      <div class="col-12 col-sm-8 col-md-5">
-        <label class="text-white-50 small mb-1" for="planNameFilter">Name</label>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label class="text-white-50 small mb-1" for="planNameFilter">Workout plan name</label>
         <input
           id="planNameFilter"
           class="form-control form-control-sm"
-          placeholder="Search by name..."
+          placeholder="Search by workout plan name..."
           [ngModel]="nameFilter"
           (ngModelChange)="onNameFilterChange($event)"
         />
       </div>
-      <div class="col-12 col-md-4">
-        <div class="form-check">
-          <input
-            id="onlyOwnFilter"
-            type="checkbox"
-            class="form-check-input"
-            [(ngModel)]="onlyOwnFilter"
-            (ngModelChange)="onOnlyOwnChange()"
-          />
-          <label class="form-check-label text-white-50 small" for="onlyOwnFilter">Only own workout plans</label>
-        </div>
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="text-white-50 small mb-1" for="createdByFilter">Created by</label>
+        <select
+          id="createdByFilter"
+          class="form-select form-select-sm"
+          [(ngModel)]="createdByFilter"
+          (ngModelChange)="onCreatedByChange()"
+        >
+          <option [ngValue]="CreatedByFilter.All">All</option>
+          <option [ngValue]="CreatedByFilter.OnlyMyself">Only Myself</option>
+          <option [ngValue]="CreatedByFilter.OnlyFollowers">Only Followers</option>
+        </select>
       </div>
+      @if (createdByFilter !== CreatedByFilter.OnlyMyself) {
+      <div class="col-12 col-sm-6 col-md-3">
+        <label class="text-white-50 small mb-1" for="ownerNameFilter">Owner name</label>
+        <input
+          id="ownerNameFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by owner name..."
+          [ngModel]="ownerNameFilter"
+          (ngModelChange)="onOwnerNameFilterChange($event)"
+        />
+      </div>
+      }
     </div>
 
     <div class="row">
@@ -58,6 +72,7 @@
               }
             </h6>
             <p class="text-muted small mb-1">{{ plan.categoryLabel }}</p>
+            <p class="text-muted small mb-1">Created by: {{ plan.createdByName }}</p>
             @if (plan.description) {
             <p class="small plan-description">{{ plan.description }}</p>
             }

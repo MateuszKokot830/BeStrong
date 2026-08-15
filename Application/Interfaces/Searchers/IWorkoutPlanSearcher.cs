@@ -7,6 +7,6 @@ namespace Application.Interfaces.Searchers
     public interface IWorkoutPlanSearcher
     {
         Task<WorkoutPlanDto?> FindByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<PaginationList<WorkoutPlanDto>> GetPagedAsync(WorkoutPlanSearchCriteria criteria, int requestingUserId, CancellationToken cancellationToken = default);
+        Task<PaginationList<WorkoutPlanDto>> GetPagedAsync(WorkoutPlanSearchCriteria criteria, int requestingUserId, IReadOnlyList<int>? followedUserIds, CancellationToken cancellationToken = default);
     }
 }

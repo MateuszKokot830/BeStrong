@@ -9,7 +9,8 @@ namespace Infrastructure.Repositories
     {
         protected override IQueryable<WorkoutPlan> GetQueryable() => _context.WorkoutPlans
             .Include(w => w.WorkoutTemplates).ThenInclude(t => t.Exercises).ThenInclude(e => e.Exercise)
-            .Include(w => w.UsedBy);
+            .Include(w => w.UsedBy)
+            .Include(w => w.CreatedBy);
 
         public async Task<WorkoutPlan?> GetUserCurrentWorkoutPlanAsync(int id, CancellationToken cancellationToken = default)
         {

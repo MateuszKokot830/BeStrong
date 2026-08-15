@@ -17,6 +17,10 @@ namespace Application.Validators.Queries
             RuleFor(x => x.Criteria.Name)
                 .MaximumLength(100).WithMessage("Name filter cannot exceed 100 characters.")
                 .When(x => x.Criteria.Name is not null);
+
+            RuleFor(x => x.Criteria.OwnerName)
+                .MaximumLength(100).WithMessage("Owner name filter cannot exceed 100 characters.")
+                .When(x => x.Criteria.OwnerName is not null);
         }
     }
 }

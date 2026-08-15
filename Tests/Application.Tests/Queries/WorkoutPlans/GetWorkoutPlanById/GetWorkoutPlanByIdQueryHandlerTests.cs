@@ -20,7 +20,7 @@ namespace Application.Tests.Queries.WorkoutPlans.GetWorkoutPlanById
         }
 
         private static WorkoutPlanDto Plan(int id, int createdById, bool isPublic) =>
-            new(id, createdById, [], "Plan", "Desc", WorkoutPlanCategory.FullBody, "Full Body", isPublic, []);
+            new(id, createdById, [], "Plan", "Desc", WorkoutPlanCategory.FullBody, "Full Body", isPublic, [], "Jane Doe");
 
         [Fact]
         public async Task Handle_WhenPlanDoesNotExist_ReturnsNotFound()

@@ -54,8 +54,12 @@ export class WorkoutPlanService {
       params = params.set('name', criteria.name);
     }
 
-    if (criteria.onlyOwn) {
-      params = params.set('onlyOwn', criteria.onlyOwn);
+    if (criteria.createdBy) {
+      params = params.set('createdBy', criteria.createdBy);
+    }
+
+    if (criteria.ownerName) {
+      params = params.set('ownerName', criteria.ownerName);
     }
 
     return this.http.get<WorkoutPlan[]>(this.baseUrl + 'workoutplans', { observe: 'response', params }).pipe(

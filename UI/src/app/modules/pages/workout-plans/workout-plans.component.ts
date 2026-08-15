@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { WorkoutPlanCategory } from 'src/app/core/models/Enums';
 import { Pagination } from 'src/app/core/models/Pagination';
-import { WorkoutPlan, WorkoutPlanCategoryOption } from 'src/app/core/models/WorkoutPlan';
+import { CreatedByFilter, WorkoutPlan, WorkoutPlanCategoryOption } from 'src/app/core/models/WorkoutPlan';
 import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutPlanService } from 'src/app/core/services/workout-plan.service';
 import { WorkoutPlanDetailsComponent } from './workout-plan-details/workout-plan-details.component';
@@ -25,11 +25,15 @@ export class WorkoutPlansComponent implements OnInit {
   categories: WorkoutPlanCategoryOption[] = [];
   selectedCategory: WorkoutPlanCategory | null = null;
   nameFilter = '';
-  onlyOwnFilter = false;
+  createdByFilter: CreatedByFilter = CreatedByFilter.All;
+  ownerNameFilter = '';
   currentUserId: number | null = null;
   currentPlanId: number | null = null;
 
+  readonly CreatedByFilter = CreatedByFilter;
+
   private nameFilter$ = new Subject<string>();
+  private ownerNameFilter$ = new Subject<string>();
 
   constructor(
     private workoutPlanService: WorkoutPlanService,
@@ -39,6 +43,11 @@ export class WorkoutPlansComponent implements OnInit {
     private modalService: BsModalService
   ) {
     this.nameFilter$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
+      this.pageNumber = 1;
+      this.loadPlans();
+    });
+
+    this.ownerNameFilter$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
       this.pageNumber = 1;
       this.loadPlans();
     });
@@ -63,9 +72,17 @@ export class WorkoutPlansComponent implements OnInit {
     this.loadPlans();
   }
 
-  onOnlyOwnChange() {
+  onCreatedByChange() {
+    if (this.createdByFilter === CreatedByFilter.OnlyMyself) {
+      this.ownerNameFilter = '';
+    }
     this.pageNumber = 1;
     this.loadPlans();
+  }
+
+  onOwnerNameFilterChange(value: string) {
+    this.ownerNameFilter = value;
+    this.ownerNameFilter$.next(value);
   }
 
   pageChanged(event: { page: number }) {
@@ -79,7 +96,8 @@ export class WorkoutPlansComponent implements OnInit {
       pageSize: this.pageSize,
       category: this.selectedCategory ?? undefined,
       name: this.nameFilter || undefined,
-      onlyOwn: this.onlyOwnFilter || undefined
+      createdBy: this.createdByFilter,
+      ownerName: (this.createdByFilter !== CreatedByFilter.OnlyMyself && this.ownerNameFilter) || undefined
     }).subscribe(response => {
       this.plans = response.result;
       this.pagination = response.pagination;
@@ -92,6 +110,10 @@ export class WorkoutPlansComponent implements OnInit {
 
   isCurrent(plan: WorkoutPlan): boolean {
     return plan.id === this.currentPlanId;
+  }
+
+  createPlan() {
+    this.router.navigate(['/workout-plan']);
   }
 
   viewDetails(plan: WorkoutPlan) {

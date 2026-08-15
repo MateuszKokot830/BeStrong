@@ -12,6 +12,7 @@ namespace Application.Dto.WorkoutPlan
         WorkoutPlanCategory Category,
         string CategoryLabel,
         bool IsPublic,
-        IReadOnlyCollection<WorkoutTemplateDto> WorkoutTemplates
+        IReadOnlyCollection<WorkoutTemplateDto> WorkoutTemplates,
+        string CreatedByName
     );
 }

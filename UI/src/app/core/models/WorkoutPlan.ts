@@ -6,6 +6,7 @@ import { User } from './User';
 export interface WorkoutPlan {
   id: number;
   createdById: number;
+  createdByName: string;
   usedBy: User[];
   name: string | null;
   description: string | null;
@@ -57,8 +58,15 @@ export interface WorkoutPlanCategoryOption {
   label: string;
 }
 
+export enum CreatedByFilter {
+  All = 'All',
+  OnlyMyself = 'OnlyMyself',
+  OnlyFollowers = 'OnlyFollowers'
+}
+
 export interface WorkoutPlanCriteria extends PaginationParams {
   category?: WorkoutPlanCategory;
   name?: string;
-  onlyOwn?: boolean;
+  createdBy?: CreatedByFilter;
+  ownerName?: string;
 }
