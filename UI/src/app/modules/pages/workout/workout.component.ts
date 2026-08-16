@@ -4,8 +4,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Exercise } from 'src/app/core/models/Exercise';
 import { MuscleGroup, MuscleSubgroup } from 'src/app/core/models/Enums';
 import { Workout, WorkoutCreate, WorkoutExercise, WorkoutSet } from 'src/app/core/models/Workout';
+import { WorkoutPlan } from 'src/app/core/models/WorkoutPlan';
 import { AccountService } from 'src/app/core/services/account.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
+import { WorkoutPlanService } from 'src/app/core/services/workout-plan.service';
 import { DraftExercise, WorkoutDraftService } from 'src/app/core/services/workout-draft.service';
 import { ExerciseComponent } from '../../components/exercise/exercise/exercise.component';
 
@@ -27,6 +29,8 @@ export class WorkoutComponent implements OnInit, AfterViewInit, OnDestroy {
   isAdmin = false;
   dragOverIndex: number | null = null;
   rightPanelHeight: number = DEFAULT_PANEL_HEIGHT;
+  activeWorkoutPlan: WorkoutPlan | null = null;
+  selectedTemplateOrder: number | null = null;
 
   muscleGroups = Object.keys(MuscleGroup)
     .filter(key => isNaN(Number(key)))
@@ -39,7 +43,7 @@ export class WorkoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private workoutService: WorkoutService, private toastr: ToastrService,
     private modalService: BsModalService, private accountService: AccountService,
-    private zone: NgZone, public draft: WorkoutDraftService) { }
+    private workoutPlanService: WorkoutPlanService, private zone: NgZone, public draft: WorkoutDraftService) { }
 
   ngOnInit(): void {
     this.loadExercises();
@@ -49,7 +53,19 @@ export class WorkoutComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isAdmin = user.isAdmin;
         this.currentUserId = user.id;
         this.refreshPreviousSets();
+        this.loadActiveWorkoutPlan(user.workoutPlanId);
       }
+    });
+  }
+
+  private loadActiveWorkoutPlan(workoutPlanId: number | null): void {
+    if (!workoutPlanId) {
+      this.activeWorkoutPlan = null;
+      return;
+    }
+
+    this.workoutPlanService.getWorkoutPlan(workoutPlanId).subscribe({
+      next: plan => this.activeWorkoutPlan = plan
     });
   }
 
@@ -141,6 +157,20 @@ export class WorkoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   removeSet(exerciseIndex: number, setIndex: number) {
     this.draft.removeSet(exerciseIndex, setIndex);
+  }
+
+  onCopyTemplateSelected() {
+    const template = this.activeWorkoutPlan?.workoutTemplates.find(t => t.order === this.selectedTemplateOrder);
+    setTimeout(() => this.selectedTemplateOrder = null);
+    if (!template)
+      return;
+
+    if (!this.draft.name.trim()) {
+      this.draft.name = template.name ?? '';
+    }
+
+    this.draft.copyFromTemplate(template);
+    this.toastr.success(`Copied "${template.name || 'workout'}" from your plan`);
   }
 
   cancelWorkout() {

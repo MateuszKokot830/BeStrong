@@ -5,6 +5,19 @@
         <div class="section-header mt-3">
           <h4 class="text-info mb-0">Add workout</h4>
           <div class="d-flex gap-2">
+            @if (activeWorkoutPlan) {
+            <select
+              class="form-select form-select-sm w-auto"
+              aria-label="Copy from plan"
+              [(ngModel)]="selectedTemplateOrder"
+              (ngModelChange)="onCopyTemplateSelected()"
+            >
+              <option [ngValue]="null">Copy from plan...</option>
+              @for (template of activeWorkoutPlan.workoutTemplates; track template.order) {
+              <option [ngValue]="template.order">{{ template.name || 'Workout ' + template.order }}</option>
+              }
+            </select>
+            }
             @if (!draft.isEmpty()) {
             <button type="button" class="btn btn-danger btn-sm" (click)="cancelWorkout()">Cancel workout</button>
             }

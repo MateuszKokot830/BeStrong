@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from '../models/Exercise';
 import { MuscleSubgroup } from '../models/Enums';
+import { WorkoutTemplate } from '../models/WorkoutPlan';
 
 export interface DraftSet {
   reps: number | null;
@@ -36,6 +37,19 @@ export class WorkoutDraftService {
 
   removeExercise(index: number) {
     this.exercises.splice(index, 1);
+  }
+
+  copyFromTemplate(template: WorkoutTemplate) {
+    for (const templateExercise of template.exercises) {
+      this.exercises.push({
+        exerciseId: templateExercise.exercise.id,
+        name: templateExercise.exercise.name,
+        imageUrl: templateExercise.exercise.imageUrl,
+        muscleSubgroup: templateExercise.exercise.muscleSubgroup,
+        notes: null,
+        sets: Array.from({ length: templateExercise.sets }, () => ({ reps: templateExercise.minReps, weight: null }))
+      });
+    }
   }
 
   addSet(exerciseIndex: number) {
