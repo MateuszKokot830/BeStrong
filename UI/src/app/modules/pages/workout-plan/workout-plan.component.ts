@@ -177,6 +177,10 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dragOverIndex = null;
   }
 
+  returnToPlans() {
+    this.router.navigateByUrl('/workout-plans');
+  }
+
   cancelPlan() {
     if (this.draft.isEmpty())
       return;

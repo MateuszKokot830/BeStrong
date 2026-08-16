@@ -1,7 +1,7 @@
 <div class="card page-card">
   <div class="card-body">
     <div class="position-relative mt-1 mb-2">
-      <button type="button" class="btn btn-sm btn-outline-success position-absolute top-0 start-0" (click)="createPlan()">Add new workout plan</button>
+      <button type="button" class="btn btn-success btn-sm position-absolute top-0 start-0" (click)="createPlan()">Add new workout plan</button>
       <h4 class="text-center text-info mb-0">Workout Plans</h4>
       @if ((accountService.currentProfile$ | async)?.workoutPlanName; as planName) {
       <span class="position-absolute top-0 end-0 text-white-50 small">Current plan: {{ planName }}</span>
