@@ -260,6 +260,43 @@
                   }
                 </div>
               </tab>
+              <tab heading="Workout Plan" class="text-white">
+                <div class="row mt-3">
+                  <div class="col-12 card bg-dark mb-2 mt-3">
+                    <div class="card-body">
+                      <h4 class="text-center mt-3 text-info">{{ user.userName | titlecase }}'s workout plan</h4>
+                      @if (currentWorkoutPlan) {
+                      <h5 class="text-center mt-2 text-success">{{ currentWorkoutPlan.name }}</h5>
+                      <p class="text-muted small text-center mb-1">
+                        {{ currentWorkoutPlan.categoryLabel }} · {{ currentWorkoutPlan.isPublic ? 'Public' : 'Private' }}
+                      </p>
+                      @if (currentWorkoutPlan.description) {
+                      <p class="text-white text-center mb-3">{{ currentWorkoutPlan.description }}</p>
+                      }
+                      @for (template of currentWorkoutPlan.workoutTemplates; track template.order) {
+                      <h6 class="text-info mt-3">{{ template.name || 'Workout ' + template.order }}</h6>
+                      <div class="data-pane mb-2">
+                        <div class="data-row cols-exercise data-row--head">
+                          <span>Exercise</span>
+                          <span>Sets</span>
+                          <span>Reps</span>
+                        </div>
+                        @for (exercise of template.exercises; track exercise.order) {
+                        <div class="data-row cols-exercise">
+                          <span>{{ exercise.exercise.name }}</span>
+                          <span>{{ exercise.sets }}</span>
+                          <span>{{ exercise.minReps }}–{{ exercise.maxReps }}</span>
+                        </div>
+                        }
+                      </div>
+                      }
+                      } @else {
+                      <p class="text-white text-center mb-3">No active workout plan.</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </tab>
               <tab heading="Gallery" class="text-white">
                 <div class="row mt-3">
                   @if (isCurrentUser && isEditMode) {

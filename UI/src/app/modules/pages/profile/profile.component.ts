@@ -6,8 +6,10 @@ import { switchMap } from 'rxjs/operators';
 import { Photo } from 'src/app/core/models/Photo';
 import { Measurements, User, UserUpdate } from 'src/app/core/models/User';
 import { Workout, WorkoutExercise } from 'src/app/core/models/Workout';
+import { WorkoutPlan } from 'src/app/core/models/WorkoutPlan';
 import { AccountService } from 'src/app/core/services/account.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { WorkoutPlanService } from 'src/app/core/services/workout-plan.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
 @Component({
@@ -26,6 +28,7 @@ export class ProfileComponent implements OnInit {
   sinceLastWorkout = '';
   followers: User[] = [];
   followedUsers: User[] = [];
+  currentWorkoutPlan: WorkoutPlan | null = null;
   isCurrentUser = false;
   isEditMode = false;
   isFollowed = false;
@@ -35,7 +38,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(private accountService: AccountService, private userService: UserService,
     private route: ActivatedRoute, private toastr: ToastrService,
-    private workoutService: WorkoutService) { }
+    private workoutService: WorkoutService, private workoutPlanService: WorkoutPlanService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -66,14 +69,16 @@ export class ProfileComponent implements OnInit {
         return forkJoin({
           followers: followerIds.length ? this.userService.getUsersByIds(followerIds) : of<User[]>([]),
           followedUsers: followedIds.length ? this.userService.getUsersByIds(followedIds) : of<User[]>([]),
-          workouts: this.workoutService.getUserWorkouts(user.id)
+          workouts: this.workoutService.getUserWorkouts(user.id),
+          workoutPlan: user.workoutPlanId ? this.workoutPlanService.getWorkoutPlan(user.workoutPlanId) : of<WorkoutPlan | null>(null)
         });
       })
     ).subscribe({
-      next: ({ followers, followedUsers, workouts }) => {
+      next: ({ followers, followedUsers, workouts, workoutPlan }) => {
         this.isLoading = false;
         this.followers = followers;
         this.followedUsers = followedUsers;
+        this.currentWorkoutPlan = workoutPlan;
         this.setWorkouts(workouts);
       },
       error: _ => this.isLoading = false
