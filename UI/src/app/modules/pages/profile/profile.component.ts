@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
   currentUserAcc: User | null = null;
   measurements: Measurements = emptyMeasurements();
   workouts: Workout[] = [];
+  workoutPeriodDays = 14;
   exerciseNames = new Map<number, string>();
   lastWorkout: Workout | null = null;
   sinceLastWorkout = '';
@@ -126,6 +127,12 @@ export class ProfileComponent implements OnInit {
     this.lastWorkout = workouts[0];
     const dateDifference = new Date().getTime() - new Date(this.lastWorkout.date).getTime();
     this.sinceLastWorkout = Math.round(dateDifference / (1000 * 3600 * 24)) + ' days ago';
+  }
+
+  get filteredWorkouts(): Workout[] {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - this.workoutPeriodDays);
+    return this.workouts.filter(w => new Date(w.date) >= cutoff);
   }
 
   onPhotoChange(photo: Photo): void {
