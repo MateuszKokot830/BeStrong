@@ -30,6 +30,8 @@ export class WorkoutPlanDraftService {
   activeTemplateIndex = 0;
   editingPlanId: number | null = null;
 
+  private originalSnapshot: string | null = null;
+
   loadFrom(plan: WorkoutPlan) {
     this.editingPlanId = plan.id;
     this.name = plan.name ?? '';
@@ -49,6 +51,21 @@ export class WorkoutPlanDraftService {
       }))
     }));
     this.activeTemplateIndex = 0;
+    this.originalSnapshot = this.snapshot();
+  }
+
+  hasChanges(): boolean {
+    return this.editingPlanId !== null && this.snapshot() !== this.originalSnapshot;
+  }
+
+  private snapshot(): string {
+    return JSON.stringify({
+      name: this.name,
+      description: this.description,
+      category: this.category,
+      isPublic: this.isPublic,
+      templates: this.templates
+    });
   }
 
   addTemplate() {
@@ -110,6 +127,7 @@ export class WorkoutPlanDraftService {
     this.templates = [this.createTemplate(1)];
     this.activeTemplateIndex = 0;
     this.editingPlanId = null;
+    this.originalSnapshot = null;
   }
 
   private createTemplate(order: number): DraftTemplate {

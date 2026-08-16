@@ -123,6 +123,18 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.draft.templates[this.draft.activeTemplateIndex]?.name || 'workout';
   }
 
+  get showReturnButton(): boolean {
+    return this.draft.editingPlanId ? !this.draft.hasChanges() : this.draft.isEmpty();
+  }
+
+  get showDiscardOrCancelButton(): boolean {
+    return this.draft.editingPlanId ? this.draft.hasChanges() : !this.draft.isEmpty();
+  }
+
+  get showSaveButton(): boolean {
+    return this.draft.editingPlanId ? this.draft.hasChanges() : true;
+  }
+
   addTemplate() {
     this.draft.addTemplate();
   }
@@ -178,6 +190,7 @@ export class WorkoutPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   returnToPlans() {
+    this.draft.clear();
     this.router.navigateByUrl('/workout-plans');
   }
 

@@ -5,12 +5,15 @@
         <div class="section-header mt-3">
           <h4 class="text-info mb-0">{{ draft.editingPlanId ? 'Edit workout plan' : 'Build workout plan' }}</h4>
           <div class="d-flex gap-2">
-            @if (!draft.editingPlanId && draft.isEmpty()) {
+            @if (showReturnButton) {
             <button type="button" class="btn btn-secondary btn-sm" (click)="returnToPlans()">Return</button>
-            } @if (draft.editingPlanId || !draft.isEmpty()) {
+            }
+            @if (showDiscardOrCancelButton) {
             <button type="button" class="btn btn-danger btn-sm" (click)="cancelPlan()">{{ draft.editingPlanId ? 'Discard changes' : 'Cancel plan' }}</button>
             }
+            @if (showSaveButton) {
             <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="savePlan()">{{ draft.editingPlanId ? 'Save changes' : 'Save plan' }}</button>
+            }
           </div>
         </div>
 
