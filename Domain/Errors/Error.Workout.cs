@@ -10,8 +10,8 @@ public static partial class Errors
             code: "Workout.NotFound",
             description: "Workout was not found.");
 
-        public static Error Unauthorized => Error.Unauthorized(
-            code: "Workout.Unauthorized",
+        public static Error Forbidden => Error.Forbidden(
+            code: "Workout.Forbidden",
             description: "You are not authorized to modify this workout.");
     }
 }

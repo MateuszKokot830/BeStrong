@@ -42,7 +42,7 @@ namespace Application.Tests.Commands.Posts.UpdatePost
 
             var result = await _sut.Handle(Command(1, "new text"), CancellationToken.None);
 
-            Assert.Equal(Errors.Post.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.Post.Forbidden, result.FirstError);
         }
 
         [Fact]

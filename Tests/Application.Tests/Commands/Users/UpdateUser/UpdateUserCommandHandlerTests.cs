@@ -52,7 +52,7 @@ namespace Application.Tests.Commands.Users.UpdateUser
 
             var result = await _sut.Handle(new UpdateUserCommand(Dto(5)), CancellationToken.None);
 
-            Assert.Equal(Errors.User.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.User.Forbidden, result.FirstError);
         }
 
         [Fact]

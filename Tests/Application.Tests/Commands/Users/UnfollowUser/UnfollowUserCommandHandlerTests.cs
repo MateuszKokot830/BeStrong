@@ -26,7 +26,7 @@ namespace Application.Tests.Commands.Users.UnfollowUser
 
             var result = await _sut.Handle(new UnfollowUserCommand(UserId: 1, UnfollowUserId: 2), CancellationToken.None);
 
-            Assert.Equal(Errors.User.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.User.Forbidden, result.FirstError);
         }
 
         [Fact]

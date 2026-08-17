@@ -46,7 +46,7 @@ namespace Application.Tests.Commands.WorkoutPlans.UpdateWorkoutPlan
 
             var result = await _sut.Handle(new UpdateWorkoutPlanCommand(1, ValidDto()), CancellationToken.None);
 
-            Assert.Equal(Errors.WorkoutPlan.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.WorkoutPlan.Forbidden, result.FirstError);
         }
 
         [Fact]

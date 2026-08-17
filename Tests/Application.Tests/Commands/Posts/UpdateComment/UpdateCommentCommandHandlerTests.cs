@@ -38,7 +38,7 @@ namespace Application.Tests.Commands.Posts.UpdateComment
 
             var result = await _sut.Handle(new UpdateCommentCommand(1, new UpdateCommentDto("edited")), CancellationToken.None);
 
-            Assert.Equal(Errors.Comment.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.Comment.Forbidden, result.FirstError);
         }
 
         [Fact]

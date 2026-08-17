@@ -26,7 +26,7 @@ namespace Application.Tests.Commands.Users.FollowUser
 
             var result = await _sut.Handle(new FollowUserCommand(UserId: 1, FollowUserId: 2), CancellationToken.None);
 
-            Assert.Equal(Errors.User.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.User.Forbidden, result.FirstError);
             _userRepository.Verify(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 

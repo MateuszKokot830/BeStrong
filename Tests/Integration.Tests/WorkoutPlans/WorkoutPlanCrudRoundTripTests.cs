@@ -177,7 +177,7 @@ namespace Integration.Tests.WorkoutPlans
         }
 
         [Fact]
-        public async Task UpdateWorkoutPlan_AsADifferentUser_ReturnsUnauthorized()
+        public async Task UpdateWorkoutPlan_AsADifferentUser_ReturnsForbidden()
         {
             var exercise = await CreateExerciseAsAdminAsync("WP Face Pull");
             var ownerToken = await _client.RegisterAndGetTokenAsync("iris_wpupdateowner");
@@ -191,7 +191,7 @@ namespace Integration.Tests.WorkoutPlans
 
             var updateResponse = await strangerClient.PutAsJsonAsync($"/api/workoutplans/{created!.Id}", PlanWithNestedTemplates(exercise.Id));
 
-            Assert.Equal(HttpStatusCode.Unauthorized, updateResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, updateResponse.StatusCode);
         }
 
         [Fact]
@@ -236,7 +236,7 @@ namespace Integration.Tests.WorkoutPlans
         }
 
         [Fact]
-        public async Task DeleteWorkoutPlan_AsADifferentAuthenticatedUser_ReturnsUnauthorized()
+        public async Task DeleteWorkoutPlan_AsADifferentAuthenticatedUser_ReturnsForbidden()
         {
             var exercise = await CreateExerciseAsAdminAsync("WP Row");
             var ownerToken = await _client.RegisterAndGetTokenAsync("iris_wpownerdel");
@@ -250,7 +250,7 @@ namespace Integration.Tests.WorkoutPlans
 
             var deleteResponse = await strangerClient.DeleteAsync($"/api/workoutplans/{created!.Id}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, deleteResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, deleteResponse.StatusCode);
         }
     }
 }

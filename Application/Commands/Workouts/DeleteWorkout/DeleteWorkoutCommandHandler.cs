@@ -20,7 +20,7 @@ namespace Application.Commands.Workouts.DeleteWorkout
                 return Errors.Workout.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(workout.UserId ?? 0))
-                return Errors.Workout.Unauthorized;
+                return Errors.Workout.Forbidden;
 
             await _workoutRepository.DeleteAsync(workout, cancellationToken);
             return Unit.Value;

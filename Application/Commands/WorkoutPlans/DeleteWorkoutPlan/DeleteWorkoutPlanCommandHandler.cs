@@ -20,7 +20,7 @@ namespace Application.Commands.WorkoutPlans.DeleteWorkoutPlan
                 return Errors.WorkoutPlan.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(plan.CreatedById))
-                return Errors.WorkoutPlan.Unauthorized;
+                return Errors.WorkoutPlan.Forbidden;
 
             if (plan.UsedBy.Count > 0)
                 return Errors.WorkoutPlan.InUse;

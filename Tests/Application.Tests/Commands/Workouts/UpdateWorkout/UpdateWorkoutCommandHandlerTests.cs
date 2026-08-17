@@ -42,7 +42,7 @@ namespace Application.Tests.Commands.Workouts.UpdateWorkout
 
             var result = await _sut.Handle(new UpdateWorkoutCommand(1, Dto("Push Day")), CancellationToken.None);
 
-            Assert.Equal(Errors.Workout.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.Workout.Forbidden, result.FirstError);
         }
 
         [Fact]

@@ -20,7 +20,7 @@ namespace Application.Commands.Posts.DeleteComment
                 return Errors.Comment.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(comment.UserId))
-                return Errors.Comment.Unauthorized;
+                return Errors.Comment.Forbidden;
 
             await _commentRepository.DeleteAsync(comment, cancellationToken);
             return Unit.Value;

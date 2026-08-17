@@ -23,7 +23,7 @@ namespace Application.Commands.WorkoutPlans.AssignWorkoutPlan
                 return Errors.WorkoutPlan.NotFound;
 
             if (!plan.IsPublic && !_currentUserService.IsOwnerOrAdmin(plan.CreatedById))
-                return Errors.WorkoutPlan.Unauthorized;
+                return Errors.WorkoutPlan.Forbidden;
 
             var user = await _userRepository.GetByIdAsync(_currentUserService.UserId, cancellationToken);
             if (user is null)

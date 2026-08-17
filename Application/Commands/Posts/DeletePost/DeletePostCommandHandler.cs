@@ -20,7 +20,7 @@ namespace Application.Commands.Posts.DeletePost
                 return Errors.Post.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(post.UserId))
-                return Errors.Post.Unauthorized;
+                return Errors.Post.Forbidden;
 
             await _postRepository.DeleteAsync(post, cancellationToken);
             return Unit.Value;

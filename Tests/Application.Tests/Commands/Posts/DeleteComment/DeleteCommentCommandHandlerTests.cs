@@ -37,7 +37,7 @@ namespace Application.Tests.Commands.Posts.DeleteComment
 
             var result = await _sut.Handle(new DeleteCommentCommand(1), CancellationToken.None);
 
-            Assert.Equal(Errors.Comment.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.Comment.Forbidden, result.FirstError);
         }
 
         [Fact]

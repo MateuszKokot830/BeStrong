@@ -10,8 +10,8 @@ public static partial class Errors
             code: "Comment.NotFound",
             description: "Comment was not found.");
 
-        public static Error Unauthorized => Error.Unauthorized(
-            code: "Comment.Unauthorized",
+        public static Error Forbidden => Error.Forbidden(
+            code: "Comment.Forbidden",
             description: "You are not authorized to delete this comment.");
 
         public static Error AlreadyLiked => Error.Conflict(

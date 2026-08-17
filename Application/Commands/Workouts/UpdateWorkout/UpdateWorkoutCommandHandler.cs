@@ -22,7 +22,7 @@ namespace Application.Commands.Workouts.UpdateWorkout
                 return Errors.Workout.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(workout.UserId ?? 0))
-                return Errors.Workout.Unauthorized;
+                return Errors.Workout.Forbidden;
 
             workout.Name = request.WorkoutDto.Name;
             workout.WorkoutExercises.Clear();

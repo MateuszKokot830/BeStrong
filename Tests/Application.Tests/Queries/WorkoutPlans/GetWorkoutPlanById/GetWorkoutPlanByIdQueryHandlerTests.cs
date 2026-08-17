@@ -40,7 +40,7 @@ namespace Application.Tests.Queries.WorkoutPlans.GetWorkoutPlanById
 
             var result = await _sut.Handle(new GetWorkoutPlanByIdQuery(1), CancellationToken.None);
 
-            Assert.Equal(Errors.WorkoutPlan.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.WorkoutPlan.Forbidden, result.FirstError);
         }
 
         [Fact]

@@ -14,8 +14,8 @@ namespace Domain.Errors
                 code: "User.NotFound",
                 description: "User was not found.");
 
-            public static Error Unauthorized => Error.Unauthorized(
-                code: "User.Unauthorized",
+            public static Error Forbidden => Error.Forbidden(
+                code: "User.Forbidden",
                 description: "You are not authorized to perform this action.");
         }
     }

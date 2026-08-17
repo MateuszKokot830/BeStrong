@@ -23,7 +23,7 @@ namespace Application.Queries.Workouts.GetWorkoutStatistics
         public async Task<ErrorOr<StatisticsDto>> Handle(GetWorkoutStatisticsQuery request, CancellationToken cancellationToken)
         {
             if (!_currentUserService.IsOwnerOrAdmin(request.UserId))
-                return Errors.User.Unauthorized;
+                return Errors.User.Forbidden;
 
             if (!await _userSearcher.ExistsAsync(request.UserId, cancellationToken))
                 return Errors.User.NotFound;

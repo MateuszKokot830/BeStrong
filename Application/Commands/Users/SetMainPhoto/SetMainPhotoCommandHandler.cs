@@ -20,7 +20,7 @@ namespace Application.Commands.Users.SetMainPhoto
                 return Errors.User.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(user.Id))
-                return Errors.User.Unauthorized;
+                return Errors.User.Forbidden;
 
             var photo = user.Photos.FirstOrDefault(x => x.Id == request.PhotoId);
             if (photo is null)

@@ -21,7 +21,7 @@ namespace Application.Queries.WorkoutPlans.GetWorkoutPlanById
                 return Errors.WorkoutPlan.NotFound;
 
             if (!plan.IsPublic && !_currentUserService.IsOwnerOrAdmin(plan.CreatedById))
-                return Errors.WorkoutPlan.Unauthorized;
+                return Errors.WorkoutPlan.Forbidden;
 
             return plan;
         }

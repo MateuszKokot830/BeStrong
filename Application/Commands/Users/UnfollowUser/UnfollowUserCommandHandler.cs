@@ -16,7 +16,7 @@ namespace Application.Commands.Users.UnfollowUser
         public async Task<ErrorOr<Unit>> Handle(UnfollowUserCommand request, CancellationToken cancellationToken)
         {
             if (!_currentUserService.IsOwnerOrAdmin(request.UserId))
-                return Errors.User.Unauthorized;
+                return Errors.User.Forbidden;
 
             var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
             if (user is null)

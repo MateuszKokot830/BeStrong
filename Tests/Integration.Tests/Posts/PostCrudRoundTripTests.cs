@@ -67,7 +67,7 @@ namespace Integration.Tests.Posts
         }
 
         [Fact]
-        public async Task DeletePost_AsADifferentAuthenticatedUser_ReturnsUnauthorized()
+        public async Task DeletePost_AsADifferentAuthenticatedUser_ReturnsForbidden()
         {
             // Proves ownership enforcement works with a real JWT-derived ICurrentUserService,
             // not just a mocked one — the same check is already unit-tested in Application.Tests,
@@ -84,7 +84,7 @@ namespace Integration.Tests.Posts
 
             var deleteResponse = await strangerClient.DeleteAsync($"/api/posts/{created!.Id}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, deleteResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, deleteResponse.StatusCode);
         }
 
         [Fact]

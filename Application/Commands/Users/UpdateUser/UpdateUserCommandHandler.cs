@@ -22,7 +22,7 @@ namespace Application.Commands.Users.UpdateUser
                 return Errors.User.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(user.Id))
-                return Errors.User.Unauthorized;
+                return Errors.User.Forbidden;
 
             request.UserUpdateDto.ApplyTo(user);
             user.UpdatedDate = DateTime.UtcNow;

@@ -23,7 +23,7 @@ namespace Application.Commands.Posts.UpdatePost
                 return Errors.Post.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(post.UserId))
-                return Errors.Post.Unauthorized;
+                return Errors.Post.Forbidden;
 
             if (post.Type == PostType.Normal && request.UpdatePostDto.Description is null)
                 return Errors.Post.DescriptionRequired;

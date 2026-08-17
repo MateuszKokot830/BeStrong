@@ -38,7 +38,7 @@ namespace Application.Tests.Commands.Posts.DeletePost
 
             var result = await _sut.Handle(new DeletePostCommand(1), CancellationToken.None);
 
-            Assert.Equal(Errors.Post.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.Post.Forbidden, result.FirstError);
             _postRepository.Verify(r => r.DeleteAsync(It.IsAny<Post>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 

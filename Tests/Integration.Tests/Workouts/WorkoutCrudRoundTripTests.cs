@@ -112,11 +112,14 @@ namespace Integration.Tests.Workouts
         }
 
         [Fact]
-        public async Task GetUserWorkouts_AsADifferentAuthenticatedUser_ReturnsUnauthorized()
+        public async Task GetUserWorkouts_AsADifferentAuthenticatedUser_ReturnsTheirWorkouts()
         {
+            var exercise = await CreateExerciseAsAdminAsync("Browse Profile Row");
             var token = await _client.RegisterAndGetTokenAsync("jack_workoutowner");
             _client.SetBearerToken(token);
             var me = await _client.GetFromJsonAsync<UserDto>("/api/users/me");
+            var createResponse = await _client.PostAsJsonAsync("/api/workouts", WorkoutWithOneExercise(exercise.Id, "Owner's Workout"));
+            var created = await createResponse.Content.ReadFromJsonAsync<WorkoutDto>();
 
             using var strangerClient = _factory.CreateClient();
             var strangerToken = await strangerClient.RegisterAndGetTokenAsync("jack_workoutstranger");
@@ -124,11 +127,13 @@ namespace Integration.Tests.Workouts
 
             var response = await strangerClient.GetAsync($"/api/workouts/{me!.Id}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var workouts = await response.Content.ReadFromJsonAsync<List<WorkoutDto>>();
+            Assert.Contains(workouts!, w => w.Id == created!.Id);
         }
 
         [Fact]
-        public async Task DeleteWorkout_AsADifferentAuthenticatedUser_ReturnsUnauthorized()
+        public async Task DeleteWorkout_AsADifferentAuthenticatedUser_ReturnsForbidden()
         {
             var exercise = await CreateExerciseAsAdminAsync("Deadlift");
             var ownerToken = await _client.RegisterAndGetTokenAsync("jack_workoutdelowner");
@@ -142,7 +147,7 @@ namespace Integration.Tests.Workouts
 
             var deleteResponse = await strangerClient.DeleteAsync($"/api/workouts/{created!.Id}");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, deleteResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, deleteResponse.StatusCode);
         }
 
         [Fact]

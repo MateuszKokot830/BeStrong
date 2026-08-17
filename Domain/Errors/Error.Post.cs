@@ -10,8 +10,8 @@ public static partial class Errors
             code: "Post.NotFound",
             description: "Post was not found.");
 
-        public static Error Unauthorized => Error.Unauthorized(
-            code: "Post.Unauthorized",
+        public static Error Forbidden => Error.Forbidden(
+            code: "Post.Forbidden",
             description: "You are not authorized to delete this post.");
 
         public static Error AlreadyLiked => Error.Conflict(

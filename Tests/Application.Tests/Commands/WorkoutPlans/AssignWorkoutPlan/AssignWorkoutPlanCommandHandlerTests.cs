@@ -43,7 +43,7 @@ namespace Application.Tests.Commands.WorkoutPlans.AssignWorkoutPlan
 
             var result = await _sut.Handle(new AssignWorkoutPlanCommand(1), CancellationToken.None);
 
-            Assert.Equal(Errors.WorkoutPlan.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.WorkoutPlan.Forbidden, result.FirstError);
         }
 
         [Fact]

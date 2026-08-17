@@ -72,14 +72,14 @@ namespace Integration.Tests.Users
         }
 
         [Fact]
-        public async Task FollowUser_OnBehalfOfADifferentUser_ReturnsUnauthorized()
+        public async Task FollowUser_OnBehalfOfADifferentUser_ReturnsForbidden()
         {
             var (_, userId) = await RegisterClientAsync("kate_impersonated");
             var (attacker, targetId) = await RegisterClientAsync("kate_impersonator");
 
             var response = await attacker.PostAsync($"/api/users/{userId}/follow?followUserId={targetId}", content: null);
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
     }
 }

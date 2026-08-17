@@ -10,8 +10,8 @@ public static partial class Errors
             code: "WorkoutPlan.NotFound",
             description: "Workout plan was not found.");
 
-        public static Error Unauthorized => Error.Unauthorized(
-            code: "WorkoutPlan.Unauthorized",
+        public static Error Forbidden => Error.Forbidden(
+            code: "WorkoutPlan.Forbidden",
             description: "You are not authorized to modify this workout plan.");
 
         public static Error DuplicateName => Error.Conflict(

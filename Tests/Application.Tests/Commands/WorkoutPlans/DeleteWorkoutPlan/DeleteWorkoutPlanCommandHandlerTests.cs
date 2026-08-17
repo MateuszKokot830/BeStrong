@@ -37,7 +37,7 @@ namespace Application.Tests.Commands.WorkoutPlans.DeleteWorkoutPlan
 
             var result = await _sut.Handle(new DeleteWorkoutPlanCommand(1), CancellationToken.None);
 
-            Assert.Equal(Errors.WorkoutPlan.Unauthorized, result.FirstError);
+            Assert.Equal(Errors.WorkoutPlan.Forbidden, result.FirstError);
         }
 
         [Fact]

@@ -22,7 +22,7 @@ namespace Application.Commands.Posts.UpdateComment
                 return Errors.Comment.NotFound;
 
             if (!_currentUserService.IsOwnerOrAdmin(comment.UserId))
-                return Errors.Comment.Unauthorized;
+                return Errors.Comment.Forbidden;
 
             comment.Description = request.UpdateCommentDto.Description;
 
