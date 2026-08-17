@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Exercise, ExerciseCreate } from '../models/Exercise';
-import { Workout, WorkoutCreate } from '../models/Workout';
+import { PaginatedResult, PaginationHeader } from '../models/Pagination';
+import { Workout, WorkoutCreate, WorkoutCriteria } from '../models/Workout';
 import { Statistics } from '../models/Statistics';
 
 @Injectable({
@@ -15,6 +17,47 @@ export class WorkoutService {
 
   getUserWorkouts(userId: number) {
     return this.http.get<Workout[]>(`${this.baseUrl}workouts/${userId}`);
+  }
+
+  getWorkouts(criteria: WorkoutCriteria) {
+    let params = new HttpParams()
+      .set('pageNumber', criteria.pageNumber)
+      .set('pageSize', criteria.pageSize);
+
+    if (criteria.dateFrom) {
+      params = params.set('dateFrom', criteria.dateFrom);
+    }
+
+    if (criteria.dateTo) {
+      params = params.set('dateTo', criteria.dateTo);
+    }
+
+    if (criteria.name) {
+      params = params.set('name', criteria.name);
+    }
+
+    if (criteria.exerciseId !== undefined && criteria.exerciseId !== null) {
+      params = params.set('exerciseId', criteria.exerciseId);
+    }
+
+    return this.http.get<Workout[]>(this.baseUrl + 'workouts', { observe: 'response', params }).pipe(
+      map((response): PaginatedResult<Workout[]> => {
+        const header = response.headers.get('Pagination');
+        const parsed: PaginationHeader = header ? JSON.parse(header) : null;
+
+        return {
+          result: response.body ?? [],
+          pagination: parsed
+            ? {
+                currentPage: parsed.currentPage,
+                itemsPerPage: parsed.itemsPerPage,
+                totalItems: parsed.totalItems,
+                totalPages: parsed.totalPages
+              }
+            : null
+        };
+      })
+    );
   }
 
   addWorkout(workout: WorkoutCreate) {

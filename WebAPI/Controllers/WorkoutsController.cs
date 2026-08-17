@@ -3,13 +3,17 @@ using Application.Commands.Workouts.DeleteWorkout;
 using Application.Commands.Workouts.UpdateWorkout;
 using Application.Dto.Workout;
 using Application.Dto.Statistics;
+using Application.Helpers;
+using Application.Helpers.Criteria;
 using Application.Queries.Workouts.GetUserWorkouts;
 using Application.Queries.Workouts.GetOneRepMax;
+using Application.Queries.Workouts.GetWorkouts;
 using Application.Queries.Workouts.GetWorkoutStatistics;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using WebAPI.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -37,6 +41,24 @@ namespace WebAPI.Controllers
             return result.Match(
                 workouts => Ok(workouts),
                 errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Retrieves the current user's workouts, filtered and paginated")]
+        [HttpGet]
+        public async Task<IActionResult> GetWorkouts([FromQuery] WorkoutSearchCriteria criteria)
+        {
+            ErrorOr<PaginationList<WorkoutDto>> result = await _mediator.Send(new GetWorkoutsQuery(criteria));
+
+            if (result.IsError)
+                return Problem(result.Errors);
+
+            Response.AddPaginationHeader(new PaginationHeader(
+                result.Value.CurrentPage,
+                result.Value.PageSize,
+                result.Value.TotalItems,
+                result.Value.TotalPages));
+
+            return Ok(result.Value);
         }
 
         [SwaggerOperation(Summary = "Retrieves workout statistics from specific user")]

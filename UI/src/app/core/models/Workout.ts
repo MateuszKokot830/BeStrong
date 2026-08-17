@@ -1,3 +1,5 @@
+import { PaginationParams } from './Pagination';
+
 export interface Workout {
   id: number;
   userId: number | null;
@@ -27,4 +29,11 @@ export interface WorkoutSet {
 export interface WorkoutCreate {
   name: string | null;
   exercises: WorkoutExercise[];
+}
+
+export interface WorkoutCriteria extends PaginationParams {
+  dateFrom?: string;
+  dateTo?: string;
+  name?: string;
+  exerciseId?: number;
 }

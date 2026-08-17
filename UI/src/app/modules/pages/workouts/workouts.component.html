@@ -1,0 +1,115 @@
+<div class="card page-card">
+  <div class="card-body">
+    <div class="position-relative mt-1 mb-2">
+      <div class="position-absolute top-0 start-0 d-flex gap-2">
+        <button type="button" class="btn btn-success btn-sm" (click)="startEmptyWorkout()">Start empty workout</button>
+        @if (activeWorkoutPlan) {
+        <select
+          class="form-select form-select-sm w-auto"
+          aria-label="Copy from plan"
+          [(ngModel)]="selectedTemplateOrder"
+          (ngModelChange)="onCopyTemplateSelected()"
+        >
+          <option [ngValue]="null">Copy from plan...</option>
+          @for (template of activeWorkoutPlan.workoutTemplates; track template.order) {
+          <option [ngValue]="template.order">{{ template.name || 'Workout ' + template.order }}</option>
+          }
+        </select>
+        }
+      </div>
+      <h4 class="text-center text-info mb-0">Workouts</h4>
+      @if ((accountService.currentProfile$ | async)?.workoutPlanName; as planName) {
+      <span class="position-absolute top-0 end-0 text-white-50 small">Current plan: {{ planName }}</span>
+      }
+    </div>
+
+    <div class="row mb-3 g-2 align-items-end">
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="text-white-50 small mb-1" for="dateFromFilter">Date from</label>
+        <input
+          id="dateFromFilter"
+          type="date"
+          class="form-control form-control-sm"
+          [(ngModel)]="dateFrom"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="text-white-50 small mb-1" for="dateToFilter">Date to</label>
+        <input
+          id="dateToFilter"
+          type="date"
+          class="form-control form-control-sm"
+          [(ngModel)]="dateTo"
+          (ngModelChange)="onFilterChange()"
+        />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label class="text-white-50 small mb-1" for="workoutNameFilter">Workout name</label>
+        <input
+          id="workoutNameFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by workout name..."
+          [ngModel]="nameFilter"
+          (ngModelChange)="onNameFilterChange($event)"
+        />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label class="text-white-50 small mb-1" for="exerciseFilter">Exercise</label>
+        <select
+          id="exerciseFilter"
+          class="form-select form-select-sm"
+          [(ngModel)]="selectedExerciseId"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option [ngValue]="null">All exercises</option>
+          @for (exercise of exercises; track exercise.id) {
+          <option [ngValue]="exercise.id">{{ exercise.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="row stat-row">
+      @for (workout of workouts; track workout.id) {
+      <div class="card bg-dark stat-card">
+        <div class="card-body">
+          <h5 class="text-center mt-2 text-success">
+            {{ workout.date | date }} <br />
+            {{ workout.name }}
+          </h5>
+          <div class="data-pane mb-3">
+            <div class="data-row cols-exercise data-row--head">
+              <span>Exercise</span>
+              <span>Sets × Reps</span>
+              <span>Weight</span>
+            </div>
+            @for (exercise of workout.workoutExercises; track exercise) {
+            <div class="data-row cols-exercise">
+              <span>{{ getExerciseName(exercise.exerciseId) }}</span>
+              <span>{{ formatReps(exercise) }}</span>
+              <span>{{ formatWeight(exercise) }}</span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      } @empty {
+      <p class="text-white-50 text-center mt-3">No workouts match your filters.</p>
+      }
+    </div>
+
+    @if (pagination) {
+    <div class="d-flex justify-content-center mt-4">
+      <pagination
+        [boundaryLinks]="true"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [maxSize]="5"
+        [(ngModel)]="pageNumber"
+        (pageChanged)="pageChanged($event)"
+      ></pagination>
+    </div>
+    }
+  </div>
+</div>
