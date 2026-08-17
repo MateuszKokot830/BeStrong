@@ -8,7 +8,7 @@ import { Pagination } from 'src/app/core/models/Pagination';
 import { Workout, WorkoutExercise } from 'src/app/core/models/Workout';
 import { WorkoutPlan } from 'src/app/core/models/WorkoutPlan';
 import { AccountService } from 'src/app/core/services/account.service';
-import { WorkoutDraftService } from 'src/app/core/services/workout-draft.service';
+import { DraftExercise, WorkoutDraftService } from 'src/app/core/services/workout-draft.service';
 import { WorkoutPlanService } from 'src/app/core/services/workout-plan.service';
 import { WorkoutService } from 'src/app/core/services/workout.service';
 
@@ -117,6 +117,31 @@ export class WorkoutsComponent implements OnInit {
   }
 
   startEmptyWorkout() {
+    this.router.navigate(['/workout']);
+  }
+
+  copyWorkout(workout: Workout) {
+    if (!this.draft.isEmpty() && !confirm('This will replace your current unsaved workout. Continue?'))
+      return;
+
+    const draftExercises: DraftExercise[] = [];
+    for (const workoutExercise of workout.workoutExercises) {
+      const exercise = this.exercises.find(e => e.id === workoutExercise.exerciseId);
+      if (!exercise)
+        continue;
+
+      draftExercises.push({
+        exerciseId: exercise.id,
+        name: exercise.name,
+        imageUrl: exercise.imageUrl,
+        muscleSubgroup: exercise.muscleSubgroup,
+        notes: workoutExercise.notes,
+        sets: workoutExercise.sets.map(s => ({ reps: s.reps, weight: s.weight }))
+      });
+    }
+
+    this.draft.copyFromWorkout(workout.name, draftExercises);
+    this.toastr.success(`Copied "${workout.name || 'workout'}"`);
     this.router.navigate(['/workout']);
   }
 

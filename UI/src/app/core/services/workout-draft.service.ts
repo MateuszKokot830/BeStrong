@@ -39,6 +39,11 @@ export class WorkoutDraftService {
     this.exercises.splice(index, 1);
   }
 
+  copyFromWorkout(name: string | null, exercises: DraftExercise[]) {
+    this.name = name ?? '';
+    this.exercises = exercises;
+  }
+
   copyFromTemplate(template: WorkoutTemplate) {
     for (const templateExercise of template.exercises) {
       this.exercises.push({
