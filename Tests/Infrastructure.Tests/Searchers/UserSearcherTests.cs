@@ -1,5 +1,6 @@
 using Application.Helpers.Criteria;
 using Domain.Aggregates;
+using Domain.Common;
 using Domain.Entities;
 using Infrastructure.Searchers;
 using Infrastructure.Tests.TestDoubles;
@@ -147,6 +148,60 @@ namespace Infrastructure.Tests.Searchers
 
             Assert.DoesNotContain(page, u => u.UserName == "alice");
             Assert.Contains(page, u => u.UserName == "bob");
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_FiltersByUsernameSubstring_CaseInsensitive()
+        {
+            await CreateUserAsync("alice");
+            await CreateUserAsync("bob");
+
+            var page = await _sut.GetPagedAsync(new UserSearchCriteria { PageNumber = 1, PageSize = 10, Username = "ALI" }, CancellationToken.None);
+
+            Assert.Single(page);
+            Assert.Equal("alice", page[0].UserName);
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_FiltersByGender()
+        {
+            Context.Users.AddRange(
+                new User { UserName = "alice", Gender = Gender.Female },
+                new User { UserName = "bob", Gender = Gender.Male });
+            await Context.SaveChangesAsync();
+
+            var page = await _sut.GetPagedAsync(new UserSearchCriteria { PageNumber = 1, PageSize = 10, Gender = Gender.Female }, CancellationToken.None);
+
+            Assert.Single(page);
+            Assert.Equal("alice", page[0].UserName);
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_FiltersByCountrySubstring_CaseInsensitive()
+        {
+            Context.Users.AddRange(
+                new User { UserName = "alice", Country = "Poland" },
+                new User { UserName = "bob", Country = "France" });
+            await Context.SaveChangesAsync();
+
+            var page = await _sut.GetPagedAsync(new UserSearchCriteria { PageNumber = 1, PageSize = 10, Country = "poland" }, CancellationToken.None);
+
+            Assert.Single(page);
+            Assert.Equal("alice", page[0].UserName);
+        }
+
+        [Fact]
+        public async Task GetPagedAsync_FiltersByCitySubstring_CaseInsensitive()
+        {
+            Context.Users.AddRange(
+                new User { UserName = "alice", City = "Warsaw" },
+                new User { UserName = "bob", City = "Paris" });
+            await Context.SaveChangesAsync();
+
+            var page = await _sut.GetPagedAsync(new UserSearchCriteria { PageNumber = 1, PageSize = 10, City = "warsaw" }, CancellationToken.None);
+
+            Assert.Single(page);
+            Assert.Equal("alice", page[0].UserName);
         }
 
         [Fact]

@@ -62,5 +62,38 @@ namespace Application.Tests.Validators.Queries
 
             result.ShouldNotHaveValidationErrorFor("Criteria.ExcludeUsername");
         }
+
+        [Fact]
+        public void Validate_WhenUsernameFilterExceedsMaxLength_HasError()
+        {
+            var criteria = Valid();
+            criteria.Username = new string('a', 51);
+
+            var result = _validator.TestValidate(new GetUsersListQuery(criteria));
+
+            result.ShouldHaveValidationErrorFor("Criteria.Username");
+        }
+
+        [Fact]
+        public void Validate_WhenCountryFilterExceedsMaxLength_HasError()
+        {
+            var criteria = Valid();
+            criteria.Country = new string('a', 101);
+
+            var result = _validator.TestValidate(new GetUsersListQuery(criteria));
+
+            result.ShouldHaveValidationErrorFor("Criteria.Country");
+        }
+
+        [Fact]
+        public void Validate_WhenCityFilterExceedsMaxLength_HasError()
+        {
+            var criteria = Valid();
+            criteria.City = new string('a', 101);
+
+            var result = _validator.TestValidate(new GetUsersListQuery(criteria));
+
+            result.ShouldHaveValidationErrorFor("Criteria.City");
+        }
     }
 }

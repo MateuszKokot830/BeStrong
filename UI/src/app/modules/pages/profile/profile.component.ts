@@ -205,6 +205,9 @@ export class ProfileComponent implements OnInit {
       return;
 
     const wasFollowed = this.isFollowed;
+    if (wasFollowed && !confirm(`Unfollow ${this.user.userName}?`))
+      return;
+
     const username = this.user.userName;
     const request = wasFollowed
       ? this.userService.unfollowUser(this.currentUserAcc.id, this.user.id)

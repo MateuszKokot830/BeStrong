@@ -17,6 +17,18 @@ namespace Application.Validators.Queries
             RuleFor(x => x.Criteria.ExcludeUsername)
                 .MaximumLength(50).WithMessage("ExcludeUsername filter cannot exceed 50 characters.")
                 .When(x => x.Criteria.ExcludeUsername is not null);
+
+            RuleFor(x => x.Criteria.Username)
+                .MaximumLength(50).WithMessage("Username filter cannot exceed 50 characters.")
+                .When(x => x.Criteria.Username is not null);
+
+            RuleFor(x => x.Criteria.Country)
+                .MaximumLength(100).WithMessage("Country filter cannot exceed 100 characters.")
+                .When(x => x.Criteria.Country is not null);
+
+            RuleFor(x => x.Criteria.City)
+                .MaximumLength(100).WithMessage("City filter cannot exceed 100 characters.")
+                .When(x => x.Criteria.City is not null);
         }
     }
 }

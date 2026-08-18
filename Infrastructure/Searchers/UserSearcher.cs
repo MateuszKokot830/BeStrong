@@ -53,6 +53,10 @@ namespace Infrastructure.Searchers
             var query = _context.Users
                 .AsNoTracking()
                 .Where(u => criteria.ExcludeUsername == null || u.UserName != criteria.ExcludeUsername)
+                .Where(u => criteria.Username == null || (u.UserName != null && EF.Functions.Like(u.UserName, $"%{criteria.Username}%")))
+                .Where(u => criteria.Gender == null || u.Gender == criteria.Gender)
+                .Where(u => criteria.Country == null || (u.Country != null && EF.Functions.Like(u.Country, $"%{criteria.Country}%")))
+                .Where(u => criteria.City == null || (u.City != null && EF.Functions.Like(u.City, $"%{criteria.City}%")))
                 .OrderBy(u => u.UserName)
                 .Select(UserMappings.Selector);
 

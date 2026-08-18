@@ -11,8 +11,24 @@
 }
 
 .card-img-wrapper {
+  position: relative;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+}
+
+.follow-btn {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.card:hover .follow-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .card-img-wrapper .card-img-top {

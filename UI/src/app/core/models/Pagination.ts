@@ -22,6 +22,12 @@ export interface PaginationParams {
   pageSize: number;
 }
 
+import { Gender } from './Enums';
+
 export interface UserSearchCriteria extends PaginationParams {
   excludeUsername?: string;
+  username?: string;
+  gender?: Gender;
+  country?: string;
+  city?: string;
 }

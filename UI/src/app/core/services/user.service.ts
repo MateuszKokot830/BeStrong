@@ -67,6 +67,22 @@ export class UserService {
       params = params.set('excludeUsername', criteria.excludeUsername);
     }
 
+    if (criteria.username) {
+      params = params.set('username', criteria.username);
+    }
+
+    if (criteria.gender !== undefined && criteria.gender !== null) {
+      params = params.set('gender', criteria.gender);
+    }
+
+    if (criteria.country) {
+      params = params.set('country', criteria.country);
+    }
+
+    if (criteria.city) {
+      params = params.set('city', criteria.city);
+    }
+
     return this.http.get<User[]>(this.baseUrl + 'users/list', { observe: 'response', params }).pipe(
       map((response): PaginatedResult<User[]> => {
         const header = response.headers.get('Pagination');

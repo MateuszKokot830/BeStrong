@@ -1,17 +1,60 @@
 <div class="card page-card">
   <div class="card-body">
-    <div class="row">
-      <div class="col-12">
-        <h4 class="text-center text-info mt-1">Search for users</h4>
+    <h4 class="text-center text-info mt-1 mb-3">Search for users</h4>
+
+    <div class="row mb-3 g-2 align-items-end">
+      <div class="col-12 col-sm-6 col-md-3">
+        <label class="text-white-50 small mb-1" for="usernameFilter">Username</label>
+        <input
+          id="usernameFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by username..."
+          [ngModel]="usernameFilter"
+          (ngModelChange)="onUsernameFilterChange($event)"
+        />
       </div>
+      <div class="col-12 col-sm-6 col-md-2">
+        <label class="text-white-50 small mb-1" for="genderFilter">Gender</label>
+        <select id="genderFilter" class="form-select form-select-sm" [(ngModel)]="selectedGender" (ngModelChange)="onFilterChange()">
+          <option [ngValue]="null">All</option>
+          <option [ngValue]="Gender.Male">Male</option>
+          <option [ngValue]="Gender.Female">Female</option>
+        </select>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3">
+        <label class="text-white-50 small mb-1" for="countryFilter">Country</label>
+        <input
+          id="countryFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by country..."
+          [ngModel]="countryFilter"
+          (ngModelChange)="onCountryFilterChange($event)"
+        />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4">
+        <label class="text-white-50 small mb-1" for="cityFilter">City</label>
+        <input
+          id="cityFilter"
+          class="form-control form-control-sm"
+          placeholder="Search by city..."
+          [ngModel]="cityFilter"
+          (ngModelChange)="onCityFilterChange($event)"
+        />
+      </div>
+    </div>
+
+    <div class="row">
       @for (user of users; track user) {
       <div class="col-6 col-sm-4 col-md-3 col-lg-2">
         <app-user-card [user]="user"></app-user-card>
       </div>
+      } @empty {
+      <p class="text-white-50 text-center mt-3">No users match your filters.</p>
       }
     </div>
+
     @if (pagination) {
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-4">
       <pagination
         [boundaryLinks]="true"
         [totalItems]="pagination.totalItems"
