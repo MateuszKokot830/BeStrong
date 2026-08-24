@@ -78,5 +78,92 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card bg-dark mt-3">
+          <div class="card-body">
+            <h4 class="text-center text-info mt-1 mb-3">Exercise progress</h4>
+            <div class="exercise-select-field">
+              <label class="text-white-50 small mb-1" for="statsExerciseSelect">Exercise</label>
+              <select
+                id="statsExerciseSelect"
+                class="form-select form-select-sm"
+                [(ngModel)]="selectedExerciseId"
+                (ngModelChange)="onExerciseSelected()"
+              >
+                <option [ngValue]="null">Select an exercise...</option>
+                @for (exercise of exercises; track exercise.id) {
+                <option [ngValue]="exercise.id">{{ exercise.name }}</option>
+                }
+              </select>
+            </div>
+
+            @if (selectedExerciseId !== null) {
+              @if (exerciseHistory.length > 0) {
+              <div class="row mt-3">
+                <div class="col-12 col-lg-6">
+                  <h6 class="text-center text-white-50">One rep max (last 3 months)</h6>
+                  <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" class="stats-chart">
+                    <line [attr.x1]="axisLineX" [attr.y1]="chartTopY" [attr.x2]="axisLineX" [attr.y2]="chartBottomY" class="axis-line" />
+                    <text [attr.x]="axisTickX" [attr.y]="chartTopY + 4" class="axis-tick" text-anchor="end">{{ oneRepMaxChart.maxValue | number : '1.0-1' }}</text>
+                    <text [attr.x]="axisTickX" [attr.y]="chartBottomY + 4" class="axis-tick" text-anchor="end">{{ oneRepMaxChart.minValue | number : '1.0-1' }}</text>
+                    <text
+                      [attr.x]="axisTitleX"
+                      [attr.y]="axisTitleY"
+                      [attr.transform]="'rotate(-90 ' + axisTitleX + ' ' + axisTitleY + ')'"
+                      class="axis-title"
+                      text-anchor="middle"
+                    >1RM (kg)</text>
+                    <path [attr.d]="oneRepMaxChart.path" fill="none" stroke="var(--accent)" stroke-width="2" />
+                    @for (point of oneRepMaxChart.points; track point.date) {
+                    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" fill="var(--accent)">
+                      <title>1RM: ~{{ point.value | number : '1.0-1' }} kg, {{ point.date | date : 'dd.MM.yy' }}</title>
+                    </circle>
+                    }
+                  </svg>
+                  @if (oneRepMaxChart.points.length > 1) {
+                  <div class="d-flex justify-content-between chart-date-labels">
+                    <span>{{ oneRepMaxChart.points[0].date | date : 'MMM d' }}</span>
+                    <span>{{ oneRepMaxChart.points[oneRepMaxChart.points.length - 1].date | date : 'MMM d' }}</span>
+                  </div>
+                  }
+                </div>
+                <div class="col-12 col-lg-6">
+                  <h6 class="text-center text-white-50">Max total weight per set (last 3 months)</h6>
+                  <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" class="stats-chart">
+                    <line [attr.x1]="axisLineX" [attr.y1]="chartTopY" [attr.x2]="axisLineX" [attr.y2]="chartBottomY" class="axis-line" />
+                    <text [attr.x]="axisTickX" [attr.y]="chartTopY + 4" class="axis-tick" text-anchor="end">{{ totalWeightChart.maxValue | number : '1.0-1' }}</text>
+                    <text [attr.x]="axisTickX" [attr.y]="chartBottomY + 4" class="axis-tick" text-anchor="end">{{ totalWeightChart.minValue | number : '1.0-1' }}</text>
+                    <text
+                      [attr.x]="axisTitleX"
+                      [attr.y]="axisTitleY"
+                      [attr.transform]="'rotate(-90 ' + axisTitleX + ' ' + axisTitleY + ')'"
+                      class="axis-title"
+                      text-anchor="middle"
+                    >Total weight (kg)</text>
+                    <path [attr.d]="totalWeightChart.path" fill="none" stroke="#4caf82" stroke-width="2" />
+                    @for (point of totalWeightChart.points; track point.date) {
+                    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" fill="#4caf82">
+                      <title>Total weight: ~{{ point.value | number : '1.0-1' }} kg, {{ point.date | date : 'dd.MM.yy' }}</title>
+                    </circle>
+                    }
+                  </svg>
+                  @if (totalWeightChart.points.length > 1) {
+                  <div class="d-flex justify-content-between chart-date-labels">
+                    <span>{{ totalWeightChart.points[0].date | date : 'MMM d' }}</span>
+                    <span>{{ totalWeightChart.points[totalWeightChart.points.length - 1].date | date : 'MMM d' }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+              } @else {
+              <p class="text-white-50 text-center mt-3 mb-0">No workouts logged for this exercise in the last 3 months.</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
