@@ -56,4 +56,11 @@ namespace Domain.Common
         Calves,
         RotatorCuff
     }
+
+    public enum ProfileVisibility
+    {
+        Public,
+        FollowersOnly,
+        Private
+    }
 }

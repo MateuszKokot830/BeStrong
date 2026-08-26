@@ -1,5 +1,7 @@
 using Application.Interfaces.Common;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Searchers;
+using Application.Mappings;
 using Application.Notifications;
 using Domain.Aggregates;
 using Domain.Common;
@@ -10,12 +12,14 @@ namespace Application.Tests.Notifications
     public class WorkoutSavedNotificationHandlerTests
     {
         private readonly Mock<IPostRepository> _postRepository = new();
+        private readonly Mock<IUserSearcher> _userSearcher = new();
         private readonly Mock<IUnitOfWork> _unitOfWork = new();
         private readonly WorkoutSavedNotificationHandler _sut;
 
         public WorkoutSavedNotificationHandlerTests()
         {
-            _sut = new WorkoutSavedNotificationHandler(_postRepository.Object, _unitOfWork.Object);
+            _sut = new WorkoutSavedNotificationHandler(_postRepository.Object, _userSearcher.Object, _unitOfWork.Object);
+            _userSearcher.Setup(s => s.GetSettingsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(UserSettingsMappings.Default);
         }
 
         [Fact]
@@ -55,6 +59,19 @@ namespace Application.Tests.Notifications
             _postRepository.Verify(r => r.AddAsync(
                 It.Is<Post>(p => p.Description == null),
                 It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Handle_WhenAutoPublishWorkoutsIsDisabled_DoesNotCreateAPost()
+        {
+            _userSearcher.Setup(s => s.GetSettingsAsync(7, It.IsAny<CancellationToken>())).ReturnsAsync(
+                UserSettingsMappings.Default with { AutoPublishWorkouts = false });
+            var notification = new WorkoutSavedNotification(WorkoutId: 5, UserId: 7, Description: "Push Day");
+
+            await _sut.Handle(notification, CancellationToken.None);
+
+            _postRepository.Verify(r => r.AddAsync(It.IsAny<Post>(), It.IsAny<CancellationToken>()), Times.Never);
+            _unitOfWork.Verify(u => u.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }

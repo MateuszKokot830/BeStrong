@@ -88,6 +88,7 @@ namespace Infrastructure.Data
             builder.Entity<User>(entity =>
             {
                 entity.OwnsOne(x => x.Measurements);
+                entity.OwnsOne(x => x.Settings);
                 entity.HasOne(x => x.WorkoutPlan)
                 .WithMany(x => x.UsedBy)
                 .HasForeignKey(x => x.WorkoutPlanId)

@@ -28,6 +28,10 @@ namespace Application.Dto.User
         IReadOnlyCollection<FollowerDto> Followers,
         bool IsAdmin,
         int? WorkoutPlanId,
-        string? WorkoutPlanName
+        string? WorkoutPlanName,
+        bool CanViewPhotos,
+        bool CanViewWorkouts,
+        bool CanViewWorkoutPlan,
+        bool CanViewMeasurements
     );
 }

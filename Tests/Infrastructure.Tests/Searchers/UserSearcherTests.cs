@@ -1,7 +1,9 @@
 using Application.Helpers.Criteria;
+using Application.Mappings;
 using Domain.Aggregates;
 using Domain.Common;
 using Domain.Entities;
+using Domain.ValueObjects;
 using Infrastructure.Searchers;
 using Infrastructure.Tests.TestDoubles;
 
@@ -230,6 +232,39 @@ namespace Infrastructure.Tests.Searchers
             var result = await _sut.GetAllAsync(CancellationToken.None);
 
             Assert.Null(result.Single().WorkoutSince);
+        }
+
+        [Fact]
+        public async Task GetSettingsAsync_WhenUserHasNoSettings_ReturnsDefault()
+        {
+            var user = await CreateUserAsync();
+
+            var result = await _sut.GetSettingsAsync(user.Id, CancellationToken.None);
+
+            Assert.Equal(UserSettingsMappings.Default, result);
+        }
+
+        [Fact]
+        public async Task GetSettingsAsync_WhenUserHasSettings_ReturnsThem()
+        {
+            var user = new User
+            {
+                UserName = "alice",
+                Settings = new UserSettings(
+                    ProfileVisibility.Private, ProfileVisibility.FollowersOnly, ProfileVisibility.Private, ProfileVisibility.Public,
+                    autoPublishWorkouts: false, autoPublishWorkoutPlanChanges: false)
+            };
+            Context.Users.Add(user);
+            await Context.SaveChangesAsync();
+
+            var result = await _sut.GetSettingsAsync(user.Id, CancellationToken.None);
+
+            Assert.Equal(ProfileVisibility.Private, result.PhotosVisibility);
+            Assert.Equal(ProfileVisibility.FollowersOnly, result.WorkoutsVisibility);
+            Assert.Equal(ProfileVisibility.Private, result.WorkoutPlanVisibility);
+            Assert.Equal(ProfileVisibility.Public, result.MeasurementsVisibility);
+            Assert.False(result.AutoPublishWorkouts);
+            Assert.False(result.AutoPublishWorkoutPlanChanges);
         }
     }
 }

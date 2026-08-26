@@ -23,6 +23,7 @@ namespace Domain.Aggregates
         public int Age => DateOfBirth.GetAgeFromDate();
         public string? WorkoutSince => DateOfWorkoutStart?.GetTimeDifferenceString();
         public Measurements? Measurements { get; set; }
+        public UserSettings? Settings { get; set; }
         public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
         public virtual ICollection<Role> Roles { get; set; } = [];
         public virtual ICollection<Post> Posts { get; set; } = [];

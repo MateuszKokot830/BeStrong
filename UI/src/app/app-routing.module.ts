@@ -59,6 +59,12 @@ const routes: Routes = [
     canLoad: [AuthGuard],
     loadChildren: () => import('./modules/pages/workouts/workouts.module').then(m => m.WorkoutsModule)
   },
+  {
+    path: 'settings',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./modules/pages/settings/settings.module').then(m => m.SettingsModule)
+  },
   { path: '**', redirectTo: '' }
 ];
 

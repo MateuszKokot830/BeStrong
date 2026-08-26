@@ -70,8 +70,8 @@ export class ProfileComponent implements OnInit {
         return forkJoin({
           followers: followerIds.length ? this.userService.getUsersByIds(followerIds) : of<User[]>([]),
           followedUsers: followedIds.length ? this.userService.getUsersByIds(followedIds) : of<User[]>([]),
-          workouts: this.workoutService.getUserWorkouts(user.id),
-          workoutPlan: user.workoutPlanId ? this.workoutPlanService.getWorkoutPlan(user.workoutPlanId) : of<WorkoutPlan | null>(null)
+          workouts: user.canViewWorkouts ? this.workoutService.getUserWorkouts(user.id) : of<Workout[]>([]),
+          workoutPlan: user.canViewWorkoutPlan && user.workoutPlanId ? this.workoutPlanService.getWorkoutPlan(user.workoutPlanId) : of<WorkoutPlan | null>(null)
         });
       })
     ).subscribe({

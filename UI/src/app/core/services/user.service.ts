@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult, PaginationHeader, UserSearchCriteria } from '../models/Pagination';
 import { Post } from '../models/Post';
-import { User, UserUpdate } from '../models/User';
+import { User, UserSettings, UserUpdate } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +56,14 @@ export class UserService {
 
   deletePhoto(photoId: number, userId: number) {
     return this.http.delete(`${this.baseUrl}users/${userId}/photos/${photoId}`);
+  }
+
+  getUserSettings() {
+    return this.http.get<UserSettings>(this.baseUrl + 'users/settings');
+  }
+
+  updateUserSettings(settings: UserSettings) {
+    return this.http.put<UserSettings>(this.baseUrl + 'users/settings', settings);
   }
 
   getUserList(criteria: UserSearchCriteria) {

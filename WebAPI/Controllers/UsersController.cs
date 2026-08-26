@@ -14,8 +14,10 @@ using Application.Commands.Users.FollowUser;
 using Application.Commands.Users.UnfollowUser;
 using Application.Commands.Users.SetMainPhoto;
 using Application.Commands.Users.UpdateUser;
+using Application.Commands.Users.UpdateUserSettings;
 using Application.Queries.Users.GetCurrentUser;
 using Application.Queries.Users.GetUserByUsername;
+using Application.Queries.Users.GetUserSettings;
 using Application.Queries.Users.GetUserPostsByUsername;
 using Application.Queries.Users.GetUsers;
 using Application.Queries.Users.GetUsersByIds;
@@ -78,6 +80,28 @@ namespace WebAPI.Controllers
 
             return result.Match(
                 user => Ok(user),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Retrieves the current logged in user's settings")]
+        [HttpGet("settings")]
+        public async Task<IActionResult> GetUserSettings()
+        {
+            ErrorOr<UserSettingsDto> result = await _mediator.Send(new GetUserSettingsQuery());
+
+            return result.Match(
+                settings => Ok(settings),
+                errors => Problem(errors));
+        }
+
+        [SwaggerOperation(Summary = "Updates the current logged in user's settings")]
+        [HttpPut("settings")]
+        public async Task<IActionResult> UpdateUserSettings(UserSettingsDto settingsDto)
+        {
+            ErrorOr<UserSettingsDto> result = await _mediator.Send(new UpdateUserSettingsCommand(settingsDto));
+
+            return result.Match(
+                settings => Ok(settings),
                 errors => Problem(errors));
         }
 

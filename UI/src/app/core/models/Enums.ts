@@ -42,3 +42,9 @@ export enum MuscleSubgroup {
   Calves,
   RotatorCuff
 }
+
+export enum ProfileVisibility {
+  Public,
+  FollowersOnly,
+  Private
+}

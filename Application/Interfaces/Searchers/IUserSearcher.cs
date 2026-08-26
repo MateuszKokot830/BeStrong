@@ -14,5 +14,6 @@ namespace Application.Interfaces.Searchers
         Task<bool> ExistsAsync(int userId, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<int>> GetFollowedUserIdsAsync(int userId, CancellationToken cancellationToken = default);
         Task<DateTime?> GetWorkoutStartDateAsync(int userId, CancellationToken cancellationToken = default);
+        Task<UserSettingsDto> GetSettingsAsync(int userId, CancellationToken cancellationToken = default);
     }
 }

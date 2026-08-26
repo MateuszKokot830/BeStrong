@@ -79,5 +79,16 @@ namespace Infrastructure.Searchers
                 .Where(u => u.Id == userId)
                 .Select(u => u.DateOfWorkoutStart)
                 .SingleOrDefaultAsync(cancellationToken);
+
+        public async Task<UserSettingsDto> GetSettingsAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            var settings = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .Select(u => u.Settings)
+                .SingleOrDefaultAsync(cancellationToken);
+
+            return settings.ToDtoOrDefault();
+        }
     }
 }

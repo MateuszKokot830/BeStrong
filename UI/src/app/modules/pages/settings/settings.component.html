@@ -1,0 +1,65 @@
+<div class="card page-card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12 col-lg-8 mx-auto">
+        <div class="card bg-dark mt-3">
+          <div class="card-body">
+            <h4 class="text-center text-info mt-1 mb-3">Settings</h4>
+
+            @if (settings) {
+            <h6 class="text-info mt-2">Who can see these panels on your profile</h6>
+            <div class="row g-2 mb-3">
+              <div class="col-12 col-sm-6">
+                <label class="text-white-50 small mb-1" for="photosVisibility">Photos</label>
+                <select id="photosVisibility" class="form-select form-select-sm" [(ngModel)]="settings.photosVisibility">
+                  <option [ngValue]="ProfileVisibility.Public">Public</option>
+                  <option [ngValue]="ProfileVisibility.FollowersOnly">Followers only</option>
+                  <option [ngValue]="ProfileVisibility.Private">Private</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6">
+                <label class="text-white-50 small mb-1" for="workoutsVisibility">Workouts</label>
+                <select id="workoutsVisibility" class="form-select form-select-sm" [(ngModel)]="settings.workoutsVisibility">
+                  <option [ngValue]="ProfileVisibility.Public">Public</option>
+                  <option [ngValue]="ProfileVisibility.FollowersOnly">Followers only</option>
+                  <option [ngValue]="ProfileVisibility.Private">Private</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6">
+                <label class="text-white-50 small mb-1" for="workoutPlanVisibility">Workout plan</label>
+                <select id="workoutPlanVisibility" class="form-select form-select-sm" [(ngModel)]="settings.workoutPlanVisibility">
+                  <option [ngValue]="ProfileVisibility.Public">Public</option>
+                  <option [ngValue]="ProfileVisibility.FollowersOnly">Followers only</option>
+                  <option [ngValue]="ProfileVisibility.Private">Private</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6">
+                <label class="text-white-50 small mb-1" for="measurementsVisibility">Measurements</label>
+                <select id="measurementsVisibility" class="form-select form-select-sm" [(ngModel)]="settings.measurementsVisibility">
+                  <option [ngValue]="ProfileVisibility.Public">Public</option>
+                  <option [ngValue]="ProfileVisibility.FollowersOnly">Followers only</option>
+                  <option [ngValue]="ProfileVisibility.Private">Private</option>
+                </select>
+              </div>
+            </div>
+
+            <h6 class="text-info mt-3">Activity</h6>
+            <div class="form-check mb-2">
+              <input id="autoPublishWorkouts" type="checkbox" class="form-check-input" [(ngModel)]="settings.autoPublishWorkouts" />
+              <label class="form-check-label text-white" for="autoPublishWorkouts">Automatically publish new workouts</label>
+            </div>
+            <div class="form-check mb-3">
+              <input id="autoPublishWorkoutPlanChanges" type="checkbox" class="form-check-input" [(ngModel)]="settings.autoPublishWorkoutPlanChanges" />
+              <label class="form-check-label text-white" for="autoPublishWorkoutPlanChanges">Automatically publish workout plan changes</label>
+            </div>
+
+            <div class="text-center">
+              <button type="button" class="btn btn-success btn-sm" [disabled]="isSaving" (click)="save()">Save</button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

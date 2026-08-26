@@ -104,6 +104,7 @@
                   </div>
                 </div>
                 <div class="row stat-row">
+                  @if (user.canViewMeasurements) {
                   <div class="card bg-dark stat-card">
                     <div class="card-body">
                       <h4 class="text-center mt-2 mb-2 text-info">Measurements</h4>
@@ -198,6 +199,8 @@
                       </dl>
                     </div>
                   </div>
+                  }
+                  @if (user.canViewWorkouts) {
                   <div class="card bg-dark stat-card">
                     <div class="card-body">
                       <h4 class="text-center mt-2 text-info">Last workout</h4>
@@ -225,8 +228,10 @@
                       }
                     </div>
                   </div>
+                  }
                 </div>
               </tab>
+              @if (user.canViewWorkouts) {
               <tab heading="Workouts" class="text-white">
                 <div class="row mt-3">
                   <div class="col-12 position-relative workout-history-header">
@@ -270,6 +275,8 @@
                   }
                 </div>
               </tab>
+              }
+              @if (user.canViewWorkoutPlan) {
               <tab heading="Workout Plan" class="text-white">
                 <div class="row mt-3">
                   <div class="col-12 card bg-dark mb-2 mt-3">
@@ -307,6 +314,8 @@
                   </div>
                 </div>
               </tab>
+              }
+              @if (user.canViewPhotos) {
               <tab heading="Gallery" class="text-white">
                 <div class="row mt-3">
                   @if (isCurrentUser && isEditMode) {
@@ -327,6 +336,7 @@
                   </div>
                 </div>
               </tab>
+              }
               <tab heading="Followers: {{ followers.length }}" class="text-white">
                 <h4 class="text-center text-info mt-3">{{ user.userName | titlecase }}'s followers</h4>
                 <div class="row">

@@ -1,4 +1,4 @@
-import { Gender } from './Enums';
+import { Gender, ProfileVisibility } from './Enums';
 import { Follower } from './Follower';
 import { Photo } from './Photo';
 import { Post } from './Post';
@@ -26,6 +26,19 @@ export interface User {
   isAdmin: boolean;
   workoutPlanId: number | null;
   workoutPlanName: string | null;
+  canViewPhotos: boolean;
+  canViewWorkouts: boolean;
+  canViewWorkoutPlan: boolean;
+  canViewMeasurements: boolean;
+}
+
+export interface UserSettings {
+  photosVisibility: ProfileVisibility;
+  workoutsVisibility: ProfileVisibility;
+  workoutPlanVisibility: ProfileVisibility;
+  measurementsVisibility: ProfileVisibility;
+  autoPublishWorkouts: boolean;
+  autoPublishWorkoutPlanChanges: boolean;
 }
 
 export interface Measurements {

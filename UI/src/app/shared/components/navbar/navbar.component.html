@@ -38,6 +38,9 @@
           <a class="nav-link bi-person-square" routerLink="/profile/{{ user.username }}" routerLinkActive="active"> Profile</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link bi-gear-fill" routerLink="/settings" routerLinkActive="active"> Settings</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link bi-box-arrow-right" routerLink="/" (click)="logout()"> Logout</a>
         </li>
       </ul>
